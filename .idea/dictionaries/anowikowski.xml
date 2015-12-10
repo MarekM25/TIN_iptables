@@ -4,6 +4,7 @@
       <w>anowikowski</w>
       <w>httpserver</w>
       <w>iptables</w>
+      <w>pthread</w>
     </words>
   </dictionary>
 </component>

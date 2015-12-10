@@ -14,10 +14,14 @@ class Configuration
 public:
     static Configuration& getInstance();
     ~Configuration();
-    void Initialize(string configurationFilePath);
+    void initialize(string configurationFilePath);
+    string getServerIpAddress();
+    unsigned short getServerPort();
 private:
     Configuration();
     Configuration(Configuration const&);
+    string serverIpAddress;
+    unsigned short serverPort;
 };
 
 
