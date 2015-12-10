@@ -1,1 +1,1 @@
-Zrobić prosty diagram klas
+Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
