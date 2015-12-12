@@ -110,7 +110,7 @@ void Logger<log_policy>::print(Args...args)
     log_stream<<tt_s<<" - ";
 
     print_impl(severity, std::forward<std::stringstream>(log_stream), std::move(args)...);
-};
+}
 
 template<typename log_policy>
 void Logger<log_policy>::print_impl(severity_type severity, std::stringstream&& log_stream)
