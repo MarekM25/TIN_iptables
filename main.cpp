@@ -20,6 +20,7 @@ int main()
 
     HttpServer server(configurationInstance.getServerIpAddress(), configurationInstance.getServerPort());
 
+    LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
     server.start();
 
     cout << "Hello, World!" << endl;

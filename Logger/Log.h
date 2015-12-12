@@ -1,6 +1,16 @@
-//
-// Created by andrusza2 on 12/12/15.
-//
+/*
+ * @file Log.h
+ * Header file for Logger module classes.
+ *
+ * @brief
+ * Generic class Logger is specified by the class that implements LogPolicyInterface.
+ * LogPolicyInterface define logs-writing behavior.
+ * This file contains FileLogPolicy class definition.
+ *
+ * @author Pawel Andruszkiewicz
+ *
+ * @version 0.3
+ */
 
 #ifndef TIN_IPTABLES_LOG_H
 #define TIN_IPTABLES_LOG_H
@@ -68,7 +78,7 @@ public:
     Logger();
 
     template<severity_type severity, typename...Args>
-    void print(Args&&...args);
+    void print(Args...args);
 
     ~Logger();
 };
@@ -87,7 +97,7 @@ Logger<log_policy>::~Logger()
 
 template<typename log_policy>
 template<severity_type severity, typename...Args>
-void Logger<log_policy>::print(Args&&...args)
+void Logger<log_policy>::print(Args...args)
 {
 
     std::stringstream log_stream;

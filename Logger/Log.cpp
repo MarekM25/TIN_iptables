@@ -1,6 +1,14 @@
-//
-// Created by andrusza2 on 12/12/15.
-//
+/*
+ * @file Log.cpp
+ * Source file for Logger module classes.
+ *
+ * @brief
+ * This file contains FileLogPolicy class implementation.
+ *
+ * @author Pawel Andruszkiewicz
+ *
+ * @version 0.3
+ */
 
 #include "Log.h"
 

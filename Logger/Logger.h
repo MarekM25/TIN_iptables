@@ -1,6 +1,16 @@
-//
-// Created by anowikowski on 10.12.15.
-//
+/*
+ * @file Logger.h
+ * Header file which should be included in order to use Logger module.
+ *
+ * @brief
+ * In this file there is declaration of extern Logger object and.
+ *
+ *
+ *
+ * @author Pawel Andruszkiewicz
+ *
+ * @version 0.3
+ */
 
 #ifndef TIN_IPTABLES_LOGGER_H
 #define TIN_IPTABLES_LOGGER_H
