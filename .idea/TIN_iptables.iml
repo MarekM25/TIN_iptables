@@ -3,7 +3,10 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/Configuration.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Logger.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Logger/Log.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Logger/Log.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Logger/Logger.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Logger/Logger.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/HttpServer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
@@ -11,7 +14,6 @@
       <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/HttpServer.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/HttpRequest.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Logger.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Configuration.cpp" isTestSource="false" />
     </content>
