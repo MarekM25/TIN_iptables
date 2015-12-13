@@ -59,10 +59,10 @@ bool Configuration::parseConfigFile( string& configFile )
     return true;
 }
 
-string Configuration::trim( string source )
+string Configuration::trim( string const& sourceString )
 {
     string delimiters = " \t\r\n";
-    string result( source );
+    string result( sourceString );
 
     auto index = result.find_last_not_of( delimiters );
     if( index != string::npos )
@@ -102,4 +102,34 @@ string Configuration::getServerIpAddress()
 unsigned short Configuration::getServerPort()
 {
     return this->serverPort;
+}
+
+string Configuration::getListenIpAddress()
+{
+    return listenIpAddress;
+}
+
+unsigned short Configuration::getListenPort()
+{
+    return listenPort;
+}
+
+unsigned short Configuration::getSessionTimeout()
+{
+    return sessionTimeout;
+}
+
+unsigned short Configuration::getTransmissionTimeout()
+{
+    return transmissionTimeout;
+}
+
+string Configuration::getLogPath()
+{
+    return logPath;
+}
+
+string Configuration::getUsersFilePath()
+{
+    return usersFilePath;
 }

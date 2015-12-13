@@ -20,11 +20,18 @@ public:
     string getServerIpAddress();
     unsigned short getServerPort();
 
+    string getListenIpAddress();
+    unsigned short getListenPort();
+    unsigned short getSessionTimeout();
+    unsigned short getTransmissionTimeout();
+    string getLogPath();
+    string getUsersFilePath();
+
 private:
     Configuration();
-    //Configuration(Configuration const&);
-    bool parseConfigFile(string& configFile);
-    string trim( string source );
+    Configuration( Configuration const& );
+    bool parseConfigFile( string& configFile );
+    string trim( string const& sourceString );
 
     map< string, string > params;
 
