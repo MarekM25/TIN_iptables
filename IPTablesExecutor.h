@@ -82,9 +82,11 @@ std::string IPTablesExecutor::executeCommand( commandType command, T param, chai
             break;
     }
 
+    // delete after debugging
     std::cout << cmd.c_str() << std::endl;
     return "";
 
+    // uncomment after debugging
     //return exec( cmd.c_str() );
 }
 

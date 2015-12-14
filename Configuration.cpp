@@ -25,12 +25,12 @@ void Configuration::initialize(string configurationFilePath)
 
 bool Configuration::parseConfigFile( string& configFile )
 {
-    ifstream file( configFile.c_str() );
-    //ifstream file( "/Users/Pawel/Documents/Studia/TIN/TIN_iptables/iptables.conf" );
+    //ifstream file( configFile.c_str() );
+    ifstream file( "/Users/Pawel/Documents/Studia/TIN/TIN_iptables/iptables.conf" );
 
     if ( !file )
     {
-        LOG_ERR("Cannot open Config File");
+        LOG_ERR( "Cannot open Config File" );
         return false;
     }
 
