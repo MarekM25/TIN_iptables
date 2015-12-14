@@ -37,18 +37,17 @@ public:
     virtual void write_error(const std::string& msg) = 0;
     virtual void write_access(const std::string& msg) = 0;
     virtual void write_info(const std::string& msg) = 0;
-    virtual ~LogPolicyInterface() = 0;
+    virtual ~LogPolicyInterface() {}
 };
-
-inline LogPolicyInterface::~LogPolicyInterface() { }
 
 class FileLogPolicy : LogPolicyInterface
 {
-    std::unique_ptr<std::ofstream> error_out_stream;  //TODO: is unique_ptr needed?
-    std::unique_ptr<std::ofstream> access_out_stream;
-    std::unique_ptr<std::ofstream> info_out_stream;
+    std::ofstream error_out_stream;
+    std::ofstream access_out_stream;
+    std::ofstream info_out_stream;
+
 public:
-    FileLogPolicy() : error_out_stream(new std::ofstream), access_out_stream(new std::ofstream), info_out_stream(new std::ofstream) {}
+    FileLogPolicy() {}
     ~FileLogPolicy();
 
     void open_ostream(const std::string& error_name, const std::string& access_name,const std::string& info_name);
@@ -96,7 +95,7 @@ Logger<log_policy>::~Logger()
 }
 
 template<typename log_policy>
-template<severity_type severity, typename...Args>
+    template<severity_type severity, typename...Args>
 void Logger<log_policy>::print(Args...args)
 {
 
