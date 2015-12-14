@@ -25,8 +25,8 @@ public:
     bool isHeaderPresent(const std::string &headerName);
     void setHttpRequestData(std::string httpRequestDataString);
 private:
-    const std::string newLineString = "\r\n";
-    const std::string httpHeaderNameValueDelimiter = ": ";
+    static const std::string newLineString;
+    static const std::string httpHeaderNameValueDelimiter;
     std::map<std::string, std::string> headers;
     std::string data;
     HttpRequestMethod method;

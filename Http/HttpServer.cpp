@@ -10,6 +10,10 @@
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 
+const std::string HttpServer::newLineString = "\r\n";
+const std::string HttpServer::httpRequestHeadersDataSeparator = "\r\n\r\n";
+const size_t HttpServer::bufferSize = 256;
+
 HttpServer::HttpServer()
 {
     this->localAddress.sin_addr.s_addr = htonl(INADDR_ANY);

@@ -38,9 +38,9 @@ private:
     std::string readString(int socket, int length);
     void sendResponse(int socket, HttpResponse &httpResponse);
     void sendString(int socket, const std::string &str);
-    const std::string newLineString = "\r\n";
-    const std::string httpRequestHeadersDataSeparator = "\r\n\r\n";
-    static const size_t bufferSize = 256;
+    static const std::string newLineString;
+    static const std::string httpRequestHeadersDataSeparator;
+    static const size_t bufferSize;
     HttpResponse (*httpRequestHandler)(HttpRequest httpRequest);
 };
 

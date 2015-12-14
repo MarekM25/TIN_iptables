@@ -6,6 +6,9 @@
 #include "../Extensions/StringExtensions.h"
 #include "../Exception/HttpException.h"
 
+const std::string HttpRequest::newLineString = "\r\n";
+const std::string HttpRequest::httpHeaderNameValueDelimiter = ": ";
+
 HttpRequest::HttpRequest(std::string httpRequestString)
 {
     //Parse http/1.1 method and path and set currentIndex=XXX
