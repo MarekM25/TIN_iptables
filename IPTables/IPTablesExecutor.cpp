@@ -4,7 +4,7 @@
 #define LOGGING_LEVEL_1
 
 #include "IPTablesExecutor.h"
-#include "Logger/Logger.h"
+#include "../Logger/Logger.h"
 
 IPTablesExecutor::IPTablesExecutor()
 {

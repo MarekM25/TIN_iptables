@@ -6,6 +6,7 @@
 #define TIN_IPTABLES_HTTPREQUEST_H
 
 #include <map>
+#include <string>
 
 enum HttpRequestMethod
 {

@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <thread>
+#include <array>
 #include "HttpServer.h"
 #include "../Extensions/StringExtensions.h"
 #include "HttpRequest.h"
@@ -244,7 +245,7 @@ std::string HttpServer::readString(int socket, int length)
     ssize_t received = 0;
     std::string str;
 
-    std::array<char, this->bufferSize> bufferArray;
+    std::array<char, bufferSize> bufferArray;
     while (received < length)
     {
         ssize_t ret = recv(socket, bufferArray.data(), std::min(this->bufferSize - 1, (size_t)length - (size_t)received), 0);

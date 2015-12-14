@@ -1,9 +1,9 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "Configuration.h"
+#include "Configuration/Configuration.h"
 #include "Http/HttpServer.h"
-#include "IPTablesExecutor.h"
+#include "IPTables/IPTablesExecutor.h"
 
 #include "Logger/Logger.h"
 

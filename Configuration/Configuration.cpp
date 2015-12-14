@@ -4,7 +4,7 @@
 #define LOGGING_LEVEL_1
 
 #include "Configuration.h"
-#include "Logger/Logger.h"
+#include "../Logger/Logger.h"
 
 void Configuration::initialize(string configurationFilePath)
 {
@@ -26,7 +26,6 @@ void Configuration::initialize(string configurationFilePath)
 bool Configuration::parseConfigFile( string& configFile )
 {
     //ifstream file( configFile.c_str() );
-    //ifstream file( "/Users/Pawel/Documents/Studia/TIN/TIN_iptables/iptables.conf" );
     ifstream file( "../iptables.conf" );
 
     if ( !file )
