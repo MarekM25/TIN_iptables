@@ -102,8 +102,13 @@ void Logger<log_policy>::print(Args...args)
 
     std::stringstream log_stream;
 
+#ifdef __APPLE__
+    auto cur_time = std::chrono::system_clock::now();
+    std::time_t tt = std::chrono::system_clock::to_time_t(cur_time);
+#else
     auto cur_time = std::chrono::high_resolution_clock::now();
     std::time_t tt = std::chrono::high_resolution_clock::to_time_t(cur_time);
+#endif
     char* tt_s = ctime(&tt);
     tt_s[strlen(tt_s)-1]=0;
 
