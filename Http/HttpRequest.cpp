@@ -4,6 +4,7 @@
 
 #include "HttpRequest.h"
 #include "../Extensions/StringExtensions.h"
+#include "../Exception/HttpException.h"
 
 HttpRequest::HttpRequest(std::string httpRequestString)
 {
@@ -50,10 +51,21 @@ unsigned int HttpRequest::getContentLength()
 std::string HttpRequest::getHeaderValue(std::string header)
 {
     std::string headerLowerCase = string_extensions::tolower(header);
+    if (!this->isHeaderPresent(headerLowerCase))
+    {
+        throw exception::http::http_header_not_present();
+    }
+
     return this->headers[headerLowerCase];
 }
 
 void HttpRequest::setHttpRequestData(std::string httpRequestDataString)
 {
     this->data = httpRequestDataString;
+}
+
+bool HttpRequest::isHeaderPresent(const std::string &headerName)
+{
+    std::string headerNameLowerCase = string_extensions::tolower(headerName);
+    return this->headers.count(headerNameLowerCase) > 0;
 }

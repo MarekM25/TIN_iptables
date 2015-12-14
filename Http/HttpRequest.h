@@ -22,6 +22,7 @@ public:
     ~HttpRequest();
     unsigned int getContentLength();
     std::string getHeaderValue(std::string header);
+    bool isHeaderPresent(const std::string &headerName);
     void setHttpRequestData(std::string httpRequestDataString);
 private:
     const std::string newLineString = "\r\n";
