@@ -5,6 +5,7 @@
 
 #include "Configuration.h"
 #include "HttpServer.h"
+#include "IPTablesExecutor.h"
 
 #include "Logger/Logger.h"
 
@@ -17,6 +18,17 @@ int main()
 
     Configuration &configurationInstance = Configuration::getInstance();
     configurationInstance.initialize("iptables.conf");
+
+    IPTablesExecutor iptexec;
+    iptexec.executeCommand( GET_ALL_RULES );
+    iptexec.executeCommand( DELETE_RULE, 1, INPUT );
+    iptexec.executeCommand( DELETE_RULE, 4, OUTPUT );
+    iptexec.executeCommand( BLOCK_IP, "192.168.1.101", INPUT );
+    iptexec.executeCommand( BLOCK_IP, "192.168.1.104", OUTPUT );
+    iptexec.executeCommand( BLOCK_TCP_PORT, 9999, OUTPUT );
+    iptexec.executeCommand( BLOCK_UDP_PORT, 1234, INPUT );
+    iptexec.executeCommand( BLOCK_INCOMING_MAC, "00:0F:EA:91:04:08" );
+    iptexec.executeCommand( RAW, "pwd" );
 
     HttpServer server(configurationInstance.getServerIpAddress(), configurationInstance.getServerPort());
 
