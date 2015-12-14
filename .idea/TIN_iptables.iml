@@ -5,15 +5,19 @@
       <sourceFolder url="file://$MODULE_DIR$/Configuration.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Logger.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/HttpServer.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/HttpRequest.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/HttpServer.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/HttpRequest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Logger.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Configuration.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.cpp" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
