@@ -5,15 +5,16 @@
 
 #include "Configuration.h"
 #include "../Logger/Logger.h"
+#include "../Extensions/StringExtensions.h"
 
-void Configuration::initialize(string configurationFilePath)
+void Configuration::initialize( string configurationFilePath )
 {
     parseConfigFile( configurationFilePath );
 
     listenIpAddress = params[ "core/listen_ip" ];
-    listenPort = ( unsigned short ) stoi( params[ "core/listen_port" ] );
-    sessionTimeout = ( unsigned short ) stoi( params[ "core/session_timeout" ] );
-    transmissionTimeout = ( unsigned short ) stoi( params[ "core/transmission_timeout" ] );
+    listenPort = string_extensions::stous( params[ "core/listen_port" ] );
+    sessionTimeout = string_extensions::stous( params[ "core/session_timeout" ] );
+    transmissionTimeout = string_extensions::stous( params[ "core/transmission_timeout" ] );
     logPath = params[ "paths/log_path" ];
     usersFilePath = params[ "paths/users_path" ];
 
@@ -49,37 +50,19 @@ bool Configuration::parseConfigFile( string& configFile )
 
         if ( line[ 0 ] == '[' )
         {
-            section = trim( line.substr( 1, line.find( ']' ) - 1 ) );
+            section = string_extensions::trim( line.substr( 1, line.find( ']' ) - 1 ) );
             continue;
         }
 
         separatorPos = ( unsigned short ) line.find( ' ' );
 
-        key = trim( line.substr( 0, separatorPos ) );
-        value = trim( line.substr( separatorPos + 1 ) );
+        key = string_extensions::trim( line.substr( 0, separatorPos ) );
+        value = string_extensions::trim( line.substr( separatorPos + 1 ) );
 
         params[ section + '/' + key ] = value;
     }
 
     return true;
-}
-
-string Configuration::trim( string const& sourceString )
-{
-    string delimiters = " \t\r\n";
-    string result( sourceString );
-
-    auto index = result.find_last_not_of( delimiters );
-    if( index != string::npos )
-        result.erase( ++index );
-
-    index = result.find_first_not_of( delimiters );
-    if( index != string::npos )
-        result.erase( 0, index );
-    else
-        result.erase();
-
-    return result;
 }
 
 Configuration& Configuration::getInstance()

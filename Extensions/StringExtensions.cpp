@@ -29,6 +29,36 @@ namespace string_extensions
         return iresult;
     }
 
+    unsigned short stous(const std::string &s)
+    {
+        unsigned long lresult = stoul(s, 0, 10);
+        unsigned short iresult = lresult;
+        if (lresult != (unsigned short)iresult)
+        {
+            throw std::out_of_range("");
+        }
+
+        return iresult;
+    }
+
+    std::string trim( const std::string& sourceString )
+    {
+        std::string delimiters = " \t\r\n";
+        std::string result( sourceString );
+
+        auto index = result.find_last_not_of( delimiters );
+        if( index != std::string::npos )
+            result.erase( ++index );
+
+        index = result.find_first_not_of( delimiters );
+        if( index != std::string::npos )
+            result.erase( 0, index );
+        else
+            result.erase();
+
+        return result;
+    }
+
     std::string tolower(const std::string &str)
     {
         std::string lowerStr = str;

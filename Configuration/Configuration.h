@@ -31,7 +31,6 @@ private:
     Configuration();
     Configuration( Configuration const& );
     bool parseConfigFile( string& configFile );
-    string trim( string const& sourceString );
 
     map< string, string > params;
 

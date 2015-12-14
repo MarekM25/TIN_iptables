@@ -11,6 +11,8 @@ namespace string_extensions
 {
     bool ends_with(const std::string &str, const std::string &ending);
     unsigned int stoui(const std::string &s);
+    unsigned short stous(const std::string &s);
+    std::string trim( const std::string& sourceString );
     std::string tolower(const std::string &str);
 }
 
