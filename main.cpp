@@ -28,7 +28,7 @@ int main()
 
     while(true) //NOT RECEIVED EXIT SIGNAL OR COMMAND
     {
-        LOG_ERR("FUCK, NOTHING HAPPENS :(");
+        LOG_ERR("Some error occurred");
         sleep(1);
     }
 

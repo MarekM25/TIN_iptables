@@ -1,8 +1,10 @@
 //
 // Created by anowikowski on 10.12.15.
 //
+#define LOGGING_LEVEL_1
 
 #include "Configuration.h"
+#include "Logger/Logger.h"
 
 void Configuration::initialize(string configurationFilePath)
 {
@@ -27,7 +29,10 @@ bool Configuration::parseConfigFile( string& configFile )
     //ifstream file( "/Users/Pawel/Documents/Studia/TIN/TIN_iptables/iptables.conf" );
 
     if ( !file )
+    {
+        LOG_ERR("Cannot open Config File");
         return false;
+    }
 
     string line;
     string key;
