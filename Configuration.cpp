@@ -26,7 +26,8 @@ void Configuration::initialize(string configurationFilePath)
 bool Configuration::parseConfigFile( string& configFile )
 {
     //ifstream file( configFile.c_str() );
-    ifstream file( "/Users/Pawel/Documents/Studia/TIN/TIN_iptables/iptables.conf" );
+    //ifstream file( "/Users/Pawel/Documents/Studia/TIN/TIN_iptables/iptables.conf" );
+    ifstream file( "../iptables.conf" );
 
     if ( !file )
     {
