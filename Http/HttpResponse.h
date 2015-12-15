@@ -22,7 +22,7 @@ public:
     HttpResponse();
     ~HttpResponse();
     std::string GetData();
-    std::string SetData(const std::string &data);
+    void SetData(const std::string &data);
     void SetStatus(HttpResponseStatus status);
     void SetHttpVersion(std::string httpVersion);
     std::string GetHttpVersion();

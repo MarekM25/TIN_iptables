@@ -24,7 +24,7 @@ std::string HttpResponse::GetData()
     return this->m_sData;
 }
 
-std::string HttpResponse::SetData(const std::string &data)
+void HttpResponse::SetData(const std::string &data)
 {
     this->m_sData = data;
 }

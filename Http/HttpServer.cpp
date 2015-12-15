@@ -318,7 +318,7 @@ void HttpServer::SendString(int socket, const std::string &str)
 {
     ssize_t sent = 0;
 
-    while (sent < str.length())
+    while ((size_t)sent < str.length())
     {
         ssize_t ret = send(socket, str.c_str(), (size_t)str.length() - (size_t)sent, 0);
         if (ret == -1)
