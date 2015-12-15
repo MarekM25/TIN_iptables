@@ -4,7 +4,6 @@
 
 #ifndef TIN_IPTABLES_HTTPREQUEST_H
 #define TIN_IPTABLES_HTTPREQUEST_H
-
 #include <map>
 #include <string>
 
@@ -39,7 +38,7 @@ private:
     static const std::string m_sContentLengthHeaderName;
     std::map<std::string, std::string> m_headers;
     std::string m_sData;
-    std::string m_sHttpVersion;
+                    std::string m_sHttpVersion;
     HttpRequestMethod m_method;
     std::string m_sPath;
     std::pair<std::string, std::string> SplitHttpHeaderNameValue(const std::string &httpHeader);
