@@ -19,7 +19,7 @@ void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
     std::size_t httpPrologueEndIndex = httpRequestString.find(this->m_sNewLineString);
     if (httpPrologueEndIndex == std::string::npos)
     {
-        throw new exception::http::invalid_http_request();
+        throw exception::http::invalid_http_request();
     }
 
     std::string httpPrologueLine = httpRequestString.substr(0, httpPrologueEndIndex);
@@ -27,7 +27,7 @@ void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
 
     if (httpPrologueTokens.size() != 3)
     {
-        throw new exception::http::invalid_http_request();
+        throw exception::http::invalid_http_request();
     }
 
     std::string method = httpPrologueTokens[0];
@@ -38,9 +38,9 @@ void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
     {
         this->SetHttpMethod(method);
     }
-    catch (exception::http::invalid_http_method)
+    catch (const exception::http::invalid_http_method &e)
     {
-        throw new exception::http::invalid_http_request();
+        throw exception::http::invalid_http_request();
     }
 
     this->m_sPath = path;
@@ -63,9 +63,9 @@ void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
             {
                 httpHeaderNameValue = this->SplitHttpHeaderNameValue(httpHeader);
             }
-            catch (exception::http::invalid_http_header)
+            catch (const exception::http::invalid_http_header &e)
             {
-                throw new exception::http::invalid_http_request();
+                throw exception::http::invalid_http_request();
             }
 
             this->m_headers.insert(std::pair<std::string, std::string>(httpHeaderNameValue.first, httpHeaderNameValue.second));
@@ -126,7 +126,7 @@ std::pair<std::string, std::string> HttpRequest::SplitHttpHeaderNameValue(const 
     std::size_t headerDelimiterIndex = httpHeader.find(this->m_sHttpHeaderNameValueDelimiter);
     if (headerDelimiterIndex == std::string::npos || headerDelimiterIndex == 1)
     {
-        throw new exception::http::invalid_http_header();
+        throw exception::http::invalid_http_header();
     }
 
     std::string httpHeaderName = httpHeader.substr(0, headerDelimiterIndex);
@@ -181,7 +181,7 @@ HttpRequestMethod HttpRequest::MapHttpRequestMethod(const std::string &method)
         return HttpRequestMethod::CONNECT;
     }
 
-    throw new exception::http::invalid_http_method();
+    throw exception::http::invalid_http_method();
 }
 
 std::string HttpRequest::GetData()

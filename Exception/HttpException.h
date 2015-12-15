@@ -16,6 +16,7 @@ namespace exception
         class invalid_http_request : http_exception { };
         class invalid_http_header : invalid_http_request { };
         class invalid_http_method : invalid_http_request { };
+        class unknown_http_response_status : http_exception { };
     }
 }
 

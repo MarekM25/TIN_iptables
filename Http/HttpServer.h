@@ -24,7 +24,7 @@ public:
     void SetMaxConnectionQueueLength(int maxConnectionQueueLength);
     void SetSendTimeout(int sendTimeout);
     void SetReceiveTimeout(int receiveTimeout);
-    void SetHttpRequestHandler(HttpResponse (*httpRequestHandler)(HttpRequest httpRequest));
+    void SetHttpRequestHandler(HttpResponse (*httpRequestHandler)(HttpRequest));
 private:
     sockaddr_in m_localAddress;
     std::thread m_serverThread;
@@ -40,8 +40,10 @@ private:
     void SendString(int socket, const std::string &str);
     static const std::string m_sNewLineString;
     static const std::string m_sHttpRequestHeadersDataSeparator;
+    static const std::string m_sHttpRequestHeaderNameValueSeparator;
     static const std::size_t m_bufferSize;
     HttpResponse (*m_pHttpRequestHandler)(HttpRequest httpRequest);
+    void SendBadRequestResponse(int iSocket);
 };
 
 

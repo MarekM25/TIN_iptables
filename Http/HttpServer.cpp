@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <thread>
 #include <array>
+#include <algorithm>
 #include "HttpServer.h"
 #include "../Extensions/StringExtensions.h"
 #include "HttpRequest.h"
@@ -14,6 +15,7 @@
 
 const std::string HttpServer::m_sNewLineString = "\r\n";
 const std::string HttpServer::m_sHttpRequestHeadersDataSeparator = "\r\n\r\n";
+const std::string HttpServer::m_sHttpRequestHeaderNameValueSeparator = ": ";
 const std::size_t HttpServer::m_bufferSize = 256;
 
 HttpServer::HttpServer()
@@ -147,7 +149,6 @@ void HttpServer::ServerThreadWork()
         if (clientsockfd == -1)
         {
             //TODO Throw error
-            int x = errno;
             throw "Error accepting client connection";
         }
 
@@ -197,21 +198,29 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
     {
         httpRequest.SetRawHttpRequest(httpRequestString);
     }
-    catch (exception::http::invalid_http_request)
+    catch (const exception::http::invalid_http_request &e)
     {
         //TODO Send invalid http request response
-
+        this->SendBadRequestResponse(clientSocket);
         close(clientSocket);
         return;
     }
 
     //TODO When content-length is not set send INVALID_REQUEST Http response
-    unsigned int contentLength = httpRequest.GetContentLength();
-    std::string httpRequestDataString = this->ReadString(clientSocket, contentLength);
-
-    httpRequest.SetData(httpRequestDataString);
+    try
+    {
+        unsigned int contentLength = httpRequest.GetContentLength();
+        std::string httpRequestDataString = this->ReadString(clientSocket, contentLength);
+        httpRequest.SetData(httpRequestDataString);
+    }
+    catch (const exception::http::http_header_not_present &e)
+    {
+        //If Content-Length header no present, assume there is no data
+        httpRequest.SetData("");
+    }
 
     HttpResponse httpResponse = this->m_pHttpRequestHandler(httpRequest);
+    httpResponse.SetStatus(HttpResponseStatus::OK_200);
 
     //Set http headers etc
 
@@ -281,16 +290,33 @@ std::string HttpServer::ReadString(int socket, int length)
 }
 
 void HttpServer::SetHttpRequestHandler(
-        HttpResponse (*httpRequestHandler)(HttpRequest httpRequest))
+        HttpResponse (*httpRequestHandler)(HttpRequest))
 {
     this->m_pHttpRequestHandler = httpRequestHandler;
 }
 
 void HttpServer::SendResponse(int socket, HttpResponse &httpResponse)
 {
-    //TODO Send HTTP Header
+    std::string httpResponseString = httpResponse.GetHttpVersion();
+    httpResponseString += " ";
+    httpResponseString += std::to_string(httpResponse.MapHttpResponseStatusToInt(httpResponse.GetStatus()));
+    httpResponseString += " ";
+    httpResponseString += httpResponse.MapHttpResponseStatusToString(httpResponse.GetStatus());
+    httpResponseString += this->m_sNewLineString;
 
-    this->SendString(socket, httpResponse.GetData());
+    std::for_each(httpResponse.GetHeaders().begin(), httpResponse.GetHeaders().end(),
+        [this, &httpResponseString] (const std::pair<std::string, std::string> &header)
+            {
+                httpResponseString += header.first;
+                httpResponseString += this->m_sHttpRequestHeaderNameValueSeparator;
+                httpResponseString += header.second;
+                httpResponseString += this->m_sNewLineString;
+            });
+
+    httpResponseString += this->m_sNewLineString;
+    httpResponseString += httpResponse.GetData();
+
+    this->SendString(socket, httpResponseString);
 }
 
 void HttpServer::SendString(int socket, const std::string &str)
@@ -313,4 +339,11 @@ void HttpServer::SendString(int socket, const std::string &str)
 
         sent += ret;
     }
+}
+
+void HttpServer::SendBadRequestResponse(int iSocket)
+{
+    HttpResponse httpResponse;
+    httpResponse.SetStatus(HttpResponseStatus::BAD_REQUEST_400);
+    this->SendResponse(iSocket, httpResponse);
 }
