@@ -6,7 +6,7 @@
 
 HttpResponse::HttpResponse()
 {
-    this->data = "OK";
+    this->m_sData = "OK";
 }
 
 HttpResponse::~HttpResponse()
@@ -14,12 +14,12 @@ HttpResponse::~HttpResponse()
 
 }
 
-std::string HttpResponse::getData()
+std::string HttpResponse::GetData()
 {
-    return this->data;
+    return this->m_sData;
 }
 
-std::string HttpResponse::setData(const std::string &data)
+std::string HttpResponse::SetData(const std::string &data)
 {
-    this->data = data;
+    this->m_sData = data;
 }

@@ -12,26 +12,40 @@ enum HttpRequestMethod
 {
     GET,
     POST,
-    UNKNOWN
+    OPTIONS,
+    HEAD,
+    PUT,
+    DELETE,
+    TRACE,
+    CONNECT
 };
 
 
 class HttpRequest
 {
 public:
-    HttpRequest(std::string httpRequestString);
+    HttpRequest();
     ~HttpRequest();
-    unsigned int getContentLength();
-    std::string getHeaderValue(std::string header);
-    bool isHeaderPresent(const std::string &headerName);
-    void setHttpRequestData(std::string httpRequestDataString);
+    unsigned int GetContentLength();
+    std::string GetHeaderValue(std::string header);
+    void SetRawHttpRequest(std::string httpRequestString);
+    bool IsHeaderPresent(const std::string &headerName);
+    void SetData(std::string data);
+    void Clear();
+    std::string GetData();
 private:
-    static const std::string newLineString;
-    static const std::string httpHeaderNameValueDelimiter;
-    std::map<std::string, std::string> headers;
-    std::string data;
-    HttpRequestMethod method;
-    std::string path;
+    static const std::string m_sNewLineString;
+    static const std::string m_sHttpHeaderNameValueDelimiter;
+    static const std::string m_sContentLengthHeaderName;
+    std::map<std::string, std::string> m_headers;
+    std::string m_sData;
+    std::string m_sHttpVersion;
+    HttpRequestMethod m_method;
+    std::string m_sPath;
+    std::pair<std::string, std::string> SplitHttpHeaderNameValue(const std::string &httpHeader);
+    void SetHttpMethod(HttpRequestMethod method);
+    void SetHttpMethod(const std::string &method);
+    HttpRequestMethod MapHttpRequestMethod(const std::string &method);
 };
 
 

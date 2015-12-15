@@ -10,29 +10,30 @@
 #include "../Extensions/StringExtensions.h"
 #include "HttpRequest.h"
 #include "HttpResponse.h"
+#include "../Exception/HttpException.h"
 
-const std::string HttpServer::newLineString = "\r\n";
-const std::string HttpServer::httpRequestHeadersDataSeparator = "\r\n\r\n";
-const size_t HttpServer::bufferSize = 256;
+const std::string HttpServer::m_sNewLineString = "\r\n";
+const std::string HttpServer::m_sHttpRequestHeadersDataSeparator = "\r\n\r\n";
+const std::size_t HttpServer::m_bufferSize = 256;
 
 HttpServer::HttpServer()
 {
-    this->localAddress.sin_addr.s_addr = htonl(INADDR_ANY);
-    this->localAddress.sin_family = AF_INET;
-    this->bIsRunning = false;
-    this->maxConnectionQueueLength = 1;
-    this->sendTimeout = 1000;
-    this->receiveTimeout = 1000;
+    this->m_localAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+    this->m_localAddress.sin_family = AF_INET;
+    this->m_bIsRunning = false;
+    this->m_iMaxConnectionQueueLength = 1;
+    this->m_iSendTimeout = 1000;
+    this->m_iReceiveTimeout = 1000;
 }
 
-void HttpServer::setPort(unsigned short port)
+void HttpServer::SetPort(unsigned short port)
 {
-    this->localAddress.sin_port = htons(port);
+    this->m_localAddress.sin_port = htons(port);
 }
 
-void HttpServer::setListeningIpAddress(std::string ipAddress)
+void HttpServer::SetListeningIpAddress(std::string ipAddress)
 {
-    if (inet_aton(ipAddress.c_str(), &this->localAddress.sin_addr) == 0)
+    if (inet_aton(ipAddress.c_str(), &this->m_localAddress.sin_addr) == 0)
     {
         //TODO Throw custom exception class
         throw "IP address is invalid.";
@@ -41,47 +42,47 @@ void HttpServer::setListeningIpAddress(std::string ipAddress)
 
 HttpServer::~HttpServer()
 {
-    if (this->isRunning())
+    if (this->IsRunning())
     {
-        this->stop();
+        this->Stop();
     }
 }
 
-void HttpServer::start()
+void HttpServer::Start()
 {
-    if (this->isRunning())
+    if (this->IsRunning())
     {
         //TODO Throw custom exception
         throw "Server already running";
     }
 
-    this->serverThread = std::thread([this]() {
-        this->serverThreadWork();
+    this->m_serverThread = std::thread([this]() {
+        this->ServerThreadWork();
     });
 
-    this->bIsRunning = true;
+    this->m_bIsRunning = true;
 }
 
-void HttpServer::stop()
+void HttpServer::Stop()
 {
-    if (!this->isRunning())
+    if (!this->IsRunning())
     {
         //TODO Throw custom exception
         throw "Server is not running";
     }
 
     //TODO Cancel thread
-    //pthread_cancel(this->serverThread);
+    //pthread_cancel(this->m_serverThread);
 
-    this->bIsRunning = false;
+    this->m_bIsRunning = false;
 }
 
-bool HttpServer::isRunning()
+bool HttpServer::IsRunning()
 {
-    return this->bIsRunning;
+    return this->m_bIsRunning;
 }
 
-void HttpServer::serverThreadWork()
+void HttpServer::ServerThreadWork()
 {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1)
@@ -91,7 +92,7 @@ void HttpServer::serverThreadWork()
     }
 
     struct timeval sendTimeout;
-    sendTimeout.tv_sec = this->sendTimeout;
+    sendTimeout.tv_sec = this->m_iSendTimeout;
     sendTimeout.tv_usec = 0;
 
     if (setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (void*)&sendTimeout, sizeof(sendTimeout)) == -1)
@@ -101,7 +102,7 @@ void HttpServer::serverThreadWork()
     }
 
     struct timeval receiveTimeout;
-    receiveTimeout.tv_sec = this->receiveTimeout;
+    receiveTimeout.tv_sec = this->m_iReceiveTimeout;
     receiveTimeout.tv_usec = 0;
 
     if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (void*)&receiveTimeout, sizeof(receiveTimeout)) == -1)
@@ -123,13 +124,13 @@ void HttpServer::serverThreadWork()
         throw "Error when setting socket reuse port";
     }
 
-    if (bind(sockfd, (struct sockaddr*)&this->localAddress, sizeof(this->localAddress)) != 0)
+    if (bind(sockfd, (struct sockaddr*)&this->m_localAddress, sizeof(this->m_localAddress)) != 0)
     {
         //TODO Throw error
         throw "Error when binding socket";
     }
 
-    if (listen(sockfd, this->maxConnectionQueueLength) != 0)
+    if (listen(sockfd, this->m_iMaxConnectionQueueLength) != 0)
     {
         //TODO Throw error
         throw "Error when switching socket into listening mode";
@@ -151,7 +152,7 @@ void HttpServer::serverThreadWork()
         }
 
         //std::thread clientThread([this, clientsockfd]() {
-            this->clientConnectionThreadWork(clientsockfd);
+        this->ClientConnectionThreadWork(clientsockfd);
         //});
 
         //clientThread.detach();
@@ -160,55 +161,66 @@ void HttpServer::serverThreadWork()
     close(sockfd);
 }
 
-void HttpServer::setMaxConnectionQueueLength(int maxConnectionQueueLength)
+void HttpServer::SetMaxConnectionQueueLength(int maxConnectionQueueLength)
 {
-    this->maxConnectionQueueLength = maxConnectionQueueLength;
+    this->m_iMaxConnectionQueueLength = maxConnectionQueueLength;
 }
 
-void HttpServer::setSendTimeout(int sendTimeout)
+void HttpServer::SetSendTimeout(int sendTimeout)
 {
-    this->sendTimeout = sendTimeout;
+    this->m_iSendTimeout = sendTimeout;
 }
 
-void HttpServer::setReceiveTimeout(int receiveTimeout)
+void HttpServer::SetReceiveTimeout(int receiveTimeout)
 {
-    this->receiveTimeout = receiveTimeout;
+    this->m_iReceiveTimeout = receiveTimeout;
 }
 
-void HttpServer::clientConnectionThreadWork(int clientSocket)
+void HttpServer::ClientConnectionThreadWork(int clientSocket)
 {
     std::string httpRequestString;
     std::string line;
     //Read http headers
     while(true)
     {
-        line = this->readLine(clientSocket);
+        line = this->ReadLine(clientSocket);
         httpRequestString += line;
 
-        if (string_extensions::ends_with(httpRequestString, this->httpRequestHeadersDataSeparator))
+        if (string_extensions::ends_with(httpRequestString, this->m_sHttpRequestHeadersDataSeparator))
         {
             break;
         }
     }
 
-    HttpRequest httpRequest(httpRequestString);
+    HttpRequest httpRequest;
+    try
+    {
+        httpRequest.SetRawHttpRequest(httpRequestString);
+    }
+    catch (exception::http::invalid_http_request)
+    {
+        //TODO Send invalid http request response
+
+        close(clientSocket);
+        return;
+    }
 
     //TODO When content-length is not set send INVALID_REQUEST Http response
-    unsigned int contentLength = httpRequest.getContentLength();
-    std::string httpRequestDataString = this->readString(clientSocket, contentLength);
+    unsigned int contentLength = httpRequest.GetContentLength();
+    std::string httpRequestDataString = this->ReadString(clientSocket, contentLength);
 
-    httpRequest.setHttpRequestData(httpRequestDataString);
+    httpRequest.SetData(httpRequestDataString);
 
-    HttpResponse httpResponse = this->httpRequestHandler(httpRequest);
+    HttpResponse httpResponse = this->m_pHttpRequestHandler(httpRequest);
 
     //Set http headers etc
 
-    this->sendResponse(clientSocket, httpResponse);
+    this->SendResponse(clientSocket, httpResponse);
 
     close(clientSocket);
 }
 
-std::string HttpServer::readLine(int socket)
+std::string HttpServer::ReadLine(int socket)
 {
     std::string line;
     while(true)
@@ -231,7 +243,7 @@ std::string HttpServer::readLine(int socket)
                 break;
         }
 
-        if (string_extensions::ends_with(line, this->httpRequestHeadersDataSeparator))
+        if (string_extensions::ends_with(line, this->m_sHttpRequestHeadersDataSeparator))
         {
             break;
         }
@@ -240,15 +252,15 @@ std::string HttpServer::readLine(int socket)
     return line;
 }
 
-std::string HttpServer::readString(int socket, int length)
+std::string HttpServer::ReadString(int socket, int length)
 {
     ssize_t received = 0;
     std::string str;
 
-    std::array<char, bufferSize> bufferArray;
+    std::array<char, m_bufferSize> bufferArray;
     while (received < length)
     {
-        ssize_t ret = recv(socket, bufferArray.data(), std::min(this->bufferSize - 1, (size_t)length - (size_t)received), 0);
+        ssize_t ret = recv(socket, bufferArray.data(), std::min(this->m_bufferSize - 1, (size_t)length - (size_t)received), 0);
         if (ret == -1)
         {
             if (errno == EWOULDBLOCK)
@@ -260,7 +272,7 @@ std::string HttpServer::readString(int socket, int length)
             break;
         }
 
-        std::string bufferString(bufferArray.data(), (size_t)ret);
+        std::string bufferString(bufferArray.data(), (std::size_t)ret);
         str += bufferString;
         received += ret;
     }
@@ -268,20 +280,20 @@ std::string HttpServer::readString(int socket, int length)
     return str;
 }
 
-void HttpServer::setHttpRequestHandler(
+void HttpServer::SetHttpRequestHandler(
         HttpResponse (*httpRequestHandler)(HttpRequest httpRequest))
 {
-    this->httpRequestHandler = httpRequestHandler;
+    this->m_pHttpRequestHandler = httpRequestHandler;
 }
 
-void HttpServer::sendResponse(int socket, HttpResponse &httpResponse)
+void HttpServer::SendResponse(int socket, HttpResponse &httpResponse)
 {
     //TODO Send HTTP Header
 
-    this->sendString(socket, httpResponse.getData());
+    this->SendString(socket, httpResponse.GetData());
 }
 
-void HttpServer::sendString(int socket, const std::string &str)
+void HttpServer::SendString(int socket, const std::string &str)
 {
     ssize_t sent = 0;
 

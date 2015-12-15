@@ -12,6 +12,7 @@ using namespace std;
 HttpResponse httpRequestHandler(HttpRequest httpRequest)
 {
     HttpResponse httpResponse;
+    httpResponse.SetData(httpRequest.GetData());
     return httpResponse;
 }
 
@@ -34,12 +35,12 @@ int main()
     iptexec.executeCommand( RAW, "pwd" );
 
     HttpServer server;
-    server.setPort(configurationInstance.getServerPort());
-    server.setListeningIpAddress(configurationInstance.getServerIpAddress());
-    server.setHttpRequestHandler(httpRequestHandler);
+    server.SetPort(configurationInstance.getServerPort());
+    server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
+    server.SetHttpRequestHandler(httpRequestHandler);
 
     LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
-    server.start();
+    server.Start();
 
     cout << "Hello, World!" << endl;
     LOG_ACS("Hello World request");
@@ -50,7 +51,7 @@ int main()
         sleep(1);
     }
 
-    server.stop();
+    server.Stop();
 
     return 0;
 }

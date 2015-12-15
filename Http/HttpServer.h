@@ -16,32 +16,32 @@ class HttpServer
 public:
     HttpServer();
     ~HttpServer();
-    void setPort(unsigned short port);
-    void setListeningIpAddress(std::string ipAddress);
-    void start();
-    void stop();
-    bool isRunning();
-    bool bIsRunning;
-    void setMaxConnectionQueueLength(int maxConnectionQueueLength);
-    void setSendTimeout(int sendTimeout);
-    void setReceiveTimeout(int receiveTimeout);
-    void setHttpRequestHandler(HttpResponse (*httpRequestHandler)(HttpRequest httpRequest));
+    void SetPort(unsigned short port);
+    void SetListeningIpAddress(std::string ipAddress);
+    void Start();
+    void Stop();
+    bool IsRunning();
+    void SetMaxConnectionQueueLength(int maxConnectionQueueLength);
+    void SetSendTimeout(int sendTimeout);
+    void SetReceiveTimeout(int receiveTimeout);
+    void SetHttpRequestHandler(HttpResponse (*httpRequestHandler)(HttpRequest httpRequest));
 private:
-    sockaddr_in localAddress;
-    std::thread serverThread;
-    void serverThreadWork();
-    void clientConnectionThreadWork(int clientSocket);
-    int maxConnectionQueueLength;
-    int sendTimeout;
-    int receiveTimeout;
-    std::string readLine(int socket);
-    std::string readString(int socket, int length);
-    void sendResponse(int socket, HttpResponse &httpResponse);
-    void sendString(int socket, const std::string &str);
-    static const std::string newLineString;
-    static const std::string httpRequestHeadersDataSeparator;
-    static const size_t bufferSize;
-    HttpResponse (*httpRequestHandler)(HttpRequest httpRequest);
+    sockaddr_in m_localAddress;
+    std::thread m_serverThread;
+    void ServerThreadWork();
+    void ClientConnectionThreadWork(int clientSocket);
+    int m_iMaxConnectionQueueLength;
+    int m_iSendTimeout;
+    int m_iReceiveTimeout;
+    bool m_bIsRunning;
+    std::string ReadLine(int socket);
+    std::string ReadString(int socket, int length);
+    void SendResponse(int socket, HttpResponse &httpResponse);
+    void SendString(int socket, const std::string &str);
+    static const std::string m_sNewLineString;
+    static const std::string m_sHttpRequestHeadersDataSeparator;
+    static const std::size_t m_bufferSize;
+    HttpResponse (*m_pHttpRequestHandler)(HttpRequest httpRequest);
 };
 
 

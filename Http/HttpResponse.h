@@ -12,10 +12,10 @@ class HttpResponse
 public:
     HttpResponse();
     ~HttpResponse();
-    std::string getData();
-    std::string setData(const std::string &data);
+    std::string GetData();
+    std::string SetData(const std::string &data);
 private:
-    std::string data;
+    std::string m_sData;
 };
 
 
