@@ -5,6 +5,9 @@
 #include "StringExtensions.h"
 
 #include <algorithm>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 #include <stdexcept>
 
 namespace string_extensions
@@ -64,6 +67,13 @@ namespace string_extensions
         std::string lowerStr = str;
         std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
         return lowerStr;
+    }
+
+    std::vector<std::string> split(const std::string &s) {
+        std::vector<std::string> tokens;
+        std::istringstream iss(s);
+        std::copy(std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>(), std::back_inserter(tokens));
+        return tokens;
     }
 }
 

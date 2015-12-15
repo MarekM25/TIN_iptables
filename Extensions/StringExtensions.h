@@ -6,6 +6,7 @@
 #define TIN_IPTABLES_STRINGEXTENSIONS_H
 
 #include <string>
+#include <vector>
 
 namespace string_extensions
 {
@@ -14,6 +15,7 @@ namespace string_extensions
     unsigned short stous(const std::string &s);
     std::string trim( const std::string& sourceString );
     std::string tolower(const std::string &str);
+    std::vector<std::string> split(const std::string &s);
 }
 
 #endif //TIN_IPTABLES_STRINGEXTENSIONS_H
