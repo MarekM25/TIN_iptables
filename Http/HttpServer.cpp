@@ -37,8 +37,7 @@ void HttpServer::SetListeningIpAddress(std::string ipAddress)
 {
     if (inet_aton(ipAddress.c_str(), &this->m_localAddress.sin_addr) == 0)
     {
-        //TODO Throw custom exception class
-        throw "IP address is invalid.";
+        throw exception::http::invalid_ip_address();
     }
 }
 
@@ -54,8 +53,7 @@ void HttpServer::Start()
 {
     if (this->IsRunning())
     {
-        //TODO Throw custom exception
-        throw "Server already running";
+        throw exception::http::http_server_already_running();
     }
 
     this->m_serverThread = std::thread([this]() {
@@ -69,8 +67,7 @@ void HttpServer::Stop()
 {
     if (!this->IsRunning())
     {
-        //TODO Throw custom exception
-        throw "Server is not running";
+        throw exception::http::http_server_not_running();
     }
 
     //TODO Cancel thread
@@ -200,13 +197,11 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
     }
     catch (const exception::http::invalid_http_request &e)
     {
-        //TODO Send invalid http request response
         this->SendBadRequestResponse(clientSocket);
         close(clientSocket);
         return;
     }
 
-    //TODO When content-length is not set send INVALID_REQUEST Http response
     try
     {
         unsigned int contentLength = httpRequest.GetContentLength();
