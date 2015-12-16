@@ -38,3 +38,53 @@ std::string Authorization::generateChallenge()
     std::generate_n( str.begin(), this->m_challangeLength , randchar );
     return str;
 }
+
+
+Json::Value Authorization::loginInit(std::string username,std::string ip)
+{
+    Json::Value response;
+    Configuration &config= Configuration::getInstance();
+    config.initialize("iptables.conf");
+    bool blocked = false;
+    if (blocked)
+    {
+        response["error_code"] = 20;
+        response["error_message"] = "You are not authorized to use this server.";
+        response["challange"] = "";
+    }
+    else
+    {
+        std::string challange = generateChallenge();
+        saveToFile(username, challange);
+        response["error_code"] = 0;
+        response["error_message"] = "OK";
+        response["challange"] = challange;
+    }
+    return response;
+}
+
+
+void Authorization::saveToFile(std::string username, std::string challange)
+{
+
+}
+
+void Authorization::updateInFile(std::string oldChallange, std::string newChallange)
+{
+
+}
+
+void Authorization::removeInFile(std::string challange)
+{
+
+}
+
+Json::Value Authorization::nextChallange(std::string challange)
+{
+
+}
+
+void Authorization::logout(std::string challange)
+{
+    
+}

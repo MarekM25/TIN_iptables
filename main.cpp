@@ -23,7 +23,7 @@ int main()
 {
     LOG("initialized");
 
-    /*
+
      // Example of use jsoncpp
 
     ifstream json_test;
@@ -34,7 +34,20 @@ int main()
     if(reader.parse(json_test, test_value))
 
     std::cout<<test_value["widget"]["window"]["title"].asString();
-     */
+    Json::StyledStreamWriter  writer;
+    Json::FastWriter fastWriter;
+
+    Json::Value value;
+    int b[2];
+    b[0]= 3;
+    b[1] = 34;
+    value["test"] = 5;
+    value["b"]["0"] = b[0];
+    value["b"]["1"] = b[1];
+
+    fastWriter.write(value);
+    cout << value;
+
 
     Configuration &configurationInstance = Configuration::getInstance();
     configurationInstance.initialize("iptables.conf");

@@ -5,18 +5,22 @@
 #ifndef TIN_IPTABLES_AUTH_H
 #define TIN_IPTABLES_AUTH_H
 #include <string>
+#include <json/json.h>
 #include "md5.h"
+#include "../Configuration/Configuration.h"
 class Authorization
 {
     const size_t m_challangeLength = 24;
+    void saveToFile(std::string username, std::string challange);
+    void updateInFile(std::string oldChallange, std::string newChallange);
+    void removeInFile(std::string challange);
     char* strToMd5(std::string toHash);
     std::string generateChallenge();
 
 public:
 
-    std::string loginInit(std::string ipAddress); //JsonResponse będzie zwracany
-    std::string loginRequest(std::string challange);
-
+    Json::Value loginInit(std::string username,std::string ip);
+    Json::Value nextChallange(std::string challange);
     void logout(std::string challange);
 
 };
