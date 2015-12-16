@@ -9,76 +9,17 @@
 
 #include "Logger/Logger.h"
 #include "Authorization/auth.h"
-
+#include "Handler/handler.h"
 
 using namespace std;
 
-HttpResponse httpRequestHandler(HttpRequest httpRequest)
-{
-    HttpResponse httpResponse;
-    Json::Reader reader;
-    Json::FastWriter writer;
-    Json::Value jsonRequest, jsonResponse;
-    if (reader.parse(httpRequest.GetData(),jsonRequest))
-    {
-        Configuration &config= Configuration::getInstance();
-        config.initialize("iptables.conf");
-        if (config.isIPAddressBlocked("192.0.0.1"))
-        {
-            jsonResponse["error_code"] = 20;
-            jsonResponse["error_message"] = "You are not authorized to use this server.";
-            jsonResponse["challange"] = "";
-        }
-        else
-        {
-            IPTablesExecutor iptexec;
-            switch (jsonRequest["command"].asInt())
-            {
-                case LOGIN_INIT:
-                    break;
-                case LOGIN_REQUEST:
-                    break;
-                case LOGOUT:
-                    break;
-                case GET_ALL_RULES:
-                    iptexec.executeCommand( GET_ALL_RULES );
-                    break;
-                case DELETE_RULE:
-
-                    break;
-                case BLOCK_IP:
-
-                    break;
-                case BLOCK_TCP_PORT:
-
-                    break;
-                case BLOCK_UDP_PORT:
-
-                    break;
-                case BLOCK_INCOMING_MAC:
-
-                    break;
-                case RAW:
-
-                    break;
-
-            }
-        }
-    }
-    else
-    {
-        jsonResponse["error_code"] = 10;
-        jsonResponse["error_message"] = "Request was not in JSON format";
-    }
-    writer.write(jsonResponse);
-    httpResponse.SetData(jsonResponse.asString());
-    return httpResponse;
-}
+std::map<std::string,std::string> usernameChallangeMap;
 
 int main()
 {
     LOG("initialized");
-
+    usernameChallangeMap["test"] = "value";
+    cout<< usernameChallangeMap["test"];
      // Example of use jsoncpp
 
     ifstream json_test;
@@ -87,7 +28,7 @@ int main()
     Json::Value test_value;
     Json::Reader reader;
     if(reader.parse(json_test, test_value))
-
+        Handler::httpRequestHandler(test_value);
     std::cout<<test_value["widget"]["window"]["title"].asString();
     Json::StyledStreamWriter  writer;
     Json::FastWriter fastWriter;
@@ -131,11 +72,10 @@ int main()
     iptexec.executeCommand( BLOCK_INCOMING_MAC, "00:0F:EA:91:04:08" );
     iptexec.executeCommand( RAW, "pwd" );
     */
-
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
     server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
-    server.SetHttpRequestHandler(httpRequestHandler);
+//    server.SetHttpRequestHandler(Handler::httpRequestHandler);
 
     LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
     server.Start();
