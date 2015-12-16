@@ -7,3 +7,4 @@
 //TODO Move implementation from headers to .cpp files
 //TODO Validate http request (host header required and properly set, etc.)
 //TODO Send http headers in http response
+//TODO Make very simple server client (python?)
