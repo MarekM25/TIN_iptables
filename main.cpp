@@ -73,7 +73,8 @@ HttpResponse httpRequestHandler(HttpRequestContext httpRequestContext)
         jsonResponse["error_message"] = "Request was not in JSON format";
     }
     writer.write(jsonResponse);
-    httpResponse.SetData(jsonResponse.asString());
+    //httpResponse.SetData(jsonResponse.asString());
+    httpResponse.SetData(httpRequest.GetData());
     return httpResponse;
 }
 
