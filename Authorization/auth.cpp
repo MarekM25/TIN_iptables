@@ -56,22 +56,6 @@ Json::Value Authorization::loginInit(std::string username)
     return response;
 }
 
-
-void Authorization::saveToFile(std::string username, std::string challange)
-{
-    
-}
-
-void Authorization::updateInFile(std::string oldChallange, std::string newChallange)
-{
-
-}
-
-void Authorization::removeInFile(std::string challange)
-{
-
-}
-
 Json::Value Authorization::nextChallange(std::string challange)
 {
 
@@ -82,8 +66,10 @@ void Authorization::logout(std::string challange)
     
 }
 
-Authorization::Authorization() 
+Json::Value Authorization::loginRequest(std::string username,std::string hash, std::string challange)
 {
-    Configuration &config= Configuration::getInstance();
-    m_userPath = config.getUsersFilePath();
+    Configuration &config = Configuration::getInstance();
+    config.initialize("../iptables.conf");
+    std::string password = config.getUserPassword(username);
+    strToMd5()
 }

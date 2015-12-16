@@ -66,43 +66,45 @@ public:
                 Authorization auth;
                 if (jsonRequest["command"].isNull())
                 {
-                    cout << "nie ma command";
+                    jsonResponse["error_code"] = 11;
+                    jsonResponse["error_message"] = "Request was not in valid format";
                 }
-                switch (jsonRequest["command"].asInt())
-                {
-                    case LOGIN_INIT:
-                        jsonRequest = auth.loginInit(jsonRequest["username"].asString());
-                        if (jsonRequest["error_code"]=="0")
-                        {
-                            insertToMap(jsonRequest["challange"].asString(),jsonRequest["username"].asString());
-                        }
-                        break;
-                    case LOGIN_REQUEST:
-                        break;
-                    case LOGOUT:
-                        break;
-                    case GET_ALL_RULES:
-                        iptexec.executeCommand( GET_ALL_RULES );
-                        break;
-                    case DELETE_RULE:
+                else {
+                    switch (jsonRequest["command"].asInt()) {
+                        case LOGIN_INIT:
+                            jsonRequest = auth.loginInit(jsonRequest["username"].asString());
+                            if (jsonRequest["error_code"] == "0") {
+                                insertToMap(jsonRequest["challange"].asString(), jsonRequest["username"].asString());
+                            }
+                            break;
+                        case LOGIN_REQUEST:
 
-                        break;
-                    case BLOCK_IP:
+                            break;
+                        case LOGOUT:
+                            break;
+                        case GET_ALL_RULES:
+                            iptexec.executeCommand(GET_ALL_RULES);
+                            break;
+                        case DELETE_RULE:
 
-                        break;
-                    case BLOCK_TCP_PORT:
+                            break;
+                        case BLOCK_IP:
 
-                        break;
-                    case BLOCK_UDP_PORT:
+                            break;
+                        case BLOCK_TCP_PORT:
 
-                        break;
-                    case BLOCK_INCOMING_MAC:
+                            break;
+                        case BLOCK_UDP_PORT:
 
-                        break;
-                    case RAW:
+                            break;
+                        case BLOCK_INCOMING_MAC:
 
-                        break;
+                            break;
+                        case RAW:
 
+                            break;
+
+                    }
                 }
             }
         }

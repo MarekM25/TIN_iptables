@@ -19,6 +19,7 @@ using namespace std;
 
 int main()
 {
+
     LOG("initialized");
      // Example of use jsoncpp
 
@@ -80,7 +81,7 @@ int main()
         server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
     }
 
-   // server.SetHttpRequestHandler(httpRequestHandler);
+    server.SetHttpRequestHandler(httpRequestHandler);
 
 
     LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
