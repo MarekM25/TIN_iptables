@@ -11,22 +11,15 @@ void Configuration::initialize( string configurationFilePath )
 {
     parseConfigFile( configurationFilePath );
 
-    listenIpAddress = params[ "core/listen_ip" ];
-    listenPort = string_extensions::stous( params[ "core/listen_port" ] );
-    sessionTimeout = string_extensions::stous( params[ "core/session_timeout" ] );
-    transmissionTimeout = string_extensions::stous( params[ "core/transmission_timeout" ] );
-    logPath = params[ "paths/log_path" ];
-    usersFilePath = params[ "paths/users_path" ];
-
-    params.clear();
-
-    this->serverIpAddress = "127.0.0.1";
-    this->serverPort = 12345;
+    parseBlacklistFile();
 }
 
-bool Configuration::parseConfigFile( string& configFile )
+bool Configuration::parseConfigFile( string& configurationFilePath )
 {
-    //ifstream file( configFile.c_str() );
+    map< string, string > params;
+
+    //TODO uncomment after debugging
+    //ifstream file( configurationFilePath.c_str() );
     ifstream file( "../iptables.conf" );
 
     if ( !file )
@@ -39,11 +32,9 @@ bool Configuration::parseConfigFile( string& configFile )
     string key;
     string value;
     string section;
-    unsigned short separatorPos;
 
     while ( getline( file, line ) )
     {
-
         if ( !line.length() ) continue;
         if ( line[ 0 ] == '#' ) continue;
         if ( line[ 0 ] == ';' ) continue;
@@ -54,13 +45,65 @@ bool Configuration::parseConfigFile( string& configFile )
             continue;
         }
 
-        separatorPos = ( unsigned short ) line.find( ' ' );
+        auto index = ( unsigned short ) line.find( ' ' );
 
-        key = string_extensions::trim( line.substr( 0, separatorPos ) );
-        value = string_extensions::trim( line.substr( separatorPos + 1 ) );
+        key = string_extensions::trim( line.substr( 0, index ) );
+        value = string_extensions::trim( line.substr( index + 1 ) );
 
         params[ section + '/' + key ] = value;
     }
+
+    file.close();
+
+    mHostName = params[ "core/host_name" ];
+    mServerIpAddress = params[ "core/server_ip" ];
+    mServerPort = string_extensions::stous( params[ "core/server_port" ] );
+    mSessionTimeout = string_extensions::stous( params[ "core/session_timeout" ] );
+    mTransmissionTimeout = string_extensions::stous( params[ "core/transmission_timeout" ] );
+    mLogPath = params[ "paths/log_path" ];
+    mUsersFilePath = params[ "paths/users_path" ];
+    mBlacklistFilePath = params[ "paths/blacklist_path" ];
+
+    return true;
+}
+
+bool Configuration::parseBlacklistFile()
+{
+    //TODO uncomment after debugging
+    //ifstream file( mBlacklistFilePath.c_str() );
+    ifstream file( "../blacklist.txt" );
+
+    if ( !file )
+    {
+        LOG_ERR( "Cannot open Blacklist file" );
+        return false;
+    }
+
+    string line;
+    string range;
+    string rangeEnd;
+
+    while ( getline( file, line ) )
+    {
+        if ( !line.length() ) continue;
+        if ( line[ 0 ] == '#' ) continue;
+        if ( line[ 0 ] == ';' ) continue;
+
+        auto index = line.find( ' ' );
+
+        if ( index == string::npos )
+        {
+            mBlacklist.push_back( make_pair( line, line ) );
+            continue;
+        }
+
+        range = string_extensions::trim( line.substr( 0, index ) );
+        rangeEnd = string_extensions::trim( line.substr( index + 1 ) );
+
+        mBlacklist.push_back( make_pair( range, rangeEnd ) );
+    }
+
+    file.close();
 
     return true;
 }
@@ -82,42 +125,42 @@ Configuration::Configuration()
 
 }
 
+string Configuration::getHostName()
+{
+    return mHostName;
+}
+
 string Configuration::getServerIpAddress()
 {
-    return this->serverIpAddress;
+    return mServerIpAddress;
 }
 
 unsigned short Configuration::getServerPort()
 {
-    return this->serverPort;
-}
-
-string Configuration::getListenIpAddress()
-{
-    return listenIpAddress;
-}
-
-unsigned short Configuration::getListenPort()
-{
-    return listenPort;
+    return mServerPort;
 }
 
 unsigned short Configuration::getSessionTimeout()
 {
-    return sessionTimeout;
+    return mSessionTimeout;
 }
 
 unsigned short Configuration::getTransmissionTimeout()
 {
-    return transmissionTimeout;
+    return mTransmissionTimeout;
 }
 
 string Configuration::getLogPath()
 {
-    return logPath;
+    return mLogPath;
 }
 
 string Configuration::getUsersFilePath()
 {
-    return usersFilePath;
+    return mUsersFilePath;
+}
+
+string Configuration::getBlacklistFilePath()
+{
+    return mBlacklistFilePath;
 }

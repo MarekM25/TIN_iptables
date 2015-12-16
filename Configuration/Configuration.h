@@ -5,9 +5,11 @@
 #ifndef TIN_IPTABLES_CONFIGURATION_H
 #define TIN_IPTABLES_CONFIGURATION_H
 
+#include <arpa/inet.h>
 #include <string>
 #include <fstream>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -16,33 +18,34 @@ class Configuration
 public:
     static Configuration& getInstance();
     ~Configuration();
-    void initialize(string configurationFilePath);
+    void initialize( string configurationFilePath );
+    //TODO bool isIPAddressBlocked(  );
+
+    string getHostName();
     string getServerIpAddress();
     unsigned short getServerPort();
-
-    string getListenIpAddress();
-    unsigned short getListenPort();
     unsigned short getSessionTimeout();
     unsigned short getTransmissionTimeout();
     string getLogPath();
     string getUsersFilePath();
+    string getBlacklistFilePath();
 
 private:
     Configuration();
-    Configuration( Configuration const& );
-    bool parseConfigFile( string& configFile );
+    //Configuration( Configuration const& );
+    bool parseConfigFile( string& configurationFilePath );
+    bool parseBlacklistFile();
 
-    map< string, string > params;
+    vector< pair< string, string > > mBlacklist;
 
-    string serverIpAddress;
-    unsigned short serverPort;
-
-    string listenIpAddress;
-    unsigned short listenPort;
-    unsigned short sessionTimeout;          // unsigned short -> max ~18h
-    unsigned short transmissionTimeout;
-    string logPath;
-    string usersFilePath;
+    string mHostName;
+    string mServerIpAddress;
+    unsigned short mServerPort;
+    unsigned short mSessionTimeout;          // unsigned short -> max ~18h
+    unsigned short mTransmissionTimeout;
+    string mLogPath;
+    string mUsersFilePath;
+    string mBlacklistFilePath;
 };
 
 

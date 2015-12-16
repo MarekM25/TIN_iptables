@@ -3,6 +3,7 @@
 //
 #include "auth.h"
 #include <functional>
+#include <stdlib.h>
 #include <algorithm>
 
 char* Authorization::strToMd5(std::string toHash)
