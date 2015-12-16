@@ -8,6 +8,7 @@
 #include "md5.h"
 class Authorization
 {
+    const size_t m_challangeLength = 24;
     char* strToMd5(std::string toHash);
     std::string generateChallenge();
 

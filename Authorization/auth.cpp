@@ -2,6 +2,8 @@
 // Created by mmoraczynski on 15.12.15.
 //
 #include "auth.h"
+#include <functional>
+#include <algorithm>
 
 char* Authorization::strToMd5(std::string toHash)
 {
@@ -18,4 +20,21 @@ char* Authorization::strToMd5(std::string toHash)
     }
 
     return out;
+}
+
+
+std::string Authorization::generateChallenge()
+{
+    auto randchar = []() -> char
+    {
+        const char charset[] =
+                "0123456789"
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        "abcdefghijklmnopqrstuvwxyz";
+        const size_t max_index = (sizeof(charset) - 1);
+        return charset[ rand() % max_index ];
+    };
+    std::string str(this->m_challangeLength,0);
+    std::generate_n( str.begin(), this->m_challangeLength , randchar );
+    return str;
 }
