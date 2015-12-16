@@ -21,6 +21,7 @@ public:
     ~Configuration();
     void initialize( string configurationFilePath );
     bool isIPAddressBlocked( const string& ipAddress );
+    bool isServerIpAddressSet();
 
     string getHostName();
     string getServerIpAddress();
@@ -52,6 +53,7 @@ private:
     string mLogPath;
     string mUsersFilePath;
     string mBlacklistFilePath;
+    bool mIsServerIpAddressSet;
 };
 
 

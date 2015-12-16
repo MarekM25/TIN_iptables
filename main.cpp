@@ -145,7 +145,12 @@ int main()
 
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
-    server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
+
+    if (configurationInstance.isServerIpAddressSet())
+    {
+        server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
+    }
+
     server.SetHttpRequestHandler(httpRequestHandler);
 
     LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());

@@ -6,6 +6,7 @@
 #include "Configuration.h"
 #include "../Logger/Logger.h"
 #include "../Extensions/StringExtensions.h"
+#include "../Exception/ConfigurationException.h"
 
 Configuration& Configuration::getInstance()
 {
@@ -16,7 +17,7 @@ Configuration& Configuration::getInstance()
 
 Configuration::Configuration()
 {
-
+    this->mIsServerIpAddressSet = false;
 }
 
 Configuration::~Configuration()
@@ -73,7 +74,16 @@ bool Configuration::parseConfigFile( string& configurationFilePath )
     file.close();
 
     mHostName = params[ "core/host_name" ];
-    mServerIpAddress = params[ "core/server_ip" ];
+    if (params.find( "core/server_ip" ) != params.end())
+    {
+        mServerIpAddress = params[ "core/server_ip" ];
+        mIsServerIpAddressSet = true;
+    }
+    else
+    {
+        mIsServerIpAddressSet = false;
+    }
+
     mServerPort = string_extensions::stous( params[ "core/server_port" ] );
     mSessionTimeout = string_extensions::stous( params[ "core/session_timeout" ] );
     mTransmissionTimeout = string_extensions::stous( params[ "core/transmission_timeout" ] );
@@ -201,6 +211,11 @@ string Configuration::getHostName()
 
 string Configuration::getServerIpAddress()
 {
+    if (!this->isServerIpAddressSet())
+    {
+        throw exception::configuration::config_field_not_set();
+    }
+
     return mServerIpAddress;
 }
 
@@ -237,4 +252,9 @@ string Configuration::getBlacklistFilePath()
 string Configuration::getUserPassword(string username)
 {
     return mUsers[username];
+}
+
+bool Configuration::isServerIpAddressSet()
+{
+    return mIsServerIpAddressSet;
 }
