@@ -188,3 +188,8 @@ std::string HttpRequest::GetData()
 {
     return this->m_sData;
 }
+
+HttpRequestMethod HttpRequest::GetMethod()
+{
+    return this->m_method;
+}

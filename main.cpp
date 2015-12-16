@@ -18,6 +18,13 @@ HttpResponse httpRequestHandler(HttpRequestContext httpRequestContext)
 {
     HttpResponse httpResponse;
     HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
+
+    if (httpRequest.GetMethod() != HttpRequestMethod::POST)
+    {
+        httpResponse.SetStatus(HttpResponseStatus::METHOD_NOT_ALLOWED_405);
+        return httpResponse;
+    }
+
     Json::Reader reader;
     Json::FastWriter writer;
     Json::Value jsonRequest, jsonResponse;
@@ -75,6 +82,7 @@ HttpResponse httpRequestHandler(HttpRequestContext httpRequestContext)
     writer.write(jsonResponse);
     //httpResponse.SetData(jsonResponse.asString());
     httpResponse.SetData(httpRequest.GetData());
+    httpResponse.SetStatus(HttpResponseStatus::OK_200);
     return httpResponse;
 }
 
