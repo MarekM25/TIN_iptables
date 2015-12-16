@@ -214,7 +214,23 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
         httpRequest.SetData("");
     }
 
-    HttpResponse httpResponse = this->m_pHttpRequestHandler(httpRequest);
+    HttpRequestContext httpRequestContext;
+    httpRequestContext.SetHttpRequest(httpRequest);
+    std::string sourceIpAddress;
+    try
+    {
+        sourceIpAddress = this->GetClientIpAddress(clientSocket);
+    }
+    catch (const exception::http::http_server_exception &e)
+    {
+        this->SendInternalServerErrorResponse(clientSocket);
+        close(clientSocket);
+        return;
+    }
+
+    httpRequestContext.SetClientIpAddress(sourceIpAddress);
+
+    HttpResponse httpResponse = this->m_pHttpRequestHandler(httpRequestContext);
     httpResponse.SetStatus(HttpResponseStatus::OK_200);
 
     //Set http headers etc
@@ -284,8 +300,7 @@ std::string HttpServer::ReadString(int socket, int length)
     return str;
 }
 
-void HttpServer::SetHttpRequestHandler(
-        HttpResponse (*httpRequestHandler)(HttpRequest))
+void HttpServer::SetHttpRequestHandler(HttpServerFunctionHandlerPrototype *httpRequestHandler)
 {
     this->m_pHttpRequestHandler = httpRequestHandler;
 }
@@ -340,5 +355,28 @@ void HttpServer::SendBadRequestResponse(int iSocket)
 {
     HttpResponse httpResponse;
     httpResponse.SetStatus(HttpResponseStatus::BAD_REQUEST_400);
+    this->SendResponse(iSocket, httpResponse);
+}
+
+std::string HttpServer::GetClientIpAddress(int iSocket)
+{
+    char buffer[INET_ADDRSTRLEN] = "";
+    struct sockaddr_in client;
+    socklen_t len = sizeof(client);
+
+    if (getpeername(iSocket, (struct sockaddr *)&client, &len) != 0)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    inet_ntop(AF_INET, &client.sin_addr, buffer, sizeof(buffer));
+
+    return std::string(buffer);
+}
+
+void HttpServer::SendInternalServerErrorResponse(int iSocket)
+{
+    HttpResponse httpResponse;
+    httpResponse.SetStatus(HttpResponseStatus::INTERNAL_SERVER_ERROR_500);
     this->SendResponse(iSocket, httpResponse);
 }

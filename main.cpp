@@ -9,13 +9,15 @@
 
 #include "Logger/Logger.h"
 #include "Authorization/auth.h"
+#include "Http/HttpRequestContext.h"
 
 
 using namespace std;
 
-HttpResponse httpRequestHandler(HttpRequest httpRequest)
+HttpResponse httpRequestHandler(HttpRequestContext httpRequestContext)
 {
     HttpResponse httpResponse;
+    HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
     Json::Reader reader;
     Json::FastWriter writer;
     Json::Value jsonRequest, jsonResponse;
