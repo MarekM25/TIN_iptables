@@ -1,6 +1,8 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "json/json.h"
+
 #include "Configuration/Configuration.h"
 #include "Http/HttpServer.h"
 #include "IPTables/IPTablesExecutor.h"
@@ -20,6 +22,19 @@ HttpResponse httpRequestHandler(HttpRequest httpRequest)
 int main()
 {
     LOG("initialized");
+
+    /*
+     // Example of use jsoncpp
+
+    ifstream json_test;
+    json_test.open("test.json", std::ios::in | std::ios::out);
+
+    Json::Value test_value;
+    Json::Reader reader;
+    if(reader.parse(json_test, test_value))
+
+    std::cout<<test_value["widget"]["window"]["title"].asString();
+     */
 
     Configuration &configurationInstance = Configuration::getInstance();
     configurationInstance.initialize("iptables.conf");
