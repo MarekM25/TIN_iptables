@@ -238,9 +238,6 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
     httpRequestContext.SetClientIpAddress(sourceIpAddress);
 
     HttpResponse httpResponse = this->m_pHttpRequestHandler(httpRequestContext);
-    httpResponse.SetStatus(HttpResponseStatus::OK_200);
-
-    //Set http headers etc
 
     this->SendResponse(clientSocket, httpResponse);
 
