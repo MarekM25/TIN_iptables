@@ -39,6 +39,7 @@ private:
     static const std::string m_sNewLineString;
     static const std::string m_sHttpHeaderNameValueDelimiter;
     static const std::string m_sContentLengthHeaderName;
+    static const std::string m_sHostHeaderName;
     std::map<std::string, std::string> m_headers;
     std::string m_sData;
     std::string m_sHttpVersion;

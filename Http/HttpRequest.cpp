@@ -11,6 +11,7 @@
 const std::string HttpRequest::m_sNewLineString = "\r\n";
 const std::string HttpRequest::m_sHttpHeaderNameValueDelimiter = ": ";
 const std::string HttpRequest::m_sContentLengthHeaderName = "Content-Length";
+const std::string HttpRequest::m_sHostHeaderName = "Host";
 
 void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
 {
@@ -72,6 +73,11 @@ void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
         }
 
         currentIndex = newLineIndex + this->m_sNewLineString.length();
+    }
+
+    if (!this->IsHeaderPresent(this->m_sHostHeaderName))
+    {
+        throw exception::http::invalid_http_request();
     }
 
     this->m_sData = httpRequestString.substr(currentIndex);
