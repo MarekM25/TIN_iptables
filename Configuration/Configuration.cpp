@@ -7,6 +7,23 @@
 #include "../Logger/Logger.h"
 #include "../Extensions/StringExtensions.h"
 
+Configuration& Configuration::getInstance()
+{
+    static Configuration instance;
+
+    return instance;
+}
+
+Configuration::Configuration()
+{
+
+}
+
+Configuration::~Configuration()
+{
+
+}
+
 void Configuration::initialize( string configurationFilePath )
 {
     parseConfigFile( configurationFilePath );
@@ -18,9 +35,7 @@ bool Configuration::parseConfigFile( string& configurationFilePath )
 {
     map< string, string > params;
 
-    //TODO uncomment after debugging
-    //ifstream file( configurationFilePath.c_str() );
-    ifstream file( "../iptables.conf" );
+    ifstream file( configurationFilePath );
 
     if ( !file )
     {
@@ -69,9 +84,7 @@ bool Configuration::parseConfigFile( string& configurationFilePath )
 
 bool Configuration::parseBlacklistFile()
 {
-    //TODO uncomment after debugging
-    //ifstream file( mBlacklistFilePath.c_str() );
-    ifstream file( "../blacklist.txt" );
+    ifstream file( mBlacklistFilePath );
 
     if ( !file )
     {
@@ -89,7 +102,7 @@ bool Configuration::parseBlacklistFile()
         if ( line[ 0 ] == '#' ) continue;
         if ( line[ 0 ] == ';' ) continue;
 
-        auto index = line.find( ' ' );
+        auto index = line.find( '-' );
 
         if ( index == string::npos )
         {
@@ -108,21 +121,36 @@ bool Configuration::parseBlacklistFile()
     return true;
 }
 
-Configuration& Configuration::getInstance()
+bool Configuration::isIPAddressBlocked( const string& ipAddress )
 {
-    static Configuration instance;
+    uint32_t inputAddress = IPToUInt( ipAddress );
 
-    return instance;
+    if ( inputAddress == 0 )
+        return true;
+
+    for ( unsigned long i = 0; i < mBlacklist.size(); i++ )
+    {
+        if ( inputAddress >= IPToUInt( mBlacklist.at( i ).first )
+             && inputAddress <= IPToUInt( mBlacklist.at( i ).second ) )
+                    return true;
+    }
+
+    return false;
 }
 
-Configuration::~Configuration()
+uint32_t Configuration::IPToUInt( const string& ipAddress )
 {
+    unsigned int a, b, c, d;
+    uint32_t result = 0;
 
-}
+    if ( sscanf( ipAddress.c_str(), "%d.%d.%d.%d", &a, &b, &c, &d ) != 4 )
+        return 0;
 
-Configuration::Configuration()
-{
-
+    result = a << 24;
+    result |= b << 16;
+    result |= c << 8;
+    result |= d;
+    return result;
 }
 
 string Configuration::getHostName()

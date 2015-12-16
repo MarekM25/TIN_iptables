@@ -19,7 +19,7 @@ public:
     static Configuration& getInstance();
     ~Configuration();
     void initialize( string configurationFilePath );
-    //TODO bool isIPAddressBlocked(  );
+    bool isIPAddressBlocked( const string& ipAddress );
 
     string getHostName();
     string getServerIpAddress();
@@ -35,6 +35,7 @@ private:
     //Configuration( Configuration const& );
     bool parseConfigFile( string& configurationFilePath );
     bool parseBlacklistFile();
+    uint32_t IPToUInt( const string& ipAddress );
 
     vector< pair< string, string > > mBlacklist;
 

@@ -37,8 +37,19 @@ int main()
      */
 
     Configuration &configurationInstance = Configuration::getInstance();
-    configurationInstance.initialize("iptables.conf");
+    configurationInstance.initialize("../iptables.conf");
 
+    /*
+     * example of ip address checking
+     *
+    cout << configurationInstance.isIPAddressBlocked( "192.168.1.101" ) << endl;
+    cout << configurationInstance.isIPAddressBlocked( "190.168.1.101" ) << endl;
+    cout << configurationInstance.isIPAddressBlocked( "88.23.1.115" ) << endl;
+    */
+
+    /*
+     * example of iptables commands
+     *
     IPTablesExecutor iptexec;
     iptexec.executeCommand( GET_ALL_RULES );
     iptexec.executeCommand( DELETE_RULE, 1, INPUT );
@@ -49,6 +60,7 @@ int main()
     iptexec.executeCommand( BLOCK_UDP_PORT, 1234, INPUT );
     iptexec.executeCommand( BLOCK_INCOMING_MAC, "00:0F:EA:91:04:08" );
     iptexec.executeCommand( RAW, "pwd" );
+    */
 
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
