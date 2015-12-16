@@ -16,7 +16,9 @@ enum HttpRequestMethod
     PUT,
     DELETE,
     TRACE,
-    CONNECT
+    CONNECT,
+    LINK,
+    UNLINK,
 };
 
 
