@@ -17,7 +17,6 @@ class Authorization
     std::string generateChallenge();
 
 public:
-    Authorization();
     Json::Value loginInit(std::string username);
     Json::Value nextChallange(std::string challange);
     Json::Value loginRequest(std::string username,std::string hash, std::string challange);

@@ -44,15 +44,20 @@ std::string Authorization::generateChallenge()
 Json::Value Authorization::loginInit(std::string username)
 {
     Json::Value response;
-    //check if exist
+    Configuration &config = Configuration::getInstance();
+    config.initialize("../iptables.conf");
+    if (config.getUserPassword(username)=="") {
         std::string challange = generateChallenge();
         response["error_code"] = 0;
         response["error_message"] = "OK";
         response["challange"] = challange;
-    //if not exist
+    }
+    else
+    {
         response["error_code"] = 21;
         response["error_message"] = "Specified username not exist";
         response["challange"] = "";
+    }
     return response;
 }
 
@@ -68,8 +73,21 @@ void Authorization::logout(std::string challange)
 
 Json::Value Authorization::loginRequest(std::string username,std::string hash, std::string challange)
 {
+    Json::Value response;
     Configuration &config = Configuration::getInstance();
     config.initialize("../iptables.conf");
     std::string password = config.getUserPassword(username);
-    strToMd5()
+    std::string localHash = strToMd5(password + challange);
+    if (localHash.compare(hash))
+    {
+        response["error_code"] = 0;
+        response["error_message"] = "OK";
+        response["challange"] = challange;
+    }
+    else
+    {
+        response["error_code"] = 22;
+        response["error_message"] = "Authentication failed.";
+        response["challange"] = challange;
+    }
 }

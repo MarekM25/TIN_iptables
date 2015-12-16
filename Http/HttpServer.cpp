@@ -237,7 +237,7 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
 
     httpRequestContext.SetClientIpAddress(sourceIpAddress);
 
-    HttpResponse httpResponse = this->m_pHttpRequestHandler(httpRequestContext);
+    HttpResponse httpResponse = this->m_pHttpServerRequestHandlerContextObject->HandleHttpRequest(httpRequestContext);
 
     this->SendResponse(clientSocket, httpResponse);
 
@@ -304,9 +304,9 @@ std::string HttpServer::ReadString(int socket, int length)
     return str;
 }
 
-void HttpServer::SetHttpRequestHandler(HttpServerFunctionHandlerPrototype *httpRequestHandler)
+void HttpServer::SetHttpRequestHandlerContextObject(HttpServerRequestHandlerInterface *pHttpServerRequestHandlerContextObject)
 {
-    this->m_pHttpRequestHandler = httpRequestHandler;
+    this->m_pHttpServerRequestHandlerContextObject = pHttpServerRequestHandlerContextObject;
 }
 
 void HttpServer::SendResponse(int socket, HttpResponse &httpResponse)

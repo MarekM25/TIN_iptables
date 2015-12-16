@@ -12,7 +12,7 @@
 #include "../IPTables/IPTablesExecutor.h"
 #include <unistd.h>
 
-class Handler
+class Handler : public HttpServerRequestHandlerInterface
 {
     std::map<std::string,std::string> m_usernameChallangeMap;
     void updateMap(std::string oldChallange, std::string username,std::string newChallange)
@@ -36,8 +36,11 @@ class Handler
     }
 
 public:
-    HttpResponse httpRequestHandler(HttpRequestContext httpRequestContext)
+    Handler() {}
+    ~Handler() {}
+    HttpResponse HandleHttpRequest(HttpRequestContext httpRequestContext)
     {
+        cout<<"dsaf";
         HttpResponse httpResponse;
         HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
 

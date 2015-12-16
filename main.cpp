@@ -81,8 +81,10 @@ int main()
         server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
     }
 
-    server.SetHttpRequestHandler(httpRequestHandler);
+    Handler httpRequestHandler;
 
+
+    server.SetHttpRequestHandlerContextObject(&httpRequestHandler);
 
     LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
     server.Start();

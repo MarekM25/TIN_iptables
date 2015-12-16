@@ -12,12 +12,17 @@
 #include "HttpRequest.h"
 #include "HttpRequestContext.h"
 
+class HttpServerRequestHandlerInterface
+{
+public:
+    virtual HttpResponse HandleHttpRequest(HttpRequestContext httpRequestContext) = 0;
+};
+
 class HttpServer
 {
 public:
     HttpServer();
     ~HttpServer();
-    typedef HttpResponse HttpServerFunctionHandlerPrototype(HttpRequestContext);
     void SetPort(unsigned short port);
     void SetListeningIpAddress(std::string ipAddress);
     void Start();
@@ -26,7 +31,7 @@ public:
     void SetMaxConnectionQueueLength(int maxConnectionQueueLength);
     void SetSendTimeout(int sendTimeout);
     void SetReceiveTimeout(int receiveTimeout);
-    void SetHttpRequestHandler(HttpServerFunctionHandlerPrototype *httpRequestHandler);
+    void SetHttpRequestHandlerContextObject(HttpServerRequestHandlerInterface *pHttpServerRequestHandlerContextObject);
 private:
     sockaddr_in m_localAddress;
     std::thread m_serverThread;
@@ -46,7 +51,7 @@ private:
     static const std::string m_sHttpContentLengthHttpHeaderName;
     static const std::size_t m_bufferSize;
     static const std::array<std::pair<std::string, std::string>, 3> m_staticHttpResponseHeaders;
-    HttpServerFunctionHandlerPrototype *m_pHttpRequestHandler;
+    HttpServerRequestHandlerInterface *m_pHttpServerRequestHandlerContextObject;
     void SendBadRequestResponse(int iSocket);
     void SendInternalServerErrorResponse(int iSocket);
     void AddStaticHttpResponseHeadersToHttpResponse(HttpResponse &httpResponse);
