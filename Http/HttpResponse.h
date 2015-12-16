@@ -13,7 +13,8 @@ enum HttpResponseStatus
     OK_200,
     BAD_REQUEST_400,
     NOT_FOUND_404,
-    METHOD_NOT_ALLOWED_405
+    METHOD_NOT_ALLOWED_405,
+    INTERNAL_SERVER_ERROR_500,
 };
 
 class HttpResponse
