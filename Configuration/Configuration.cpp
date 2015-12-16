@@ -29,6 +29,8 @@ void Configuration::initialize( string configurationFilePath )
     parseConfigFile( configurationFilePath );
 
     parseBlacklistFile();
+
+    parseUsersFile();
 }
 
 bool Configuration::parseConfigFile( string& configurationFilePath )
@@ -121,6 +123,45 @@ bool Configuration::parseBlacklistFile()
     return true;
 }
 
+bool Configuration::parseUsersFile()
+{
+    ifstream file( mUsersFilePath );
+
+    if ( !file )
+    {
+        LOG_ERR( "Cannot open Users file" );
+        return false;
+    }
+
+    string line;
+    string range;
+    string rangeEnd;
+
+    while ( getline( file, line ) )
+    {
+        if ( !line.length() ) continue;
+        if ( line[ 0 ] == '#' ) continue;
+        if ( line[ 0 ] == ';' ) continue;
+
+        auto index = line.find( ':' );
+
+        if ( index == string::npos )
+        {
+            LOG_ERR("Wrong line in users file");
+            continue;
+        }
+
+        range = string_extensions::trim( line.substr( 0, index ) );
+        rangeEnd = string_extensions::trim( line.substr( index + 1 ) );
+
+        mUsers.insert(make_pair(range, rangeEnd));
+    }
+
+    file.close();
+
+    return true;
+}
+
 bool Configuration::isIPAddressBlocked( const string& ipAddress )
 {
     uint32_t inputAddress = IPToUInt( ipAddress );
@@ -191,4 +232,9 @@ string Configuration::getUsersFilePath()
 string Configuration::getBlacklistFilePath()
 {
     return mBlacklistFilePath;
+}
+
+string Configuration::getUserPassword(string username)
+{
+    return mUsers[username];
 }

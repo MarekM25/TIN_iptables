@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -29,15 +30,19 @@ public:
     string getLogPath();
     string getUsersFilePath();
     string getBlacklistFilePath();
+    string getUserPassword(string username);
 
 private:
     Configuration();
     //Configuration( Configuration const& );
     bool parseConfigFile( string& configurationFilePath );
     bool parseBlacklistFile();
+    bool parseUsersFile();
     uint32_t IPToUInt( const string& ipAddress );
 
     vector< pair< string, string > > mBlacklist;
+
+    unordered_map<string, string> mUsers;
 
     string mHostName;
     string mServerIpAddress;
