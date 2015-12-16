@@ -1,0 +1,6 @@
+//TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
+//TODO Set logging level as exec parameter
+//TODO Remove #define LOGGER_LEVEL_X everywhere
+//TODO Basic RAW_COMMAND filtering
+//TODO Add LOG() LOG_ACS() in key places
+//TODO Parse and handle exec parameters

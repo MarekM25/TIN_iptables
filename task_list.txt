@@ -1,1 +1,0 @@
-Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
