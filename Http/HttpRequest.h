@@ -6,6 +6,9 @@
 #define TIN_IPTABLES_HTTPREQUEST_H
 #include <map>
 #include <string>
+#include <vector>
+#include "HttpHeader.h"
+#include "HttpHeaderCollection.h"
 
 enum HttpRequestMethod
 {
@@ -25,14 +28,13 @@ enum HttpRequestMethod
 class HttpRequest
 {
 public:
-    HttpRequest();
-    ~HttpRequest();
     unsigned int GetContentLength();
-    std::string GetHeaderValue(std::string header);
     void SetRawHttpRequest(std::string httpRequestString);
-    bool IsHeaderPresent(const std::string &headerName);
     void SetData(std::string data);
     HttpRequestMethod GetMethod();
+    HttpHeader GetHeader(std::string sHeaderName);
+    void AddHeader(HttpHeader httpHeader);
+    bool IsHeaderPresent(const std::string &sHeaderName);
     void Clear();
     std::string GetData();
 private:
@@ -40,12 +42,11 @@ private:
     static const std::string m_sHttpHeaderNameValueDelimiter;
     static const std::string m_sContentLengthHeaderName;
     static const std::string m_sHostHeaderName;
-    std::map<std::string, std::string> m_headers;
     std::string m_sData;
     std::string m_sHttpVersion;
     HttpRequestMethod m_method;
     std::string m_sPath;
-    std::pair<std::string, std::string> SplitHttpHeaderNameValue(const std::string &httpHeader);
+    HttpHeaderCollection m_httpHeaderCollection;
     void SetHttpMethod(HttpRequestMethod method);
     void SetHttpMethod(const std::string &method);
     HttpRequestMethod MapHttpRequestMethod(const std::string &method);

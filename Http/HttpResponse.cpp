@@ -14,11 +14,6 @@ HttpResponse::HttpResponse()
     this->SetDefaultHttpVersion();
 }
 
-HttpResponse::~HttpResponse()
-{
-
-}
-
 std::string HttpResponse::GetData()
 {
     return this->m_sData;
@@ -87,18 +82,17 @@ std::string HttpResponse::MapHttpResponseStatusToString(HttpResponseStatus statu
     }
 }
 
-void HttpResponse::SetHeader(const std::string &sHeaderName, const std::string &sHeaderValue)
-{
-    std::string sHeaderNameLowerCase = string_extensions::tolower(sHeaderName);
-    this->m_headers.insert(std::pair<std::string, std::string>(sHeaderNameLowerCase, sHeaderValue));
-}
-
-std::map<std::string, std::string>& HttpResponse::GetHeaders()
-{
-    return this->m_headers;
-}
-
 void HttpResponse::SetDefaultHttpVersion()
 {
     this->SetHttpVersion(this->m_sDefaultHttpVersion);
+}
+
+HttpHeaderCollection &HttpResponse::GetHttpHeaderCollection()
+{
+    return this->m_httpHeaderCollection;
+}
+
+void HttpResponse::AddHeader(HttpHeader httpHeader)
+{
+    this->m_httpHeaderCollection.AddHeader(httpHeader);
 }
