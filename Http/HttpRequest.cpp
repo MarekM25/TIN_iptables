@@ -180,6 +180,14 @@ HttpRequestMethod HttpRequest::MapHttpRequestMethod(const std::string &method)
     {
         return HttpRequestMethod::CONNECT;
     }
+    else if (method == "LINK")
+    {
+        return HttpRequestMethod::LINK;
+    }
+    else if (method == "UNLINK")
+    {
+        return HttpRequestMethod::UNLINK;
+    }
 
     throw exception::http::invalid_http_method();
 }
@@ -187,4 +195,9 @@ HttpRequestMethod HttpRequest::MapHttpRequestMethod(const std::string &method)
 std::string HttpRequest::GetData()
 {
     return this->m_sData;
+}
+
+HttpRequestMethod HttpRequest::GetMethod()
+{
+    return this->m_method;
 }

@@ -17,7 +17,6 @@
 using namespace std;
 
 
-
 int main()
 {
     LOG("initialized");
@@ -75,9 +74,14 @@ int main()
     */
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
-    server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
-    Handler handler;
-    server.SetHttpRequestHandler(&handler.httpRequestHandler);
+
+    if (configurationInstance.isServerIpAddressSet())
+    {
+        server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
+    }
+
+   // server.SetHttpRequestHandler(httpRequestHandler);
+
 
     LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
     server.Start();

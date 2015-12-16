@@ -6,6 +6,7 @@
 #include "Configuration.h"
 #include "../Logger/Logger.h"
 #include "../Extensions/StringExtensions.h"
+#include "../Exception/ConfigurationException.h"
 
 Configuration& Configuration::getInstance()
 {
@@ -16,7 +17,7 @@ Configuration& Configuration::getInstance()
 
 Configuration::Configuration()
 {
-
+    this->mIsServerIpAddressSet = false;
 }
 
 Configuration::~Configuration()
@@ -29,6 +30,8 @@ void Configuration::initialize( string configurationFilePath )
     parseConfigFile( configurationFilePath );
 
     parseBlacklistFile();
+
+    parseUsersFile();
 }
 
 bool Configuration::parseConfigFile( string& configurationFilePath )
@@ -71,7 +74,16 @@ bool Configuration::parseConfigFile( string& configurationFilePath )
     file.close();
 
     mHostName = params[ "core/host_name" ];
-    mServerIpAddress = params[ "core/server_ip" ];
+    if (params.find( "core/server_ip" ) != params.end())
+    {
+        mServerIpAddress = params[ "core/server_ip" ];
+        mIsServerIpAddressSet = true;
+    }
+    else
+    {
+        mIsServerIpAddressSet = false;
+    }
+
     mServerPort = string_extensions::stous( params[ "core/server_port" ] );
     mSessionTimeout = string_extensions::stous( params[ "core/session_timeout" ] );
     mTransmissionTimeout = string_extensions::stous( params[ "core/transmission_timeout" ] );
@@ -121,6 +133,45 @@ bool Configuration::parseBlacklistFile()
     return true;
 }
 
+bool Configuration::parseUsersFile()
+{
+    ifstream file( mUsersFilePath );
+
+    if ( !file )
+    {
+        LOG_ERR( "Cannot open Users file" );
+        return false;
+    }
+
+    string line;
+    string range;
+    string rangeEnd;
+
+    while ( getline( file, line ) )
+    {
+        if ( !line.length() ) continue;
+        if ( line[ 0 ] == '#' ) continue;
+        if ( line[ 0 ] == ';' ) continue;
+
+        auto index = line.find( ':' );
+
+        if ( index == string::npos )
+        {
+            LOG_ERR("Wrong line in users file");
+            continue;
+        }
+
+        range = string_extensions::trim( line.substr( 0, index ) );
+        rangeEnd = string_extensions::trim( line.substr( index + 1 ) );
+
+        mUsers.insert(make_pair(range, rangeEnd));
+    }
+
+    file.close();
+
+    return true;
+}
+
 bool Configuration::isIPAddressBlocked( const string& ipAddress )
 {
     uint32_t inputAddress = IPToUInt( ipAddress );
@@ -160,6 +211,11 @@ string Configuration::getHostName()
 
 string Configuration::getServerIpAddress()
 {
+    if (!this->isServerIpAddressSet())
+    {
+        throw exception::configuration::config_field_not_set();
+    }
+
     return mServerIpAddress;
 }
 
@@ -191,4 +247,14 @@ string Configuration::getUsersFilePath()
 string Configuration::getBlacklistFilePath()
 {
     return mBlacklistFilePath;
+}
+
+string Configuration::getUserPassword(string username)
+{
+    return mUsers[username];
+}
+
+bool Configuration::isServerIpAddressSet()
+{
+    return mIsServerIpAddressSet;
 }

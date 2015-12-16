@@ -40,6 +40,13 @@ public:
     {
         HttpResponse httpResponse;
         HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
+
+        if (httpRequest.GetMethod() != HttpRequestMethod::POST)
+        {
+            httpResponse.SetStatus(HttpResponseStatus::METHOD_NOT_ALLOWED_405);
+            return httpResponse;
+        }
+
         Json::Reader reader;
         Json::FastWriter writer;
         Json::Value jsonRequest, jsonResponse;
@@ -105,7 +112,8 @@ public:
             jsonResponse["error_message"] = "Request was not in JSON format";
         }
         writer.write(jsonResponse);
-        httpResponse.SetData(jsonResponse.asString());
+        httpResponse.SetData(httpRequest.GetData());
+        httpResponse.SetStatus(HttpResponseStatus::OK_200);
         return httpResponse;
     }
 

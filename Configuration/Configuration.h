@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -20,6 +21,7 @@ public:
     ~Configuration();
     void initialize( string configurationFilePath );
     bool isIPAddressBlocked( const string& ipAddress );
+    bool isServerIpAddressSet();
 
     string getHostName();
     string getServerIpAddress();
@@ -29,15 +31,19 @@ public:
     string getLogPath();
     string getUsersFilePath();
     string getBlacklistFilePath();
+    string getUserPassword(string username);
 
 private:
     Configuration();
     //Configuration( Configuration const& );
     bool parseConfigFile( string& configurationFilePath );
     bool parseBlacklistFile();
+    bool parseUsersFile();
     uint32_t IPToUInt( const string& ipAddress );
 
     vector< pair< string, string > > mBlacklist;
+
+    unordered_map<string, string> mUsers;
 
     string mHostName;
     string mServerIpAddress;
@@ -47,6 +53,7 @@ private:
     string mLogPath;
     string mUsersFilePath;
     string mBlacklistFilePath;
+    bool mIsServerIpAddressSet;
 };
 
 

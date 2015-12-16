@@ -16,7 +16,14 @@
 const std::string HttpServer::m_sNewLineString = "\r\n";
 const std::string HttpServer::m_sHttpRequestHeadersDataSeparator = "\r\n\r\n";
 const std::string HttpServer::m_sHttpRequestHeaderNameValueSeparator = ": ";
+const std::string HttpServer::m_sHttpContentLengthHttpHeaderName = "Content-Length";
 const std::size_t HttpServer::m_bufferSize = 256;
+const std::array<std::pair<std::string, std::string>, 3> HttpServer::m_staticHttpResponseHeaders =
+        {
+                std::pair<std::string, std::string>("Server", "IpTablesServer/1.0"),
+                std::pair<std::string, std::string>("Connection", "close"),
+                std::pair<std::string, std::string>("Content-Type", "application/json"),
+        };
 
 HttpServer::HttpServer()
 {
@@ -231,9 +238,6 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
     httpRequestContext.SetClientIpAddress(sourceIpAddress);
 
     HttpResponse httpResponse = this->m_pHttpRequestHandler(httpRequestContext);
-    httpResponse.SetStatus(HttpResponseStatus::OK_200);
-
-    //Set http headers etc
 
     this->SendResponse(clientSocket, httpResponse);
 
@@ -307,6 +311,9 @@ void HttpServer::SetHttpRequestHandler(HttpServerFunctionHandlerPrototype *httpR
 
 void HttpServer::SendResponse(int socket, HttpResponse &httpResponse)
 {
+    this->AddStaticHttpResponseHeadersToHttpResponse(httpResponse);
+    this->SetHttpResponseContentLengthHeader(httpResponse);
+
     std::string httpResponseString = httpResponse.GetHttpVersion();
     httpResponseString += " ";
     httpResponseString += std::to_string(httpResponse.MapHttpResponseStatusToInt(httpResponse.GetStatus()));
@@ -379,4 +386,20 @@ void HttpServer::SendInternalServerErrorResponse(int iSocket)
     HttpResponse httpResponse;
     httpResponse.SetStatus(HttpResponseStatus::INTERNAL_SERVER_ERROR_500);
     this->SendResponse(iSocket, httpResponse);
+}
+
+void HttpServer::AddStaticHttpResponseHeadersToHttpResponse(HttpResponse &httpResponse)
+{
+    std::for_each(this->m_staticHttpResponseHeaders.begin(), this->m_staticHttpResponseHeaders.end(),
+        [this, &httpResponse] (const std::pair<std::string, std::string> &header)
+        {
+            httpResponse.SetHeader(header.first, header.second);
+        });
+}
+
+void HttpServer::SetHttpResponseContentLengthHeader(HttpResponse &httpResponse)
+{
+    unsigned long dataLength = httpResponse.GetData().length();
+    std::string contentLengthHeaderValue = std::to_string(dataLength);
+    httpResponse.SetHeader(this->m_sHttpContentLengthHttpHeaderName, contentLengthHeaderValue);
 }

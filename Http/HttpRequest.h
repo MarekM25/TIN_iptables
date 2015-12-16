@@ -16,7 +16,9 @@ enum HttpRequestMethod
     PUT,
     DELETE,
     TRACE,
-    CONNECT
+    CONNECT,
+    LINK,
+    UNLINK,
 };
 
 
@@ -30,6 +32,7 @@ public:
     void SetRawHttpRequest(std::string httpRequestString);
     bool IsHeaderPresent(const std::string &headerName);
     void SetData(std::string data);
+    HttpRequestMethod GetMethod();
     void Clear();
     std::string GetData();
 private:
@@ -38,7 +41,7 @@ private:
     static const std::string m_sContentLengthHeaderName;
     std::map<std::string, std::string> m_headers;
     std::string m_sData;
-                    std::string m_sHttpVersion;
+    std::string m_sHttpVersion;
     HttpRequestMethod m_method;
     std::string m_sPath;
     std::pair<std::string, std::string> SplitHttpHeaderNameValue(const std::string &httpHeader);
