@@ -14,17 +14,36 @@
 
 class Handler
 {
-    std::map<std::string,std::string> usernameChallangeMap;
+    std::map<std::string,std::string> m_usernameChallangeMap;
+    void updateMap(std::string oldChallange, std::string username,std::string newChallange)
+    {
+        std::map<std::string,std::string>::iterator it = m_usernameChallangeMap.find(oldChallange);
+        if (it != m_usernameChallangeMap.end())
+            m_usernameChallangeMap.erase(it);
+        m_usernameChallangeMap.insert(std::pair<std::string,std::string>(newChallange,username));
+    }
+
+    void insertToMap(std::string challange, std::string username)
+    {
+        m_usernameChallangeMap.insert(std::pair<std::string,std::string>(challange,username));
+    }
+
+    void removeFromMap(std::string challange)
+    {
+        std::map<std::string,std::string>::iterator it = m_usernameChallangeMap.find(challange);
+        if (it != m_usernameChallangeMap.end())
+            m_usernameChallangeMap.erase(it);
+    }
+
 public:
-    static HttpResponse httpRequestHandler(/*HttpRequest httpRequest,*/Json::Value testJson)
+    HttpResponse httpRequestHandler(HttpRequestContext httpRequestContext)
     {
         HttpResponse httpResponse;
+        HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
         Json::Reader reader;
         Json::FastWriter writer;
         Json::Value jsonRequest, jsonResponse;
-        jsonRequest = testJson;
-        cout << jsonRequest;
-        if (/*reader.parse(httpRequest.GetData(),jsonRequest))*/true)
+        if (reader.parse(httpRequest.GetData(),jsonRequest))
         {
             Configuration &config= Configuration::getInstance();
             config.initialize("iptables.conf");
@@ -37,10 +56,19 @@ public:
             else
             {
                 IPTablesExecutor iptexec;
+                Authorization auth;
+                if (jsonRequest["command"].isNull())
+                {
+                    cout << "nie ma command";
+                }
                 switch (jsonRequest["command"].asInt())
                 {
                     case LOGIN_INIT:
-
+                        jsonRequest = auth.loginInit(jsonRequest["username"].asString());
+                        if (jsonRequest["error_code"]=="0")
+                        {
+                            insertToMap(jsonRequest["challange"].asString(),jsonRequest["username"].asString());
+                        }
                         break;
                     case LOGIN_REQUEST:
                         break;

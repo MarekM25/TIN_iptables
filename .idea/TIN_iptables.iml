@@ -8,25 +8,27 @@
       <sourceFolder url="file://$MODULE_DIR$/Logger/Log.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Logger/Logger.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Logger/Logger.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequestContext.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequestContext.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Configuration/Configuration.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Configuration/Configuration.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/IPTables/IPTablesExecutor.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/IPTables/IPTablesExecutor.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Authorization/md5.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Authorization/md5.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Authorization/auth.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Authorization/auth.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/IPTables/IPTablesExecutor.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/IPTables/IPTablesExecutor.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/3rdParty/jsoncpp/jsoncpp.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.cpp" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">

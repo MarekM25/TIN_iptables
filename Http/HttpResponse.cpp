@@ -51,6 +51,8 @@ int HttpResponse::MapHttpResponseStatusToInt(HttpResponseStatus status)
             return 404;
         case HttpResponseStatus::METHOD_NOT_ALLOWED_405:
             return 405;
+        case HttpResponseStatus::INTERNAL_SERVER_ERROR_500:
+            return 500;
         default:
             throw exception::http::unknown_http_response_status();
     }
@@ -78,6 +80,8 @@ std::string HttpResponse::MapHttpResponseStatusToString(HttpResponseStatus statu
             return "Not Found";
         case HttpResponseStatus::METHOD_NOT_ALLOWED_405:
             return "Method Not Allowed";
+        case HttpResponseStatus::INTERNAL_SERVER_ERROR_500:
+            return "Internal Server Error";
         default:
             throw exception::http::unknown_http_response_status();
     }

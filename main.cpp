@@ -11,15 +11,16 @@
 #include "Authorization/auth.h"
 #include "Handler/handler.h"
 
+#include "Http/HttpRequestContext.h"
+
+
 using namespace std;
 
-std::map<std::string,std::string> usernameChallangeMap;
+
 
 int main()
 {
     LOG("initialized");
-    usernameChallangeMap["test"] = "value";
-    cout<< usernameChallangeMap["test"];
      // Example of use jsoncpp
 
     ifstream json_test;
@@ -28,7 +29,7 @@ int main()
     Json::Value test_value;
     Json::Reader reader;
     if(reader.parse(json_test, test_value))
-        Handler::httpRequestHandler(test_value);
+
     std::cout<<test_value["widget"]["window"]["title"].asString();
     Json::StyledStreamWriter  writer;
     Json::FastWriter fastWriter;
@@ -75,7 +76,8 @@ int main()
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
     server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
-//    server.SetHttpRequestHandler(Handler::httpRequestHandler);
+    Handler handler;
+    server.SetHttpRequestHandler(&handler.httpRequestHandler);
 
     LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
     server.Start();

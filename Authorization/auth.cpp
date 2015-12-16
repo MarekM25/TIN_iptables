@@ -41,25 +41,18 @@ std::string Authorization::generateChallenge()
 }
 
 
-Json::Value Authorization::loginInit(std::string username,std::string ip)
+Json::Value Authorization::loginInit(std::string username)
 {
     Json::Value response;
-    Configuration &config= Configuration::getInstance();
-    config.initialize("iptables.conf");
-    if (config.isIPAddressBlocked(ip))
-    {
-        response["error_code"] = 20;
-        response["error_message"] = "You are not authorized to use this server.";
-        response["challange"] = "";
-    }
-    else
-    {
+    //check if exist
         std::string challange = generateChallenge();
-        saveToFile(username, challange);
         response["error_code"] = 0;
         response["error_message"] = "OK";
         response["challange"] = challange;
-    }
+    //if not exist
+        response["error_code"] = 21;
+        response["error_message"] = "Specified username not exist";
+        response["challange"] = "";
     return response;
 }
 

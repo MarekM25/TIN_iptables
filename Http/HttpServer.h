@@ -10,12 +10,14 @@
 #include <netinet/in.h>
 #include "HttpResponse.h"
 #include "HttpRequest.h"
+#include "HttpRequestContext.h"
 
 class HttpServer
 {
 public:
     HttpServer();
     ~HttpServer();
+    typedef HttpResponse HttpServerFunctionHandlerPrototype(HttpRequestContext);
     void SetPort(unsigned short port);
     void SetListeningIpAddress(std::string ipAddress);
     void Start();
@@ -24,7 +26,7 @@ public:
     void SetMaxConnectionQueueLength(int maxConnectionQueueLength);
     void SetSendTimeout(int sendTimeout);
     void SetReceiveTimeout(int receiveTimeout);
-    void SetHttpRequestHandler(HttpResponse (*httpRequestHandler)(HttpRequest));
+    void SetHttpRequestHandler(HttpServerFunctionHandlerPrototype *httpRequestHandler);
 private:
     sockaddr_in m_localAddress;
     std::thread m_serverThread;
@@ -42,8 +44,10 @@ private:
     static const std::string m_sHttpRequestHeadersDataSeparator;
     static const std::string m_sHttpRequestHeaderNameValueSeparator;
     static const std::size_t m_bufferSize;
-    HttpResponse (*m_pHttpRequestHandler)(HttpRequest httpRequest);
+    HttpServerFunctionHandlerPrototype *m_pHttpRequestHandler;
     void SendBadRequestResponse(int iSocket);
+    void SendInternalServerErrorResponse(int iSocket);
+    std::string GetClientIpAddress(int iSocket);
 };
 
 

@@ -21,7 +21,7 @@ class Authorization
 
 public:
     Authorization();
-    Json::Value loginInit(std::string username,std::string ip);
+    Json::Value loginInit(std::string username);
     Json::Value nextChallange(std::string challange);
     void logout(std::string challange);
 
