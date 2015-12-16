@@ -10,19 +10,74 @@
 #include "Logger/Logger.h"
 #include "Authorization/auth.h"
 
+
 using namespace std;
 
 HttpResponse httpRequestHandler(HttpRequest httpRequest)
 {
     HttpResponse httpResponse;
-    httpResponse.SetData(httpRequest.GetData());
+    Json::Reader reader;
+    Json::FastWriter writer;
+    Json::Value jsonRequest, jsonResponse;
+    if (reader.parse(httpRequest.GetData(),jsonRequest))
+    {
+        Configuration &config= Configuration::getInstance();
+        config.initialize("iptables.conf");
+        if (config.isIPAddressBlocked("192.0.0.1"))
+        {
+            jsonResponse["error_code"] = 20;
+            jsonResponse["error_message"] = "You are not authorized to use this server.";
+            jsonResponse["challange"] = "";
+        }
+        else
+        {
+            IPTablesExecutor iptexec;
+            switch (jsonRequest["command"].asInt())
+            {
+                case LOGIN_INIT:
+                    break;
+                case LOGIN_REQUEST:
+                    break;
+                case LOGOUT:
+                    break;
+                case GET_ALL_RULES:
+                    iptexec.executeCommand( GET_ALL_RULES );
+                    break;
+                case DELETE_RULE:
+
+                    break;
+                case BLOCK_IP:
+
+                    break;
+                case BLOCK_TCP_PORT:
+
+                    break;
+                case BLOCK_UDP_PORT:
+
+                    break;
+                case BLOCK_INCOMING_MAC:
+
+                    break;
+                case RAW:
+
+                    break;
+
+            }
+        }
+    }
+    else
+    {
+        jsonResponse["error_code"] = 10;
+        jsonResponse["error_message"] = "Request was not in JSON format";
+    }
+    writer.write(jsonResponse);
+    httpResponse.SetData(jsonResponse.asString());
     return httpResponse;
 }
 
 int main()
 {
     LOG("initialized");
-
 
      // Example of use jsoncpp
 
@@ -39,11 +94,13 @@ int main()
 
     Json::Value value;
     int b[2];
+    Json::Value arrayTest(Json::arrayValue);
     b[0]= 3;
     b[1] = 34;
     value["test"] = 5;
-    value["b"]["0"] = b[0];
-    value["b"]["1"] = b[1];
+    arrayTest.append(4);
+    arrayTest.append(5);
+    value["x"] =arrayTest;
 
     fastWriter.write(value);
     cout << value;

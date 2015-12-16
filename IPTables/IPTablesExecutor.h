@@ -11,6 +11,9 @@
 
 enum commandType
 {
+    LOGIN_INIT,
+    LOGIN_REQUEST,
+    LOGOUT,
     GET_ALL_RULES,      // no params
     DELETE_RULE,        // param: unsigned short: line_number
     BLOCK_IP,           // param: string        : incoming_ip_address
