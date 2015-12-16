@@ -16,6 +16,7 @@ namespace exception
         class http_server_not_running : http_server_exception { };
         class http_server_already_running : http_server_exception { };
         class http_header_not_present : http_exception { };
+        class http_header_already_present : http_exception { };
         class invalid_ip_address : std::exception { };
         class invalid_http_request : http_exception { };
         class invalid_http_header : invalid_http_request { };

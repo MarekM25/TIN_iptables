@@ -50,7 +50,7 @@ private:
     static const std::string m_sHttpRequestHeaderNameValueSeparator;
     static const std::string m_sHttpContentLengthHttpHeaderName;
     static const std::size_t m_bufferSize;
-    static const std::array<std::pair<std::string, std::string>, 3> m_staticHttpResponseHeaders;
+    static std::vector<HttpHeader> m_staticHttpResponseHeaders;
     HttpServerRequestHandlerInterface *m_pHttpServerRequestHandlerContextObject;
     void SendBadRequestResponse(int iSocket);
     void SendInternalServerErrorResponse(int iSocket);

@@ -56,20 +56,18 @@ void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
             break;
         }
 
-        std::string httpHeader = httpRequestString.substr(currentIndex, newLineIndex - currentIndex);
-        if (!httpHeader.empty())
+        std::string httpHeaderString = httpRequestString.substr(currentIndex, newLineIndex - currentIndex);
+        if (!httpHeaderString.empty())
         {
-            std::pair<std::string, std::string> httpHeaderNameValue;
             try
             {
-                httpHeaderNameValue = this->SplitHttpHeaderNameValue(httpHeader);
+                HttpHeader httpHeader(httpHeaderString);
+                this->AddHeader(httpHeader);
             }
             catch (const exception::http::invalid_http_header &e)
             {
                 throw exception::http::invalid_http_request();
             }
-
-            this->m_headers.insert(std::pair<std::string, std::string>(httpHeaderNameValue.first, httpHeaderNameValue.second));
         }
 
         currentIndex = newLineIndex + this->m_sNewLineString.length();
@@ -85,61 +83,19 @@ void HttpRequest::SetRawHttpRequest(std::string httpRequestString)
 
 void HttpRequest::Clear()
 {
-    this->m_headers = std::map<std::string, std::string>();
+    this->m_httpHeaderCollection.ClearCollection();
     this->m_sData = "";
-}
-
-HttpRequest::HttpRequest()
-{
-
-}
-
-HttpRequest::~HttpRequest()
-{
-
 }
 
 unsigned int HttpRequest::GetContentLength()
 {
-    std::string contentLengthHeaderValue = this->GetHeaderValue(this->m_sContentLengthHeaderName);
+    std::string contentLengthHeaderValue = this->GetHeader(this->m_sContentLengthHeaderName).GetHeaderValue();
     return string_extensions::stoui(contentLengthHeaderValue);
-}
-
-std::string HttpRequest::GetHeaderValue(std::string header)
-{
-    std::string headerLowerCase = string_extensions::tolower(header);
-    if (!this->IsHeaderPresent(headerLowerCase))
-    {
-        throw exception::http::http_header_not_present();
-    }
-
-    return this->m_headers[headerLowerCase];
 }
 
 void HttpRequest::SetData(std::string data)
 {
     this->m_sData = data;
-}
-
-bool HttpRequest::IsHeaderPresent(const std::string &headerName)
-{
-    std::string headerNameLowerCase = string_extensions::tolower(headerName);
-    return this->m_headers.count(headerNameLowerCase) > 0;
-}
-
-std::pair<std::string, std::string> HttpRequest::SplitHttpHeaderNameValue(const std::string &httpHeader)
-{
-    std::size_t headerDelimiterIndex = httpHeader.find(this->m_sHttpHeaderNameValueDelimiter);
-    if (headerDelimiterIndex == std::string::npos || headerDelimiterIndex == 1)
-    {
-        throw exception::http::invalid_http_header();
-    }
-
-    std::string httpHeaderName = httpHeader.substr(0, headerDelimiterIndex);
-    std::string httpHeaderValue = httpHeader.substr(headerDelimiterIndex + this->m_sHttpHeaderNameValueDelimiter.length());
-    httpHeaderName = string_extensions::tolower(httpHeaderName);
-
-    return std::pair<std::string, std::string>(httpHeaderName, httpHeaderValue);
 }
 
 void HttpRequest::SetHttpMethod(HttpRequestMethod method)
@@ -206,4 +162,19 @@ std::string HttpRequest::GetData()
 HttpRequestMethod HttpRequest::GetMethod()
 {
     return this->m_method;
+}
+
+HttpHeader HttpRequest::GetHeader(std::string sHeaderName)
+{
+    return this->m_httpHeaderCollection.GetHeader(sHeaderName);
+}
+
+void HttpRequest::AddHeader(HttpHeader httpHeader)
+{
+    this->m_httpHeaderCollection.AddHeader(httpHeader);
+}
+
+bool HttpRequest::IsHeaderPresent(const std::string &sHeaderName)
+{
+    return this->m_httpHeaderCollection.IsHeaderPresent(sHeaderName);
 }

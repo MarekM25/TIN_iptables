@@ -7,6 +7,7 @@
 
 #include <string>
 #include <map>
+#include "HttpHeaderCollection.h"
 
 enum HttpResponseStatus
 {
@@ -21,7 +22,6 @@ class HttpResponse
 {
 public:
     HttpResponse();
-    ~HttpResponse();
     std::string GetData();
     void SetData(const std::string &data);
     void SetStatus(HttpResponseStatus status);
@@ -30,13 +30,13 @@ public:
     HttpResponseStatus GetStatus();
     static int MapHttpResponseStatusToInt(HttpResponseStatus status);
     static std::string MapHttpResponseStatusToString(HttpResponseStatus status);
-    void SetHeader(const std::string &sHeaderName, const std::string &sHeaderValue);
     void SetDefaultHttpVersion();
-    std::map<std::string, std::string>& GetHeaders();
+    HttpHeaderCollection& GetHttpHeaderCollection();
+    void AddHeader(HttpHeader httpHeader);
 private:
     std::string m_sData;
     std::string m_sHttpVersion;
-    std::map<std::string, std::string> m_headers;
+    HttpHeaderCollection m_httpHeaderCollection;
     static const std::string m_sDefaultHttpVersion;
     HttpResponseStatus m_status;
 };

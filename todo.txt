@@ -1,10 +1,16 @@
+/* CRITICAL */
+//TODO Handler
+//TODO Validate http request (host header required and properly set, etc.)
+//TODO Parse and handle exec parameters
+
+/* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
+//TODO Add LOG() LOG_ACS() in key places
+//TODO Make very simple server client (python?)
+//TODO Basic RAW_COMMAND filtering
+
+/* MEDIUM */
 //TODO Set logging level as exec parameter
 //TODO Remove #define LOGGER_LEVEL_X everywhere
-//TODO Basic RAW_COMMAND filtering
-//TODO Add LOG() LOG_ACS() in key places
-//TODO Parse and handle exec parameters
+//TODO Some fixes in logger
 //TODO Move implementation from headers to .cpp files
-//TODO Validate http request (host header required and properly set, etc.)
-//TODO Make very simple server client (python?)
-//TODO Validate ip and path in HttpRequestHandler
