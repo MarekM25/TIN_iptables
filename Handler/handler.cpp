@@ -11,12 +11,12 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
     if (httpRequest.GetMethod() != HttpRequestMethod::POST)
     {
-        httpResponse.SetStatus(HttpResponseStatus::METHOD_NOT_ALLOWED_405);
+        httpResponse.SetStatus(HttpResponseStatus::METHOD_NOT_ALLOWED);
         return httpResponse;
     }
     if (httpRequest.GetPath() != this->m_sRequiredPathHttpHeaderValue)
     {
-        httpResponse.SetStatus(HttpResponseStatus::NOT_FOUND_404);
+        httpResponse.SetStatus(HttpResponseStatus::NOT_FOUND);
         return httpResponse;
     }
 
@@ -29,7 +29,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         jsonResponse["error_message"] = "Request was not in JSON format";
         jsonResponse["challenge"] = "";
         httpResponse.SetData(jsonResponse.toStyledString());
-        httpResponse.SetStatus(HttpResponseStatus::OK_200);
+        httpResponse.SetStatus(HttpResponseStatus::OK);
         return httpResponse;
     }
     Configuration &config= Configuration::getInstance();
@@ -40,7 +40,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
             jsonResponse["error_message"] = "You are not authorized to use this server.";
             jsonResponse["challenge"] = "";
             httpResponse.SetData(jsonResponse.toStyledString());
-            httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED_401);
+            httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED);
             return httpResponse;
         }
             IPTablesExecutor iptexec;
@@ -52,7 +52,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 jsonResponse["challenge"] = "";
                 writer.write(jsonResponse);
                 httpResponse.SetData(jsonResponse.toStyledString());
-                httpResponse.SetStatus(HttpResponseStatus::OK_200);
+                httpResponse.SetStatus(HttpResponseStatus::OK);
                 return httpResponse;
             }
 
@@ -65,7 +65,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                     }
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::OK_200);
+                    httpResponse.SetStatus(HttpResponseStatus::OK);
                     return httpResponse;
                 }
                 if (!checkIfChallengeInMap(jsonRequest["challenge"].asString()))
@@ -75,7 +75,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::OK_200);
+                    httpResponse.SetStatus(HttpResponseStatus::OK);
                     return httpResponse;
                 }
                 if (jsonCommand==LOGOUT)
@@ -86,7 +86,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::OK_200);
+                    httpResponse.SetStatus(HttpResponseStatus::OK);
                     return httpResponse;
                 }
                 bool checkIfAuthorized = auth.authorize(m_usernameChallengeMap[jsonRequest["challenge"].asString()],jsonRequest["hash"].asString(),jsonRequest["challenge"].asString());
@@ -97,7 +97,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED_401);
+                    httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED);
                     return httpResponse;
                 }
                 std::string challenge = auth.generateChallenge();
@@ -132,7 +132,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 jsonResponse["challenge"] = challenge ;
                 writer.write(jsonResponse);
                 httpResponse.SetData(jsonResponse.toStyledString());
-                httpResponse.SetStatus(HttpResponseStatus::OK_200);
+                httpResponse.SetStatus(HttpResponseStatus::OK);
                 return httpResponse;
 }
 

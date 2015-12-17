@@ -11,12 +11,12 @@
 
 enum HttpResponseStatus
 {
-    OK_200,
-    BAD_REQUEST_400,
-    UNAUTHORIZED_401,
-    NOT_FOUND_404,
-    METHOD_NOT_ALLOWED_405,
-    INTERNAL_SERVER_ERROR_500,
+    OK = 200,
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    NOT_FOUND = 404,
+    METHOD_NOT_ALLOWED = 405,
+    INTERNAL_SERVER_ERROR = 500,
 };
 
 class HttpResponse
@@ -29,7 +29,6 @@ public:
     void SetHttpVersion(std::string httpVersion);
     std::string GetHttpVersion();
     HttpResponseStatus GetStatus();
-    static int MapHttpResponseStatusToInt(HttpResponseStatus status);
     static std::string MapHttpResponseStatusToString(HttpResponseStatus status);
     void SetDefaultHttpVersion();
     HttpHeaderCollection& GetHttpHeaderCollection();

@@ -322,7 +322,7 @@ void HttpServer::SendResponse(int socket, HttpResponse &httpResponse)
 
     std::string httpResponseString = httpResponse.GetHttpVersion();
     httpResponseString += " ";
-    httpResponseString += std::to_string(httpResponse.MapHttpResponseStatusToInt(httpResponse.GetStatus()));
+    httpResponseString += std::to_string((int)httpResponse.GetStatus());
     httpResponseString += " ";
     httpResponseString += httpResponse.MapHttpResponseStatusToString(httpResponse.GetStatus());
     httpResponseString += this->m_sNewLineString;
@@ -369,7 +369,7 @@ void HttpServer::SendString(int socket, const std::string &str)
 void HttpServer::SendBadRequestResponse(int iSocket)
 {
     HttpResponse httpResponse;
-    httpResponse.SetStatus(HttpResponseStatus::BAD_REQUEST_400);
+    httpResponse.SetStatus(HttpResponseStatus::BAD_REQUEST);
     this->SendResponse(iSocket, httpResponse);
 }
 
@@ -392,7 +392,7 @@ std::string HttpServer::GetClientIpAddress(int iSocket)
 void HttpServer::SendInternalServerErrorResponse(int iSocket)
 {
     HttpResponse httpResponse;
-    httpResponse.SetStatus(HttpResponseStatus::INTERNAL_SERVER_ERROR_500);
+    httpResponse.SetStatus(HttpResponseStatus::INTERNAL_SERVER_ERROR);
     this->SendResponse(iSocket, httpResponse);
 }
 
