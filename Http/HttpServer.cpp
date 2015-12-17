@@ -21,8 +21,10 @@ const std::size_t HttpServer::m_bufferSize = 256;
 std::vector<HttpHeader> HttpServer::m_staticHttpResponseHeaders =
         {
                 HttpHeader("Server", "IpTablesServer/1.0"),
-                HttpHeader("Connection", "close"),
                 HttpHeader("Content-Type", "application/json"),
+                HttpHeader("Content-Encoding", "identity"),
+                HttpHeader("Transfer-Encoding", "identity"),
+                HttpHeader("Connection", "close"),
         };
 
 HttpServer::HttpServer()
@@ -93,8 +95,7 @@ void HttpServer::ServerThreadWork()
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1)
     {
-        //TODO Throw error
-        throw "Error creating socket";
+        throw exception::http::internal_socket_error();
     }
 
     struct timeval sendTimeout;
@@ -103,8 +104,7 @@ void HttpServer::ServerThreadWork()
 
     if (setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (void*)&sendTimeout, sizeof(sendTimeout)) == -1)
     {
-        //TODO Throw error
-        throw "Error when setting send timeout";
+        throw exception::http::internal_socket_error();
     }
 
     struct timeval receiveTimeout;
@@ -113,33 +113,28 @@ void HttpServer::ServerThreadWork()
 
     if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (void*)&receiveTimeout, sizeof(receiveTimeout)) == -1)
     {
-        //TODO Throw error
-        throw "Error when setting receive timeout";
+        throw exception::http::internal_socket_error();
     }
 
     int reuse = 1;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (void*)&reuse, sizeof(reuse)) == -1)
     {
-        //TODO Throw error
-        throw "Error when setting socket reuse address";
+        throw exception::http::internal_socket_error();
     }
 
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, (void*)&reuse, sizeof(reuse)) == -1)
     {
-        //TODO Throw error
-        throw "Error when setting socket reuse port";
+        throw exception::http::internal_socket_error();
     }
 
     if (bind(sockfd, (struct sockaddr*)&this->m_localAddress, sizeof(this->m_localAddress)) != 0)
     {
-        //TODO Throw error
-        throw "Error when binding socket";
+        throw exception::http::internal_socket_error();
     }
 
     if (listen(sockfd, this->m_iMaxConnectionQueueLength) != 0)
     {
-        //TODO Throw error
-        throw "Error when switching socket into listening mode";
+        throw exception::http::internal_socket_error();
     }
 
     //TODO while(true) really?
@@ -152,15 +147,21 @@ void HttpServer::ServerThreadWork()
         clientsockfd = accept(sockfd, (struct sockaddr *)&clientAddr, &clientAddrSize);
         if (clientsockfd == -1)
         {
-            //TODO Throw error
-            throw "Error accepting client connection";
+#ifndef NDEBUG
+            if (errno == EINTR)
+            {
+                continue;
+            }
+
+            throw exception::http::internal_socket_error();
+#endif
         }
 
-        //std::thread clientThread([this, clientsockfd]() {
-        this->ClientConnectionThreadWork(clientsockfd);
-        //});
+        std::thread clientThread([this, clientsockfd]() {
+            this->ClientConnectionThreadWork(clientsockfd);
+        });
 
-        //clientThread.detach();
+        clientThread.detach();
     }
 
     close(sockfd);
@@ -267,7 +268,7 @@ std::string HttpServer::ReadLine(int socket)
                 break;
         }
 
-        if (string_extensions::ends_with(line, this->m_sHttpRequestHeadersDataSeparator))
+        if (string_extensions::ends_with(line, this->m_sNewLineString))
         {
             break;
         }

@@ -76,6 +76,10 @@ int main()
         server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
     }
 
+    server.SetMaxConnectionQueueLength(8);
+    server.SetSendTimeout(configurationInstance.getTransmissionTimeout());
+    server.SetReceiveTimeout(configurationInstance.getTransmissionTimeout());
+
     Handler httpRequestHandler;
 
 
