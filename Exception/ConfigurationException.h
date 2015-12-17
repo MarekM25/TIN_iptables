@@ -11,8 +11,8 @@ namespace exception
 {
     namespace configuration
     {
-        class configuration_exception : std::exception { };
-        class config_field_not_set : configuration_exception { };
+        class configuration_exception : public std::exception { };
+        class config_field_not_set : public configuration_exception { };
     }
 }
 
