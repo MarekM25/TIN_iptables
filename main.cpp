@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include <signal.h>
 
 #include "json/json.h"
 
@@ -13,13 +14,18 @@
 
 #include "Http/HttpRequestContext.h"
 
-
 using namespace std;
 
+static bool isStopRequested = false;
+
+void signalHandler(int signal)
+{
+    isStopRequested = true;
+}
 
 int main()
 {
-
+    signal(SIGINT, signalHandler);
     LOG("initialized");
      // Example of use jsoncpp
 
@@ -93,7 +99,7 @@ int main()
 
     LOG_ACS("Hello World request");
 
-    while(true) //NOT RECEIVED EXIT SIGNAL OR COMMAND
+    while(!isStopRequested) //NOT RECEIVED EXIT SIGNAL OR COMMAND
     {
         //LOG_ERR("Some error occurred");
         sleep(1);

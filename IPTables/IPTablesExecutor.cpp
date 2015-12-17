@@ -1,7 +1,6 @@
 //
 // Created by anowikowski on 10.12.15.
 //
-#define LOGGING_LEVEL_1
 
 #include "IPTablesExecutor.h"
 #include "../Logger/Logger.h"
