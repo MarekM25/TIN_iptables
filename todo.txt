@@ -1,6 +1,5 @@
 /* CRITICAL */
 //TODO Handler
-//TODO Validate http request (host header required and properly set, etc.)
 //TODO Parse and handle exec parameters
 
 /* IMPORTANT */

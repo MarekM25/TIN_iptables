@@ -21,6 +21,8 @@ class Handler : public HttpServerRequestHandlerInterface
     void insertToMap(std::string challange, std::string username);
     void removeFromMap(std::string challange);
 
+    static const std::string m_sRequiredPathHttpHeaderValue;
+
 public:
     Handler() {}
     ~Handler() {}

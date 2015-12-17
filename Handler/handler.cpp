@@ -3,6 +3,8 @@
 //
 #include "handler.h"
 
+const std::string Handler::m_sRequiredPathHttpHeaderValue = "/iptables_mgmt";
+
 HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
 {
     //fflush(stdout);
@@ -14,6 +16,12 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     if (httpRequest.GetMethod() != HttpRequestMethod::POST)
     {
         httpResponse.SetStatus(HttpResponseStatus::METHOD_NOT_ALLOWED_405);
+        return httpResponse;
+    }
+
+    if (httpRequest.GetPath() != this->m_sRequiredPathHttpHeaderValue)
+    {
+        httpResponse.SetStatus(HttpResponseStatus::NOT_FOUND_404);
         return httpResponse;
     }
 
