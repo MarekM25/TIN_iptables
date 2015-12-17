@@ -45,7 +45,6 @@ Json::Value Authorization::loginInit(std::string username)
 {
     Json::Value response;
     Configuration &config = Configuration::getInstance();
-    config.initialize("../iptables.conf");
     fflush(stdout);
     if (!config.getUserPassword(username).empty()) {
         std::string challange = generateChallenge();
@@ -72,7 +71,6 @@ Json::Value Authorization::loginRequest(std::string username,std::string hash, s
 {
     Json::Value response;
     Configuration &config = Configuration::getInstance();
-    config.initialize("../iptables.conf");
     std::string password = config.getUserPassword(username);
     std::string localHash = strToMd5(password + challange);
     if (localHash.compare(hash))
