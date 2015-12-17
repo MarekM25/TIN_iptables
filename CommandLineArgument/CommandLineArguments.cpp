@@ -35,13 +35,3 @@ std::string CommandLineArguments::GetConfigFilePath()
 {
     return this->GetArgumentValue(this->ConfigFilePathArgumentName);
 }
-
-void CommandLineArguments::Parse(int argc, char **argv)
-{
-    CommandLineArgumentCollection::Parse(argc, argv);
-
-    if (!this->IsConfigFilePathSet())
-    {
-        throw exception::command_line_argument::argument_not_found();
-    }
-}

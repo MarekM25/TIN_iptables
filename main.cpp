@@ -16,6 +16,7 @@
 using namespace std;
 
 static bool isStopRequested = false;
+static std::string defaultConfigFilePath = "iptables.conf";
 
 void displayUsage(std::string executableName)
 {
@@ -88,11 +89,14 @@ int main(int argc, char *argv[])
 
 
     Configuration &configurationInstance = Configuration::getInstance();
-#ifndef NDEBUG
-    configurationInstance.initialize("../iptables.conf");
-#else
-    configurationInstance.initialize(commandLineArguments.GetConfigFilePath());
-#endif
+    if (commandLineArguments.IsConfigFilePathSet())
+    {
+        configurationInstance.initialize(commandLineArguments.GetConfigFilePath());
+    }
+    else
+    {
+        configurationInstance.initialize(defaultConfigFilePath);
+    }
 
     loggerInstance.initialize(configurationInstance.getLogPath());
     LOG("initialized");

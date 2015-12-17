@@ -13,7 +13,6 @@
 class CommandLineArguments : public CommandLineArgumentCollection
 {
 public:
-    void Parse(int argc, char *argv[]);
     bool IsAccessLoggingSet();
     bool IsErrorLoggingSet();
     bool IsInfoLoggingSet();
