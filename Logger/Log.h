@@ -85,27 +85,26 @@ private:
     Logger();
     ~Logger();
 
-    bool write_error = true;
-    bool write_access = true;
-    bool write_info = true;
+    bool write_error = false;
+    bool write_access = false;
+    bool write_info = false;
 
 public:
     Logger(Logger const&) = delete;
     void operator=(Logger const&) = delete;
 
+    void enableErrorLogging();
+    void enableAccessLogging();
+    void enableInfoLogging();
+    void disableErrorLogging();
+    void disableAccessLogging();
+    void disableInfoLogging();
+
     template<severity_type severity, typename...Args>
-    void print(const Args&...args);
+    void print(const Args...args);
 
 
 };
-
-//template<typename log_policy>
-//static Logger<log_policy>& Logger<log_policy>::getInstance()
-//{
-//    static Logger<log_policy> instance;
-//
-//    return instance;
-//}
 
 template<typename log_policy>
 Logger<log_policy>::Logger()
@@ -121,7 +120,7 @@ Logger<log_policy>::~Logger()
 
 template<typename log_policy>
     template<severity_type severity, typename...Args>
-void Logger<log_policy>::print(const Args&...args)
+void Logger<log_policy>::print(const Args...args)
 {
 
     if (severity == severity_type::ERROR && !write_error)
@@ -186,6 +185,42 @@ void Logger<log_policy>::print_impl(severity_type severity, std::stringstream &&
 {
     log_stream<<param1;
     print_impl(severity, std::forward<std::stringstream>(log_stream), param...);
+}
+
+template<typename log_policy>
+void Logger<log_policy>::enableErrorLogging()
+{
+    write_error = true;
+}
+
+template<typename log_policy>
+void Logger<log_policy>::enableAccessLogging()
+{
+    write_access = true;
+}
+
+template<typename log_policy>
+void Logger<log_policy>::enableInfoLogging()
+{
+    write_info = true;
+}
+
+template<typename log_policy>
+void Logger<log_policy>::disableErrorLogging()
+{
+    write_error = false;
+}
+
+template<typename log_policy>
+void Logger<log_policy>::disableAccessLogging()
+{
+    write_access = false;
+}
+
+template<typename log_policy>
+void Logger<log_policy>::disableInfoLogging()
+{
+    write_info = false;
 }
 
 #endif //TIN_IPTABLES_LOG_H

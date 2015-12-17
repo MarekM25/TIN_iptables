@@ -28,6 +28,7 @@ int main()
     signal(SIGINT, signalHandler);
 
     Logger<FileLogPolicy> &loggerInstance = Logger<FileLogPolicy>::getInstance();
+    loggerInstance.enableInfoLogging();
 
     LOG("initialized");
      // Example of use jsoncpp
