@@ -21,8 +21,10 @@ const std::size_t HttpServer::m_bufferSize = 256;
 std::vector<HttpHeader> HttpServer::m_staticHttpResponseHeaders =
         {
                 HttpHeader("Server", "IpTablesServer/1.0"),
-                HttpHeader("Connection", "close"),
                 HttpHeader("Content-Type", "application/json"),
+                HttpHeader("Content-Encoding", "identity"),
+                HttpHeader("Transfer-Encoding", "identity"),
+                HttpHeader("Connection", "close"),
         };
 
 HttpServer::HttpServer()
