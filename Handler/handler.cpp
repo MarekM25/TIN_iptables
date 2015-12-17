@@ -9,6 +9,8 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
 {
     HttpResponse httpResponse;
     HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
+    Configuration &config= Configuration::getInstance();
+
     std::cout<<"dsaf";
     fflush(stdout);
     if (httpRequest.GetMethod() != HttpRequestMethod::POST)
@@ -33,8 +35,8 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     {
         std::cout<<"json sparsowany";
         fflush(stdout);
-        Configuration &config= Configuration::getInstance();
-        if (config.isIPAddressBlocked("192.0.0.1"))
+
+        if (config.isIPAddressBlocked(httpRequestContext.GetClientIpAddress()))
         {
             jsonResponse["error_code"] = 20;
             jsonResponse["error_message"] = "You are not authorized to use this server.";
