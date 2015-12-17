@@ -6,29 +6,64 @@
 
 #include "Configuration/Configuration.h"
 #include "Http/HttpServer.h"
-#include "IPTables/IPTablesExecutor.h"
 
 #include "Logger/Logger.h"
-#include "Authorization/auth.h"
 #include "Handler/handler.h"
 
-#include "Http/HttpRequestContext.h"
+#include "Exception/CommandLineArgumentException.h"
+#include "CommandLineArgument/CommandLineArguments.h"
 
 using namespace std;
 
 static bool isStopRequested = false;
+
+void displayUsage(std::string executableName)
+{
+    std::cout << "Usage: ./" << executableName << " -" << CommandLineArguments::ConfigFilePathArgumentName << "=[path_to_config_file] [args]" << std::endl;
+    std::cout << "Available arguments:" << std::endl;
+    std::cout << "\t-" << CommandLineArguments::LogLevelArgumentName << "=[e][i][a] (ex. -" << CommandLineArguments::LogLevelArgumentName << "=ei would log errors and info)" << std::endl;
+}
 
 void signalHandler(int signal)
 {
     isStopRequested = true;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     signal(SIGINT, signalHandler);
 
+    CommandLineArguments commandLineArguments;
+
+    try
+    {
+        commandLineArguments.Parse(argc, argv);
+    }
+    catch (const exception::command_line_argument::command_line_argument_exception &e)
+    {
+        displayUsage(argv[0]);
+        return 0;
+    }
+    
     Logger<FileLogPolicy> &loggerInstance = Logger<FileLogPolicy>::getInstance();
-    loggerInstance.enableInfoLogging();
+
+    if (commandLineArguments.IsAccessLoggingSet())
+    {
+        loggerInstance.enableAccessLogging();
+    }
+
+    if (commandLineArguments.IsErrorLoggingSet())
+    {
+        loggerInstance.enableErrorLogging();
+    }
+
+    if (commandLineArguments.IsInfoLoggingSet())
+    {
+        loggerInstance.enableInfoLogging();
+    }
+
+
+
 
     LOG("initialized");
      // Example of use jsoncpp
@@ -54,7 +89,11 @@ int main()
 
 
     Configuration &configurationInstance = Configuration::getInstance();
+#ifndef NDEBUG
     configurationInstance.initialize("../iptables.conf");
+#else
+    configurationInstance.initialize(commandLineArguments.GetConfigFilePath());
+#endif
 
     /*
      * example of ip address checking
@@ -84,6 +123,11 @@ int main()
     if (configurationInstance.isServerIpAddressSet())
     {
         server.SetListeningIpAddress(configurationInstance.getServerIpAddress());
+        LOG("Server IP Address: ", configurationInstance.getServerIpAddress());
+    }
+    else
+    {
+        LOG("Server IP Address: *");
     }
 
     server.SetMaxConnectionQueueLength(8);
@@ -95,11 +139,9 @@ int main()
 
     server.SetHttpRequestHandlerContextObject(&httpRequestHandler);
 
-    LOG("Server IP Address: ", configurationInstance.getServerIpAddress(), " Server Port: ", configurationInstance.getServerPort());
+    LOG("Server Port: ", configurationInstance.getServerPort());
+
     server.Start();
-
-    cout << "Hello, World!" << endl;
-
 
     LOG_ACS("Hello World request");
 
