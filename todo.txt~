@@ -1,11 +1,10 @@
 /* CRITICAL */
 //TODO Handler
 //TODO Parse and handle exec parameters
-//TODO set params in method of executor iptables
 
 /* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
-//TODO Add LOG() LOG_ACS() in key places in log init etc
+//TODO Add LOG() LOG_ACS() in key places
 //TODO Make very simple server client (python?)
 //TODO Basic RAW_COMMAND filtering
 
@@ -15,5 +14,3 @@
 //TODO Some fixes in logger
 //TODO Move implementation from headers to .cpp files
 //TODO Remove 'using namespace' everywhere
-//TODO set correct status in json response
-//TODO validate if command format is correct
