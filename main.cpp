@@ -102,9 +102,8 @@ int main()
 
     LOG_ACS("Hello World request");
 
-    while(!isStopRequested) //NOT RECEIVED EXIT SIGNAL OR COMMAND
+    while(!isStopRequested)
     {
-        //LOG_ERR("Some error occurred");
         sleep(1);
     }
 

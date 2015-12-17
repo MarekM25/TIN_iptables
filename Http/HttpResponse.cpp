@@ -34,25 +34,6 @@ HttpResponseStatus HttpResponse::GetStatus()
     return this->m_status;
 }
 
-int HttpResponse::MapHttpResponseStatusToInt(HttpResponseStatus status)
-{
-    switch(status)
-    {
-        case HttpResponseStatus::OK_200:
-            return 200;
-        case HttpResponseStatus::BAD_REQUEST_400:
-            return 400;
-        case HttpResponseStatus::NOT_FOUND_404:
-            return 404;
-        case HttpResponseStatus::METHOD_NOT_ALLOWED_405:
-            return 405;
-        case HttpResponseStatus::INTERNAL_SERVER_ERROR_500:
-            return 500;
-        default:
-            throw exception::http::unknown_http_response_status();
-    }
-}
-
 void HttpResponse::SetHttpVersion(std::string httpVersion)
 {
     this->m_sHttpVersion = httpVersion;
@@ -67,15 +48,17 @@ std::string HttpResponse::MapHttpResponseStatusToString(HttpResponseStatus statu
 {
     switch(status)
     {
-        case HttpResponseStatus::OK_200:
+        case HttpResponseStatus::OK:
             return "OK";
-        case HttpResponseStatus::BAD_REQUEST_400:
+        case HttpResponseStatus::BAD_REQUEST:
             return "Bad Request";
-        case HttpResponseStatus::NOT_FOUND_404:
+        case HttpResponseStatus::UNAUTHORIZED:
+            return "Unauthorized";
+        case HttpResponseStatus::NOT_FOUND:
             return "Not Found";
-        case HttpResponseStatus::METHOD_NOT_ALLOWED_405:
+        case HttpResponseStatus::METHOD_NOT_ALLOWED:
             return "Method Not Allowed";
-        case HttpResponseStatus::INTERNAL_SERVER_ERROR_500:
+        case HttpResponseStatus::INTERNAL_SERVER_ERROR:
             return "Internal Server Error";
         default:
             throw exception::http::unknown_http_response_status();
