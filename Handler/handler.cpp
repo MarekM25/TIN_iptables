@@ -40,7 +40,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
             jsonResponse["error_message"] = "You are not authorized to use this server.";
             jsonResponse["challenge"] = "";
             httpResponse.SetData(jsonResponse.toStyledString());
-            httpResponse.SetStatus(HttpResponseStatus::OK_200);
+            httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED_401);
             return httpResponse;
         }
             IPTablesExecutor iptexec;
@@ -97,7 +97,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::OK_200);
+                    httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED_401);
                     return httpResponse;
                 }
                 std::string challenge = auth.generateChallenge();

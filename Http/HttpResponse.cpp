@@ -42,6 +42,8 @@ int HttpResponse::MapHttpResponseStatusToInt(HttpResponseStatus status)
             return 200;
         case HttpResponseStatus::BAD_REQUEST_400:
             return 400;
+        case HttpResponseStatus::UNAUTHORIZED_401:
+            return 401;
         case HttpResponseStatus::NOT_FOUND_404:
             return 404;
         case HttpResponseStatus::METHOD_NOT_ALLOWED_405:
@@ -71,6 +73,8 @@ std::string HttpResponse::MapHttpResponseStatusToString(HttpResponseStatus statu
             return "OK";
         case HttpResponseStatus::BAD_REQUEST_400:
             return "Bad Request";
+        case HttpResponseStatus::UNAUTHORIZED_401:
+            return "Unauthorized";
         case HttpResponseStatus::NOT_FOUND_404:
             return "Not Found";
         case HttpResponseStatus::METHOD_NOT_ALLOWED_405:
