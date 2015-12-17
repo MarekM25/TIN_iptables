@@ -34,7 +34,6 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         std::cout<<"json sparsowany";
         fflush(stdout);
         Configuration &config= Configuration::getInstance();
-        config.initialize("iptables.conf");
         if (config.isIPAddressBlocked("192.0.0.1"))
         {
             jsonResponse["error_code"] = 20;

@@ -11,16 +11,16 @@
 
 enum commandType
 {
-    LOGIN_INIT,
-    LOGIN_REQUEST,
-    LOGOUT,
-    GET_ALL_RULES,      // no params
-    DELETE_RULE,        // param: unsigned short: line_number
-    BLOCK_IP,           // param: string        : incoming_ip_address
-    BLOCK_TCP_PORT,     // param: unsigned short: tcp_port_number
-    BLOCK_UDP_PORT,     // param: unsigned short: udp_port_number
-    BLOCK_INCOMING_MAC, // param: string        : incoming_mac_address
-    RAW                 // param: string        : raw_command
+    LOGIN_INIT = 0,
+    LOGIN_REQUEST = 1,
+    LOGOUT = 2,
+    GET_ALL_RULES = 3,      // no params
+    DELETE_RULE = 4,        // param: unsigned short: line_number
+    BLOCK_IP = 5,           // param: string        : incoming_ip_address
+    BLOCK_TCP_PORT = 6,     // param: unsigned short: tcp_port_number
+    BLOCK_UDP_PORT = 7,     // param: unsigned short: udp_port_number
+    BLOCK_INCOMING_MAC = 8, // param: string        : incoming_mac_address
+    RAW = 9                 // param: string        : raw_command
 };
 
 enum chainType
