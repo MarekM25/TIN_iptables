@@ -5,7 +5,9 @@
 
 HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
 {
-    cout<<"dsaf";
+    //fflush(stdout);
+    std::cout<<"dsaf";
+    fflush(stdout);
     HttpResponse httpResponse;
     HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
 
@@ -18,8 +20,13 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     Json::Reader reader;
     Json::FastWriter writer;
     Json::Value jsonRequest, jsonResponse;
+
     if (reader.parse(httpRequest.GetData(),jsonRequest))
     {
+
+        fflush(stdout);
+        std::cout<<"json sprasowany";
+        fflush(stdout);
         Configuration &config= Configuration::getInstance();
         config.initialize("iptables.conf");
         if (config.isIPAddressBlocked("192.0.0.1"))
@@ -30,6 +37,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         }
         else
         {
+
             IPTablesExecutor iptexec;
             Authorization auth;
             if (jsonRequest["command"].isNull())
@@ -104,7 +112,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         jsonResponse["challange"] = "";
     }
     writer.write(jsonResponse);
-    httpResponse.SetData(httpRequest.GetData());
+    httpResponse.SetData(jsonResponse.asString());
     httpResponse.SetStatus(HttpResponseStatus::OK_200);
     return httpResponse;
 }

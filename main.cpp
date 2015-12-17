@@ -25,20 +25,15 @@ int main()
 
     ifstream json_test;
     json_test.open("test.json", std::ios::in | std::ios::out);
-
-    Json::Value test_value;
+     Json::Value test_value;
     Json::Reader reader;
-    if(reader.parse(json_test, test_value))
+     if(reader.parse(json_test, test_value))
 
-    std::cout<<test_value["widget"]["window"]["title"].asString();
-    Json::StyledStreamWriter  writer;
-    Json::FastWriter fastWriter;
+    std::cout<<test_value["hash"].asString();
 
     Json::Value value;
-    int b[2];
     Json::Value arrayTest(Json::arrayValue);
-    b[0]= 3;
-    b[1] = 34;
+    Json::FastWriter fastWriter;
     value["test"] = 5;
     arrayTest.append(4);
     arrayTest.append(5);

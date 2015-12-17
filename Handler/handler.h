@@ -11,6 +11,7 @@
 #include "../Http/HttpServer.h"
 #include "../IPTables/IPTablesExecutor.h"
 #include <unistd.h>
+#include <fstream>
 
 class Handler : public HttpServerRequestHandlerInterface
 {
@@ -24,6 +25,7 @@ public:
     Handler() {}
     ~Handler() {}
     HttpResponse HandleHttpRequest(HttpRequestContext httpRequestContext);
+
 
 };
 

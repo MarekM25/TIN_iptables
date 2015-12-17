@@ -8,7 +8,6 @@
 //TODO Add LOG() LOG_ACS() in key places
 //TODO Make very simple server client (python?)
 //TODO Basic RAW_COMMAND filtering
-//TODO Change hardcode ip config.isIPAddressBlocked("192.0.0.1") in handler
 
 /* MEDIUM */
 //TODO Set logging level as exec parameter

@@ -17,6 +17,7 @@ public:
     std::string GetHeaderValue();
     void SetHeaderValue(const std::string &sHeaderValue);
 private:
+    static const std::string m_sHttpHeaderNameValueDelimiter;
     std::string m_sHeaderName;
     std::string m_sHeaderValue;
 };
