@@ -74,13 +74,38 @@ class Logger
     void print_impl(severity_type severity, std::stringstream&&, First&& param1, Rest&&...param);
 
 public:
+    static Logger& getInstance()
+    {
+        static Logger instance;
+
+        return instance;
+    }
+
+private:
     Logger();
+    ~Logger();
+
+    bool write_error = true;
+    bool write_access = true;
+    bool write_info = true;
+
+public:
+    Logger(Logger const&) = delete;
+    void operator=(Logger const&) = delete;
 
     template<severity_type severity, typename...Args>
     void print(Args...args);
 
-    ~Logger();
+
 };
+
+//template<typename log_policy>
+//static Logger<log_policy>& Logger<log_policy>::getInstance()
+//{
+//    static Logger<log_policy> instance;
+//
+//    return instance;
+//}
 
 template<typename log_policy>
 Logger<log_policy>::Logger()
@@ -98,6 +123,19 @@ template<typename log_policy>
     template<severity_type severity, typename...Args>
 void Logger<log_policy>::print(Args...args)
 {
+
+    if (severity == severity_type::ERROR && !write_error)
+    {
+        return;
+    }
+    if (severity == severity_type::ACCESS && !write_access)
+    {
+        return;
+    }
+    if (severity == severity_type::INFO && !write_info)
+    {
+        return;
+    }
 
     std::stringstream log_stream;
 

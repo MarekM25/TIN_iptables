@@ -15,7 +15,9 @@ class Configuration
 {
 public:
     static Configuration& getInstance();
-    ~Configuration();
+    Configuration(Configuration const&) = delete;
+    void operator=(Configuration const&) = delete;
+
     void initialize( std::string configurationFilePath );
     bool isIPAddressBlocked( const std::string& ipAddress );
     bool isServerIpAddressSet();

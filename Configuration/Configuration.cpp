@@ -19,11 +19,6 @@ Configuration::Configuration()
     this->mIsServerIpAddressSet = false;
 }
 
-Configuration::~Configuration()
-{
-
-}
-
 void Configuration::initialize( std::string configurationFilePath )
 {
     parseConfigFile( configurationFilePath );

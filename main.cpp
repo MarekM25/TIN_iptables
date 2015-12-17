@@ -26,12 +26,15 @@ void signalHandler(int signal)
 int main()
 {
     signal(SIGINT, signalHandler);
+
+    Logger<FileLogPolicy> &loggerInstance = Logger<FileLogPolicy>::getInstance();
+
     LOG("initialized");
      // Example of use jsoncpp
 
     ifstream json_test;
     json_test.open("test.json", std::ios::in | std::ios::out);
-     Json::Value test_value;
+    Json::Value test_value;
     Json::Reader reader;
      if(reader.parse(json_test, test_value))
 

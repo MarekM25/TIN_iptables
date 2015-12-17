@@ -9,4 +9,4 @@
 
 #include "Logger.h"
 
-Logger<FileLogPolicy> log_inst;
+//Logger<FileLogPolicy> log_inst;
