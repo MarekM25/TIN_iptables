@@ -71,7 +71,7 @@ class Logger
     void print_impl(severity_type severity, std::stringstream&&);
 
     template<typename First, typename...Rest>
-    void print_impl(severity_type severity, std::stringstream&&, First&& param1, Rest&&...param);
+    void print_impl(severity_type severity, std::stringstream&&, const First& param1, const Rest&...param);
 
 public:
     static Logger& getInstance()
@@ -94,7 +94,7 @@ public:
     void operator=(Logger const&) = delete;
 
     template<severity_type severity, typename...Args>
-    void print(Args...args);
+    void print(const Args&...args);
 
 
 };
@@ -121,7 +121,7 @@ Logger<log_policy>::~Logger()
 
 template<typename log_policy>
     template<severity_type severity, typename...Args>
-void Logger<log_policy>::print(Args...args)
+void Logger<log_policy>::print(const Args&...args)
 {
 
     if (severity == severity_type::ERROR && !write_error)
@@ -146,12 +146,13 @@ void Logger<log_policy>::print(Args...args)
     auto cur_time = std::chrono::high_resolution_clock::now();
     std::time_t tt = std::chrono::high_resolution_clock::to_time_t(cur_time);
 #endif
-    char* tt_s = ctime(&tt);
+    char buf[256];
+    char* tt_s = ctime_r(&tt, buf);
     tt_s[strlen(tt_s)-1]=0;
 
     log_stream<<tt_s<<" - ";
 
-    print_impl(severity, std::forward<std::stringstream>(log_stream), std::move(args)...);
+    print_impl(severity, std::forward<std::stringstream>(log_stream), args...);
 }
 
 template<typename log_policy>
@@ -181,10 +182,10 @@ void Logger<log_policy>::print_impl(severity_type severity, std::stringstream&& 
 
 template<typename log_policy>
     template<typename First, typename...Rest>
-void Logger<log_policy>::print_impl(severity_type severity, std::stringstream &&log_stream, First &&param1, Rest&&...param)
+void Logger<log_policy>::print_impl(severity_type severity, std::stringstream &&log_stream, const First &param1, const Rest&...param)
 {
     log_stream<<param1;
-    print_impl(severity, std::forward<std::stringstream>(log_stream), std::move(param)...);
+    print_impl(severity, std::forward<std::stringstream>(log_stream), param...);
 }
 
 #endif //TIN_IPTABLES_LOG_H
