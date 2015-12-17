@@ -5,13 +5,11 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <thread>
-#include <array>
 #include <algorithm>
 #include "HttpServer.h"
 #include "../Extensions/StringExtensions.h"
-#include "HttpRequest.h"
-#include "HttpResponse.h"
 #include "../Exception/HttpException.h"
+#include "../Logger/Logger.h"
 
 const std::string HttpServer::m_sNewLineString = "\r\n";
 const std::string HttpServer::m_sHttpRequestHeadersDataSeparator = "\r\n\r\n";
@@ -65,6 +63,8 @@ void HttpServer::Start()
         throw exception::http::http_server_already_running();
     }
 
+    this->m_bIsServerStopRequested = false;
+
     this->m_serverThread = std::thread([this]() {
         this->ServerThreadWork();
     });
@@ -79,8 +79,8 @@ void HttpServer::Stop()
         throw exception::http::http_server_not_running();
     }
 
-    //TODO Cancel thread
-    //pthread_cancel(this->m_serverThread);
+    this->m_bIsServerStopRequested = true;
+    this->m_serverThread.join();
 
     this->m_bIsRunning = false;
 }
@@ -137,9 +137,28 @@ void HttpServer::ServerThreadWork()
         throw exception::http::internal_socket_error();
     }
 
-    //TODO while(true) really?
-    while(true)
+    fd_set ready;
+    struct timeval selectTimeout;
+    int max_fd;
+    selectTimeout.tv_sec = 1;
+    selectTimeout.tv_usec = 0;
+
+    while(!this->m_bIsServerStopRequested)
     {
+        FD_ZERO(&ready);
+        FD_SET(sockfd, &ready);
+        max_fd = sockfd;
+
+        if (select(max_fd + 1, &ready, (fd_set *)0, (fd_set *)0, &selectTimeout) == -1)
+        {
+            throw exception::http::internal_socket_error();
+        }
+
+        if (!FD_ISSET(sockfd, &ready))
+        {
+            continue;
+        }
+
         int clientsockfd;
         struct sockaddr_in clientAddr;
         socklen_t clientAddrSize = sizeof(clientAddr);

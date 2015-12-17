@@ -41,6 +41,7 @@ private:
     int m_iSendTimeout;
     int m_iReceiveTimeout;
     bool m_bIsRunning;
+    bool m_bIsServerStopRequested;
     std::string ReadLine(int socket);
     std::string ReadString(int socket, int length);
     void SendResponse(int socket, HttpResponse &httpResponse);
