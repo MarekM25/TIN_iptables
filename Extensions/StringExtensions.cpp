@@ -20,7 +20,7 @@ namespace string_extensions
     unsigned int stoui(const std::string &s)
     {
         unsigned long lresult = stoul(s, 0, 10);
-        unsigned int iresult = lresult;
+        unsigned int iresult = (unsigned int)lresult;
         if (lresult != (unsigned long)iresult)
         {
             throw std::out_of_range("");
@@ -32,8 +32,8 @@ namespace string_extensions
     unsigned short stous(const std::string &s)
     {
         unsigned long lresult = stoul(s, 0, 10);
-        unsigned short iresult = lresult;
-        if (lresult != (unsigned short)iresult)
+        unsigned short iresult = (unsigned short)lresult;
+        if (lresult != (unsigned long)iresult)
         {
             throw std::out_of_range("");
         }
