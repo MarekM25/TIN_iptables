@@ -14,6 +14,7 @@
 
 #include "Http/HttpRequestContext.h"
 
+#define LOGGING_LEVEL_1
 
 using namespace std;
 
