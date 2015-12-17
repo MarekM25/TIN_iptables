@@ -13,11 +13,8 @@
 namespace string_extensions
 {
     bool ends_with(const std::string &str, const std::string &ending) {
-        if (str.length() >= ending.length()) {
-            return (str.compare(str.length() - ending.length(), ending.length(), ending) == 0);
-        }
-
-        return false;
+        return ending.length() <= str.length() &&
+               str.compare(str.length() - ending.length(), ending.length(), ending) == 0;
     }
 
     unsigned int stoui(const std::string &s)
