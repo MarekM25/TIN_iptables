@@ -1,8 +1,8 @@
 /* CRITICAL */
 //TODO Passing invalid config file path to Configuration should throw an exception and terminate the program with error message
 //TODO Handler
-//TODO Parse and handle exec parameters
 //TODO set params in method of executor iptables
+//TODO veryfy that setting -log=aei command line argument works properly (sets logging levels)
 
 /* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
@@ -11,7 +11,6 @@
 //TODO Basic RAW_COMMAND filtering
 
 /* MEDIUM */
-//TODO Set logging level as exec parameter
 //TODO Remove #define LOGGER_LEVEL_X everywhere
 //TODO Some fixes in logger
 //TODO Move implementation from headers to .cpp files
