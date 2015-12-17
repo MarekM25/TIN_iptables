@@ -1,4 +1,5 @@
 /* CRITICAL */
+//TODO Passing invalid config file path to Configuration should throw an exception and terminate the program with error message
 //TODO Handler
 //TODO Parse and handle exec parameters
 //TODO set params in method of executor iptables
