@@ -9,6 +9,7 @@
 #include <fstream>
 #include "md5.h"
 #include "../Configuration/Configuration.h"
+#include <iostream>
 class Authorization
 {
     const size_t m_challangeLength = 24;

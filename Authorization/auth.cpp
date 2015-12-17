@@ -46,7 +46,8 @@ Json::Value Authorization::loginInit(std::string username)
     Json::Value response;
     Configuration &config = Configuration::getInstance();
     config.initialize("../iptables.conf");
-    if (config.getUserPassword(username)=="") {
+    fflush(stdout);
+    if (!config.getUserPassword(username).empty()) {
         std::string challange = generateChallenge();
         response["error_code"] = 0;
         response["error_message"] = "OK";

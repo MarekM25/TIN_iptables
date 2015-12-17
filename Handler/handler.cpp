@@ -23,10 +23,6 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
 
     if (reader.parse(httpRequest.GetData(),jsonRequest))
     {
-
-        fflush(stdout);
-        std::cout<<"json sprasowany";
-        fflush(stdout);
         Configuration &config= Configuration::getInstance();
         config.initialize("iptables.conf");
         if (config.isIPAddressBlocked("192.0.0.1"))
@@ -68,9 +64,12 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 }
                 switch (jsonCommand) {
                     case LOGIN_INIT:
-                        jsonRequest = auth.loginInit(jsonRequest["username"].asString());
-                        if (jsonRequest["error_code"] == "0") {
-                            insertToMap(jsonRequest["challange"].asString(), jsonRequest["username"].asString());
+                        jsonResponse = auth.loginInit(jsonRequest["params"]["username"].asString());
+                        writer.write(jsonResponse);
+                        std::cout<<jsonResponse;
+                        fflush(stdout);
+                        if (jsonResponse["error_code"] == "0") {
+                            insertToMap(jsonResponse["challange"].asString(), jsonRequest["params"]["username"].asString());
                         }
                         break;
                     case LOGIN_REQUEST:
@@ -112,7 +111,10 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         jsonResponse["challange"] = "";
     }
     writer.write(jsonResponse);
-    httpResponse.SetData(jsonResponse.asString());
+
+    std::cout<<jsonResponse;
+    fflush(stdout);
+    httpResponse.SetData(jsonResponse.toStyledString());
     httpResponse.SetStatus(HttpResponseStatus::OK_200);
     return httpResponse;
 }
