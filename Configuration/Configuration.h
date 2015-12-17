@@ -12,47 +12,45 @@
 #include <unordered_map>
 #include <vector>
 
-using namespace std;
-
 class Configuration
 {
 public:
     static Configuration& getInstance();
     ~Configuration();
-    void initialize( string configurationFilePath );
-    bool isIPAddressBlocked( const string& ipAddress );
+    void initialize( std::string configurationFilePath );
+    bool isIPAddressBlocked( const std::string& ipAddress );
     bool isServerIpAddressSet();
 
-    string getHostName();
-    string getServerIpAddress();
+    std::string getHostName();
+    std::string getServerIpAddress();
     unsigned short getServerPort();
     unsigned short getSessionTimeout();
     unsigned short getTransmissionTimeout();
-    string getLogPath();
-    string getUsersFilePath();
-    string getBlacklistFilePath();
-    string getUserPassword(string username);
+    std::string getLogPath();
+    std::string getUsersFilePath();
+    std::string getBlacklistFilePath();
+    std::string getUserPassword( std::string username );
 
 private:
     Configuration();
     //Configuration( Configuration const& );
-    bool parseConfigFile( string& configurationFilePath );
+    bool parseConfigFile( std::string& configurationFilePath );
     bool parseBlacklistFile();
     bool parseUsersFile();
-    uint32_t IPToUInt( const string& ipAddress );
+    uint32_t IPToUInt( const std::string& ipAddress );
 
-    vector< pair< string, string > > mBlacklist;
+    std::vector< std::pair< std::string, std::string > > mBlacklist;
 
-    unordered_map<string, string> mUsers;
+    std::unordered_map< std::string, std::string > mUsers;
 
-    string mHostName;
-    string mServerIpAddress;
+    std::string mHostName;
+    std::string mServerIpAddress;
     unsigned short mServerPort;
     unsigned short mSessionTimeout;          // unsigned short -> max ~18h
     unsigned short mTransmissionTimeout;
-    string mLogPath;
-    string mUsersFilePath;
-    string mBlacklistFilePath;
+    std::string mLogPath;
+    std::string mUsersFilePath;
+    std::string mBlacklistFilePath;
     bool mIsServerIpAddressSet;
 };
 

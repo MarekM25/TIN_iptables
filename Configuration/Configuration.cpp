@@ -25,7 +25,7 @@ Configuration::~Configuration()
 
 }
 
-void Configuration::initialize( string configurationFilePath )
+void Configuration::initialize( std::string configurationFilePath )
 {
     parseConfigFile( configurationFilePath );
 
@@ -34,11 +34,11 @@ void Configuration::initialize( string configurationFilePath )
     parseUsersFile();
 }
 
-bool Configuration::parseConfigFile( string& configurationFilePath )
+bool Configuration::parseConfigFile( std::string& configurationFilePath )
 {
-    map< string, string > params;
+    std::map< std::string, std::string > params;
 
-    ifstream file( configurationFilePath );
+    std::ifstream file( configurationFilePath );
 
     if ( !file )
     {
@@ -46,10 +46,10 @@ bool Configuration::parseConfigFile( string& configurationFilePath )
         return false;
     }
 
-    string line;
-    string key;
-    string value;
-    string section;
+    std::string line;
+    std::string key;
+    std::string value;
+    std::string section;
 
     while ( getline( file, line ) )
     {
@@ -96,7 +96,7 @@ bool Configuration::parseConfigFile( string& configurationFilePath )
 
 bool Configuration::parseBlacklistFile()
 {
-    ifstream file( mBlacklistFilePath );
+    std::ifstream file( mBlacklistFilePath );
 
     if ( !file )
     {
@@ -104,9 +104,9 @@ bool Configuration::parseBlacklistFile()
         return false;
     }
 
-    string line;
-    string range;
-    string rangeEnd;
+    std::string line;
+    std::string range;
+    std::string rangeEnd;
 
     while ( getline( file, line ) )
     {
@@ -116,7 +116,7 @@ bool Configuration::parseBlacklistFile()
 
         auto index = line.find( '-' );
 
-        if ( index == string::npos )
+        if ( index == std::string::npos )
         {
             mBlacklist.push_back( make_pair( line, line ) );
             continue;
@@ -135,7 +135,7 @@ bool Configuration::parseBlacklistFile()
 
 bool Configuration::parseUsersFile()
 {
-    ifstream file( mUsersFilePath );
+    std::ifstream file( mUsersFilePath );
 
     if ( !file )
     {
@@ -143,9 +143,9 @@ bool Configuration::parseUsersFile()
         return false;
     }
 
-    string line;
-    string range;
-    string rangeEnd;
+    std::string line;
+    std::string range;
+    std::string rangeEnd;
 
     while ( getline( file, line ) )
     {
@@ -155,7 +155,7 @@ bool Configuration::parseUsersFile()
 
         auto index = line.find( ':' );
 
-        if ( index == string::npos )
+        if ( index == std::string::npos )
         {
             LOG_ERR("Wrong line in users file");
             continue;
@@ -172,7 +172,7 @@ bool Configuration::parseUsersFile()
     return true;
 }
 
-bool Configuration::isIPAddressBlocked( const string& ipAddress )
+bool Configuration::isIPAddressBlocked( const std::string& ipAddress )
 {
     uint32_t inputAddress = IPToUInt( ipAddress );
 
@@ -189,7 +189,7 @@ bool Configuration::isIPAddressBlocked( const string& ipAddress )
     return false;
 }
 
-uint32_t Configuration::IPToUInt( const string& ipAddress )
+uint32_t Configuration::IPToUInt( const std::string& ipAddress )
 {
     unsigned int a, b, c, d;
     uint32_t result = 0;
@@ -204,12 +204,12 @@ uint32_t Configuration::IPToUInt( const string& ipAddress )
     return result;
 }
 
-string Configuration::getHostName()
+std::string Configuration::getHostName()
 {
     return mHostName;
 }
 
-string Configuration::getServerIpAddress()
+std::string Configuration::getServerIpAddress()
 {
     if (!this->isServerIpAddressSet())
     {
@@ -234,24 +234,24 @@ unsigned short Configuration::getTransmissionTimeout()
     return mTransmissionTimeout;
 }
 
-string Configuration::getLogPath()
+std::string Configuration::getLogPath()
 {
     return mLogPath;
 }
 
-string Configuration::getUsersFilePath()
+std::string Configuration::getUsersFilePath()
 {
     return mUsersFilePath;
 }
 
-string Configuration::getBlacklistFilePath()
+std::string Configuration::getBlacklistFilePath()
 {
     return mBlacklistFilePath;
 }
 
-string Configuration::getUserPassword(string username)
+std::string Configuration::getUserPassword( std::string username )
 {
-    return mUsers[username];
+    return mUsers[ username ];
 }
 
 bool Configuration::isServerIpAddressSet()
