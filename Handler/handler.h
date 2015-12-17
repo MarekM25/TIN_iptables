@@ -16,8 +16,8 @@
 class Handler : public HttpServerRequestHandlerInterface
 {
     std::map<std::string,std::string> m_usernameChallengeMap;
-    bool updateMap(std::string oldChallenge, std::string newChallenge);
-
+    bool checkIfChallengeInMap(std::string challenge);
+    void updateMap(std::string oldChallenge, std::string newChallenge);
     void insertToMap(std::string challenge, std::string username);
     void removeFromMap(std::string challenge);
 

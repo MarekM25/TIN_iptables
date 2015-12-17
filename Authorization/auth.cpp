@@ -36,9 +36,11 @@ std::string Authorization::generateChallenge()
         const size_t max_index = (sizeof(charset) - 1);
         return charset[ rand() % max_index ];
     };
-    std::string str(this->m_challangeLength,0);
-    std::generate_n( str.begin(), this->m_challangeLength , randchar );
+    std::string str(this->m_challengeLength,0);
+    std::generate_n( str.begin(), this->m_challengeLength , randchar );
     return str;
+//std::string temporaryHardcode ="fa37JncCHryDsbzayy4cBWDx";
+//    return temporaryHardcode;
 }
 
 
@@ -48,42 +50,33 @@ Json::Value Authorization::loginInit(std::string username)
     Configuration &config = Configuration::getInstance();
     fflush(stdout);
     if (!config.getUserPassword(username).empty()) {
-        std::string challange = generateChallenge();
+        std::string challenge = generateChallenge();
         response["error_code"] = 0;
         response["error_message"] = "OK";
-        response["challange"] = challange;
+        response["challenge"] = challenge;
     }
     else
     {
         response["error_code"] = 21;
         response["error_message"] = "Specified username not exist";
-        response["challange"] = "";
+        response["challenge"] = "";
     }
     return response;
 }
 
 
-void Authorization::logout(std::string challange)
-{
-    
-}
-
-Json::Value Authorization::loginRequest(std::string username,std::string hash, std::string challange)
+bool Authorization::authorize(std::string username,std::string hash, std::string challenge)
 {
     Json::Value response;
     Configuration &config = Configuration::getInstance();
     std::string password = config.getUserPassword(username);
-    std::string localHash = strToMd5(password + challange);
-    if (localHash.compare(hash))
+    std::string localHash = strToMd5(password + challenge);
+    if (localHash==hash)
     {
-        response["error_code"] = 0;
-        response["error_message"] = "OK";
-        response["challange"] = challange;
+        return true;
     }
     else
     {
-        response["error_code"] = 22;
-        response["error_message"] = "Authentication failed.";
-        response["challange"] = challange;
+        return false;
     }
 }

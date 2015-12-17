@@ -12,15 +12,13 @@
 #include <iostream>
 class Authorization
 {
-    const size_t m_challangeLength = 24;
+    const size_t m_challengeLength = 24;
     std::string m_userPath;
     char* strToMd5(std::string toHash);
 public:
     Json::Value loginInit(std::string username);
     std::string generateChallenge();
-    Json::Value loginRequest(std::string username,std::string hash, std::string challange);
-    void logout(std::string challange);
-
+    bool authorize(std::string username,std::string hash, std::string challenge);
 };
 
 #endif //TIN_IPTABLES_AUTH_H
