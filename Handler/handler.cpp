@@ -7,18 +7,17 @@ const std::string Handler::m_sRequiredPathHttpHeaderValue = "/iptables_mgmt";
 
 HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
 {
-    //fflush(stdout);
-    std::cout<<"dsaf";
-    fflush(stdout);
     HttpResponse httpResponse;
     HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
-
+    std::cout<<"dsaf";
+    fflush(stdout);
     if (httpRequest.GetMethod() != HttpRequestMethod::POST)
     {
         httpResponse.SetStatus(HttpResponseStatus::METHOD_NOT_ALLOWED_405);
         return httpResponse;
     }
-
+    std::cout<<"przed required";
+    fflush(stdout);
     if (httpRequest.GetPath() != this->m_sRequiredPathHttpHeaderValue)
     {
         httpResponse.SetStatus(HttpResponseStatus::NOT_FOUND_404);
@@ -28,9 +27,12 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     Json::Reader reader;
     Json::FastWriter writer;
     Json::Value jsonRequest, jsonResponse;
-
+    std::cout<<"przed sparsowaniem";
+    fflush(stdout);
     if (reader.parse(httpRequest.GetData(),jsonRequest))
     {
+        std::cout<<"json sparsowany";
+        fflush(stdout);
         Configuration &config= Configuration::getInstance();
         config.initialize("iptables.conf");
         if (config.isIPAddressBlocked("192.0.0.1"))
@@ -70,6 +72,8 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                         jsonResponse["challange"] = "";
                     }
                 }
+                std::cout<<"przed switch";
+                fflush(stdout);
                 switch (jsonCommand) {
                     case LOGIN_INIT:
                         jsonResponse = auth.loginInit(jsonRequest["params"]["username"].asString());
@@ -77,11 +81,14 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                         std::cout<<jsonResponse;
                         fflush(stdout);
                         if (jsonResponse["error_code"] == "0") {
+                            std::cout <<"dodajemy do mapy";
                             insertToMap(jsonResponse["challange"].asString(), jsonRequest["params"]["username"].asString());
                         }
                         break;
                     case LOGIN_REQUEST:
-
+                        std::cout<<"login request";
+                        std::cout<<m_usernameChallangeMap[jsonRequest["challange"].asString()];
+                        jsonResponse = auth.loginRequest(m_usernameChallangeMap[jsonRequest["challange"].asString()],jsonRequest["hash"].asString(),jsonRequest["challange"].asString());
                         break;
                     case LOGOUT:
                         break;
