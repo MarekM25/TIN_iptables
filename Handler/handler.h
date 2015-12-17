@@ -15,11 +15,11 @@
 
 class Handler : public HttpServerRequestHandlerInterface
 {
-    std::map<std::string,std::string> m_usernameChallangeMap;
-    bool updateMap(std::string oldChallange, std::string newChallange);
+    std::map<std::string,std::string> m_usernameChallengeMap;
+    bool updateMap(std::string oldChallenge, std::string newChallenge);
 
-    void insertToMap(std::string challange, std::string username);
-    void removeFromMap(std::string challange);
+    void insertToMap(std::string challenge, std::string username);
+    void removeFromMap(std::string challenge);
 
     static const std::string m_sRequiredPathHttpHeaderValue;
 

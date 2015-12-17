@@ -26,6 +26,7 @@ char* Authorization::strToMd5(std::string toHash)
 
 std::string Authorization::generateChallenge()
 {
+    srand( time( NULL ) );
     auto randchar = []() -> char
     {
         const char charset[] =

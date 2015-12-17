@@ -38,7 +38,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         {
             jsonResponse["error_code"] = 20;
             jsonResponse["error_message"] = "You are not authorized to use this server.";
-            jsonResponse["challange"] = "";
+            jsonResponse["challenge"] = "";
         }
         else
         {
@@ -55,20 +55,20 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 int jsonCommand = jsonRequest["command"].asInt();
                 if (jsonCommand!=LOGOUT && jsonCommand!=LOGIN_INIT)
                 {
-                    std::string challange = auth.generateChallenge();
+                    std::string challenge = auth.generateChallenge();
 
-                    bool challangeWasCorrect = updateMap(jsonRequest["challange"].asString(),challange);
-                    if (challangeWasCorrect)
+                    bool challengeWasCorrect = updateMap(jsonRequest["challenge"].asString(),challenge);
+                    if (challengeWasCorrect)
                     {
                         jsonResponse["error_code"] = 0;
                         jsonResponse["error_message"] = "OK";
-                        jsonResponse["challange"] = challange;
+                        jsonResponse["challenge"] = challenge;
                     }
                     else
                     {
                         jsonResponse["error_code"] = 22;
-                        jsonResponse["error_message"] = "Challange was not correct";
-                        jsonResponse["challange"] = "";
+                        jsonResponse["error_message"] = "challenge was not correct";
+                        jsonResponse["challenge"] = "";
                     }
                 }
                 std::cout<<"przed switch";
@@ -81,13 +81,13 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                         fflush(stdout);
                         if (jsonResponse["error_code"] == "0") {
                             std::cout <<"dodajemy do mapy";
-                            insertToMap(jsonResponse["challange"].asString(), jsonRequest["params"]["username"].asString());
+                            insertToMap(jsonResponse["challenge"].asString(), jsonRequest["params"]["username"].asString());
                         }
                         break;
                     case LOGIN_REQUEST:
                         std::cout<<"login request";
-                        std::cout<<m_usernameChallangeMap[jsonRequest["challange"].asString()];
-                        jsonResponse = auth.loginRequest(m_usernameChallangeMap[jsonRequest["challange"].asString()],jsonRequest["hash"].asString(),jsonRequest["challange"].asString());
+                        std::cout<<m_usernameChallengeMap[jsonRequest["challenge"].asString()];
+                        jsonResponse = auth.loginRequest(m_usernameChallengeMap[jsonRequest["challenge"].asString()],jsonRequest["hash"].asString(),jsonRequest["challenge"].asString());
                         break;
                     case LOGOUT:
                         break;
@@ -122,7 +122,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     {
         jsonResponse["error_code"] = 10;
         jsonResponse["error_message"] = "Request was not in JSON format";
-        jsonResponse["challange"] = "";
+        jsonResponse["challenge"] = "";
     }
     writer.write(jsonResponse);
 
@@ -134,25 +134,25 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
 }
 
 
-bool Handler::updateMap(std::string oldChallange, std::string newChallange)
+bool Handler::updateMap(std::string oldchallenge, std::string newchallenge)
 {
-    std::map<std::string,std::string>::iterator it = m_usernameChallangeMap.find(oldChallange);
-    if (it != m_usernameChallangeMap.end()) {
-        m_usernameChallangeMap.erase(it);
-        m_usernameChallangeMap.insert(std::pair<std::string, std::string>(newChallange, it->second));
+    std::map<std::string,std::string>::iterator it = m_usernameChallengeMap.find(oldchallenge);
+    if (it != m_usernameChallengeMap.end()) {
+        m_usernameChallengeMap.erase(it);
+        m_usernameChallengeMap.insert(std::pair<std::string, std::string>(newchallenge, it->second));
         return true;
     }
     return false;
 }
 
-void Handler::insertToMap(std::string challange, std::string username)
+void Handler::insertToMap(std::string challenge, std::string username)
 {
-    m_usernameChallangeMap.insert(std::pair<std::string,std::string>(challange,username));
+    m_usernameChallengeMap.insert(std::pair<std::string,std::string>(challenge,username));
 }
 
-void Handler::removeFromMap(std::string challange)
+void Handler::removeFromMap(std::string challenge)
 {
-    std::map<std::string,std::string>::iterator it = m_usernameChallangeMap.find(challange);
-    if (it != m_usernameChallangeMap.end())
-        m_usernameChallangeMap.erase(it);
+    std::map<std::string,std::string>::iterator it = m_usernameChallengeMap.find(challenge);
+    if (it != m_usernameChallengeMap.end())
+        m_usernameChallengeMap.erase(it);
 }
