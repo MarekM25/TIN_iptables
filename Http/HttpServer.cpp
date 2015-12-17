@@ -267,7 +267,7 @@ std::string HttpServer::ReadLine(int socket)
                 break;
         }
 
-        if (string_extensions::ends_with(line, this->m_sHttpRequestHeadersDataSeparator))
+        if (string_extensions::ends_with(line, this->m_sNewLineString))
         {
             break;
         }
