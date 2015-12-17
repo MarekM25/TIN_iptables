@@ -14,7 +14,7 @@ class CommandLineArgumentCollection
 {
 public:
     CommandLineArgumentCollection();
-    virtual void Parse(int argc, char *argv[]);
+    void Parse(int argc, char *argv[]);
     void Clear();
     bool IsArgumentSet(std::string sArgumentName);
     std::string GetArgumentValue(std::string sArgumentName);
