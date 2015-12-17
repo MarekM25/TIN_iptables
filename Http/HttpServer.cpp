@@ -147,14 +147,19 @@ void HttpServer::ServerThreadWork()
         clientsockfd = accept(sockfd, (struct sockaddr *)&clientAddr, &clientAddrSize);
         if (clientsockfd == -1)
         {
+            if (errno == EAGAIN)
+            {
+                continue;
+            }
+
 #ifndef NDEBUG
             if (errno == EINTR)
             {
                 continue;
             }
+#endif
 
             throw exception::http::internal_socket_error();
-#endif
         }
 
         std::thread clientThread([this, clientsockfd]() {
