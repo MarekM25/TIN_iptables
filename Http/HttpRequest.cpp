@@ -177,3 +177,8 @@ bool HttpRequest::IsHeaderPresent(const std::string &sHeaderName)
 {
     return this->m_httpHeaderCollection.IsHeaderPresent(sHeaderName);
 }
+
+std::string HttpRequest::GetPath()
+{
+    return this->m_sPath;
+}
