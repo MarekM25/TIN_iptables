@@ -147,14 +147,21 @@ void HttpServer::ServerThreadWork()
         clientsockfd = accept(sockfd, (struct sockaddr *)&clientAddr, &clientAddrSize);
         if (clientsockfd == -1)
         {
+#ifndef NDEBUG
+            if (errno == EINTR)
+            {
+                continue;
+            }
+
             throw exception::http::internal_socket_error();
+#endif
         }
 
-        //std::thread clientThread([this, clientsockfd]() {
-        this->ClientConnectionThreadWork(clientsockfd);
-        //});
+        std::thread clientThread([this, clientsockfd]() {
+            this->ClientConnectionThreadWork(clientsockfd);
+        });
 
-        //clientThread.detach();
+        clientThread.detach();
     }
 
     close(sockfd);
