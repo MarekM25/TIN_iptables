@@ -33,7 +33,8 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         return httpResponse;
     }
     Configuration &config= Configuration::getInstance();
-        if (config.isIPAddressBlocked("192.0.0.1"))
+
+        if (config.isIPAddressBlocked(httpRequestContext.GetClientIpAddress()))
         {
             jsonResponse["error_code"] = 20;
             jsonResponse["error_message"] = "You are not authorized to use this server.";
@@ -104,25 +105,25 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 switch (jsonCommand)
                 {
                     case GET_ALL_RULES:
-                        iptexec.executeCommand(GET_ALL_RULES);
+                        //iptexec.getAllRules();
                         break;
                     case DELETE_RULE:
-
+                        //iptexec.deleteRule( chainType chain, unsigned short line );
                         break;
                     case BLOCK_IP:
-
+                        //iptexec.blockIP( chainType chain, std::string ipAddress );
                         break;
                     case BLOCK_TCP_PORT:
-
+                        //iptexec.blockTCP( chainType chain, unsigned short tcpPort );
                         break;
                     case BLOCK_UDP_PORT:
-
+                        //iptexec.blockUDP( chainType chain, unsigned short udpPort );
                         break;
                     case BLOCK_INCOMING_MAC:
-
+                        //iptexec.blockMAC( std::string macAddress );
                         break;
                     case RAW:
-
+                        //iptexec.rawCommand( std::string cmd );
                         break;
 
                 }

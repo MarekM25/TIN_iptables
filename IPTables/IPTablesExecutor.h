@@ -25,8 +25,8 @@ enum commandType
 
 enum chainType
 {
-    INPUT,
-    OUTPUT
+    INPUT = 0,
+    OUTPUT = 1
 };
 
 class IPTablesExecutor
@@ -34,63 +34,17 @@ class IPTablesExecutor
 public:
     IPTablesExecutor();
 
-    template< typename T = std::string >
-    std::string executeCommand( commandType command, T param = "", chainType chain = INPUT );
+    std::string getAllRules();
+    std::string deleteRule( chainType chain, unsigned short line );
+    std::string blockIP( chainType chain, std::string ipAddress );
+    std::string blockTCP( chainType chain, unsigned short tcpPort );
+    std::string blockUDP( chainType chain, unsigned short udpPort );
+    std::string blockMAC( std::string macAddress );
+    std::string rawCommand( std::string cmd );
+
+private:
     std::string exec( const char* cmd );
+    std::string mChainStrings[ 2 ];
 };
-
-template< typename T >
-std::string IPTablesExecutor::executeCommand( commandType command, T param, chainType chain )
-{
-    std::ostringstream paramStr;
-    paramStr << param;
-
-    std::string cmd;
-    std::string sourceStr;
-    std::string chainStr;
-
-    if ( chain == OUTPUT )
-    {
-        chainStr = "OUTPUT";
-        sourceStr = "d";
-    }
-    else
-    {
-        chainStr = "INPUT";
-        sourceStr = "s";
-    }
-
-    switch ( command )
-    {
-        case GET_ALL_RULES:
-            cmd = "iptables -L";
-            break;
-        case DELETE_RULE:
-            cmd = "iptables -D " + chainStr + " " + paramStr.str();
-            break;
-        case BLOCK_IP:
-            cmd = "iptables -A " + chainStr + " -" + sourceStr + " " + paramStr.str() + " -j DROP";
-            break;
-        case BLOCK_TCP_PORT:
-            cmd = "iptables -A " + chainStr + " -p tcp --dport " + paramStr.str() + " -j DROP";
-            break;
-        case BLOCK_UDP_PORT:
-            cmd = "iptables -A " + chainStr + " -p udp --dport " + paramStr.str() + " -j DROP";
-            break;
-        case BLOCK_INCOMING_MAC:
-            cmd = "iptables -A INPUT -m mac --mac-source " + paramStr.str() + " -j DROP";
-            break;
-        case RAW:
-            cmd = paramStr.str();
-            break;
-    }
-
-    // delete after debugging
-    std::cout << cmd.c_str() << std::endl;
-    return "";
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
-}
 
 #endif //TIN_IPTABLES_IPTABLESEXECUTOR_H

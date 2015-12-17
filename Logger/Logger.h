@@ -19,6 +19,7 @@
 
 extern Logger<FileLogPolicy> log_inst;
 
+#define LOGGING_LEVEL_2
 
 #ifdef LOGGING_LEVEL_1
 #define LOG log_inst.print< severity_type::INFO >

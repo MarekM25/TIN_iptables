@@ -5,7 +5,6 @@
 #ifndef TIN_IPTABLES_CONFIGURATION_H
 #define TIN_IPTABLES_CONFIGURATION_H
 
-#include <arpa/inet.h>
 #include <string>
 #include <fstream>
 #include <map>
