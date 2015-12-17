@@ -2,7 +2,7 @@
 //TODO Passing invalid config file path to Configuration should throw an exception and terminate the program with error message
 //TODO Handler
 //TODO set params in method of executor iptables
-//TODO veryfy that setting -log=aei command line argument works properly (sets logging levels)
+//TODO verify that setting -log=aei command line argument works properly (sets logging levels)
 
 /* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
