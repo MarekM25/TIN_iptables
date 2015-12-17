@@ -108,6 +108,12 @@ public:
                             break;
 
                     }
+                    if (jsonRequest["command"].asInt()!=LOGOUT)
+                    {
+                        std::string challange = auth.generateChallenge();
+                        jsonResponse["challange"] = challange;
+//                        updateMap(jsonRequest["challange"].asString(),)
+                    }
                 }
             }
         }

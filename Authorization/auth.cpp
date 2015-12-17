@@ -61,10 +61,6 @@ Json::Value Authorization::loginInit(std::string username)
     return response;
 }
 
-Json::Value Authorization::nextChallange(std::string challange)
-{
-
-}
 
 void Authorization::logout(std::string challange)
 {
