@@ -40,7 +40,7 @@ public:
     ~Handler() {}
     HttpResponse HandleHttpRequest(HttpRequestContext httpRequestContext)
     {
-        cout<<"dsaf";
+        std::cout<<"dsaf";
         HttpResponse httpResponse;
         HttpRequest httpRequest = httpRequestContext.GetHttpRequest();
 
