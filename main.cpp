@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
 
 
 
-    LOG("initialized");
      // Example of use jsoncpp
 
     ifstream json_test;
@@ -94,6 +93,10 @@ int main(int argc, char *argv[])
 #else
     configurationInstance.initialize(commandLineArguments.GetConfigFilePath());
 #endif
+
+    loggerInstance.initialize(configurationInstance.getLogPath());
+    LOG("initialized");
+
 
     /*
      * example of ip address checking

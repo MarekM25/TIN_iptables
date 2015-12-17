@@ -31,6 +31,8 @@ void FileLogPolicy::open_ostream(const std::string& error_name, const std::strin
     {
         throw(std::runtime_error("LOGGER: Unable to open an output stream"));
     }
+
+    is_ostream_open = true;
 }
 
 void FileLogPolicy::close_ostream()
@@ -66,9 +68,12 @@ void FileLogPolicy::write_info(const std::string &msg)
     info_out_stream<<msg<<std::endl;
 }
 
+bool FileLogPolicy::isOstreamOpen()
+{
+    return is_ostream_open;
+}
 
 FileLogPolicy::~FileLogPolicy()
 {
     close_ostream();
 }
-
