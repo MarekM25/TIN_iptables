@@ -39,7 +39,6 @@ public:
     std::string GetData();
 private:
     static const std::string m_sNewLineString;
-    static const std::string m_sHttpHeaderNameValueDelimiter;
     static const std::string m_sContentLengthHeaderName;
     static const std::string m_sHostHeaderName;
     std::string m_sData;

@@ -9,7 +9,6 @@
 #include <vector>
 
 const std::string HttpRequest::m_sNewLineString = "\r\n";
-const std::string HttpRequest::m_sHttpHeaderNameValueDelimiter = ": ";
 const std::string HttpRequest::m_sContentLengthHeaderName = "Content-Length";
 const std::string HttpRequest::m_sHostHeaderName = "Host";
 
