@@ -8,6 +8,7 @@
 #include "../Authorization/auth.h"
 #include <json/json.h>
 #include "../Configuration/Configuration.h"
+#include "../Exception/IPTablesException.h"
 #include "../Http/HttpServer.h"
 #include "../IPTables/IPTablesExecutor.h"
 #include <unistd.h>

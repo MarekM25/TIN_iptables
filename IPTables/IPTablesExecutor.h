@@ -7,7 +7,6 @@
 
 #include <string>
 #include <sstream>
-#include <iostream>
 
 enum commandType
 {
@@ -44,6 +43,7 @@ public:
 
 private:
     std::string exec( const char* cmd );
+    bool hasSpecialCharacter( const std::string& source );
     std::string mChainStrings[ 2 ];
 };
 

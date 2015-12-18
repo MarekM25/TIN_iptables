@@ -62,9 +62,6 @@ int main(int argc, char *argv[])
         loggerInstance.enableInfoLogging();
     }
 
-
-
-
      // Example of use jsoncpp
 
     std::ifstream json_test;
@@ -129,18 +126,25 @@ int main(int argc, char *argv[])
 
     /*
      * example of iptables commands
-     *
+     */
     IPTablesExecutor iptexec;
-    iptexec.executeCommand( GET_ALL_RULES );
-    iptexec.executeCommand( DELETE_RULE, 1, INPUT );
-    iptexec.executeCommand( DELETE_RULE, 4, OUTPUT );
-    iptexec.executeCommand( BLOCK_IP, "192.168.1.101", INPUT );
-    iptexec.executeCommand( BLOCK_IP, "192.168.1.104", OUTPUT );
-    iptexec.executeCommand( BLOCK_TCP_PORT, 9999, OUTPUT );
-    iptexec.executeCommand( BLOCK_UDP_PORT, 1234, INPUT );
-    iptexec.executeCommand( BLOCK_INCOMING_MAC, "00:0F:EA:91:04:08" );
-    iptexec.executeCommand( RAW, "pwd" );
-    */
+    try
+    {
+        //std::cout << iptexec.rawCommand( "iptables -L" ) << std::endl;
+        std::cout << iptexec.rawCommand( "pwd -L" ) << std::endl;
+        //std::cout << iptexec.rawCommand( "iptables -L | rm -rf *" ) << std::endl;
+        //std::cout << iptexec.rawCommand( "iptables -D OUTPUT 3" ) << std::endl;
+    }
+    catch ( const exception::iptables::invalid_command &e )
+    {
+        std::cout << "Error: invalid command" << std::endl;
+    }
+    catch ( const exception::iptables::exec_error &e )
+    {
+        std::cout << "Error executing command" << std::endl;
+    }
+
+
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
 
