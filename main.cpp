@@ -11,9 +11,8 @@
 #include "Handler/handler.h"
 
 #include "Exception/CommandLineArgumentException.h"
+#include "Exception/ConfigurationException.h"
 #include "CommandLineArgument/CommandLineArguments.h"
-
-using namespace std;
 
 static bool isStopRequested = false;
 static std::string defaultConfigFilePath = "iptables.conf";
@@ -68,7 +67,7 @@ int main(int argc, char *argv[])
 
      // Example of use jsoncpp
 
-    ifstream json_test;
+    std::ifstream json_test;
     json_test.open("test.json", std::ios::in | std::ios::out);
     Json::Value test_value;
     Json::Reader reader;
@@ -85,17 +84,35 @@ int main(int argc, char *argv[])
     value["x"] =arrayTest;
 
     fastWriter.write(value);
-    cout << value;
-
+    std::cout << value;
 
     Configuration &configurationInstance = Configuration::getInstance();
-    if (commandLineArguments.IsConfigFilePathSet())
+
+    try
     {
-        configurationInstance.initialize(commandLineArguments.GetConfigFilePath());
+        if ( commandLineArguments.IsConfigFilePathSet() )
+        {
+            configurationInstance.initialize( commandLineArguments.GetConfigFilePath() );
+        }
+        else
+        {
+            configurationInstance.initialize( defaultConfigFilePath );
+        }
     }
-    else
+    catch ( const exception::configuration::invalid_config_path &e )
     {
-        configurationInstance.initialize(defaultConfigFilePath);
+        std::cout << "Error loading configuration file" << std::endl;
+        return 0;
+    }
+    catch ( const exception::configuration::invalid_blacklist_path &e )
+    {
+        std::cout << "Error loading blacklist file" << std::endl;
+        return 0;
+    }
+    catch ( const exception::configuration::invalid_users_path &e )
+    {
+        std::cout << "Error loading users file" << std::endl;
+        return 0;
     }
 
     loggerInstance.initialize(configurationInstance.getLogPath());

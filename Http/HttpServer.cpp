@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <thread>
 #include <algorithm>
+#include <array>
 #include "HttpServer.h"
 #include "../Extensions/StringExtensions.h"
 #include "../Exception/HttpException.h"

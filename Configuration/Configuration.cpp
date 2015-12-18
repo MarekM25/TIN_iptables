@@ -36,8 +36,7 @@ bool Configuration::parseConfigFile( std::string& configurationFilePath )
 
     if ( !file )
     {
-        LOG_ERR( "Cannot open Config File" );
-        return false;
+        throw exception::configuration::invalid_config_path();
     }
 
     std::string line;
@@ -94,8 +93,7 @@ bool Configuration::parseBlacklistFile()
 
     if ( !file )
     {
-        LOG_ERR( "Cannot open Blacklist file" );
-        return false;
+        throw exception::configuration::invalid_blacklist_path();
     }
 
     std::string line;
@@ -133,8 +131,7 @@ bool Configuration::parseUsersFile()
 
     if ( !file )
     {
-        LOG_ERR( "Cannot open Users file" );
-        return false;
+        throw exception::configuration::invalid_users_path();
     }
 
     std::string line;
