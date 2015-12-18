@@ -1,19 +1,17 @@
 /* CRITICAL */
-//TODO Passing invalid config file path to Configuration should throw an exception and terminate the program with error message
 //TODO Handler
 //TODO set params in method of executor iptables
+//TODO verify iptables exceptions in handler
 //TODO verify that setting -log=aei command line argument works properly (sets logging levels)
 
 /* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
 //TODO Add LOG() LOG_ACS() in key places in log init etc
 //TODO Make very simple server client (python?)
-//TODO Basic RAW_COMMAND filtering
 
 /* MEDIUM */
 //TODO Remove #define LOGGER_LEVEL_X everywhere
 //TODO Some fixes in logger
 //TODO Move implementation from headers to .cpp files
-//TODO Remove 'using namespace' everywhere
 //TODO set correct status in json response
 //TODO validate if command format is correct
