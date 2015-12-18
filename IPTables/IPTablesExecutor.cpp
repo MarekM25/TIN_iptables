@@ -131,6 +131,7 @@ std::string IPTablesExecutor::exec( const char* cmd )
 bool IPTablesExecutor::hasSpecialCharacter( const std::string& source )
 {
     return std::find_if( source.begin(), source.end(),
-                         []( char ch ) { return !( isalnum( ch ) || ch == ' ' || ch == '-' ); }
+                         []( char ch ) { return !( isalnum( ch ) || ch == ' ' || ch == '-'
+                                                   || ch == '.' || ch == '/' || ch == ':' ); }
                         ) != source.end();
 }
