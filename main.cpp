@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
 
 
     Configuration &configurationInstance = Configuration::getInstance();
+    std::cout<<configurationInstance.getHostName();
     if (commandLineArguments.IsConfigFilePathSet())
     {
         configurationInstance.initialize(commandLineArguments.GetConfigFilePath());
