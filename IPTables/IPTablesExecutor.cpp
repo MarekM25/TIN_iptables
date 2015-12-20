@@ -4,6 +4,7 @@
 
 #include "IPTablesExecutor.h"
 #include "../Exception/IPTablesException.h"
+#include "../Logger/Logger.h"
 
 #include <algorithm>
 #include <memory>
@@ -105,6 +106,7 @@ std::string IPTablesExecutor::rawCommand( std::string cmd )
 
 std::string IPTablesExecutor::exec( const char* cmd )
 {
+    LOG("Executing command " + std::string(cmd));
     std::shared_ptr< FILE > pipe( popen( cmd, "r" ), pclose );
 
     if ( !pipe )
