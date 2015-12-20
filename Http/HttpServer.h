@@ -42,10 +42,11 @@ private:
     int m_iReceiveTimeout;
     bool m_bIsRunning;
     bool m_bIsServerStopRequested;
-    std::string ReadLine(int socket);
+    std::string ReadAvailableString(int socket);
     std::string ReadString(int socket, int length);
     void SendResponse(int socket, HttpResponse &httpResponse);
     void SendString(int socket, const std::string &str);
+    void SetSocketNonBlocking(int iSocket);
     static const std::string m_sNewLineString;
     static const std::string m_sHttpRequestHeadersDataSeparator;
     static const std::string m_sHttpRequestHeaderNameValueSeparator;
