@@ -6,12 +6,16 @@
 #define TIN_IPTABLES_VALIDATOR_H
 
 #include <json/json.h>
+#include <limits>
+#include "handler.h"
 
 class Validator
 {
     bool validateIp(Json::Value ip);
-    bool validatePort(Json::Value port);
-    bool validateChainType(Json::value chainType);
+    bool isUIntShort(Json::Value);
+    bool validateMac(Json::Value);
+    bool validateChainType(Json::Value chainType);
+
 public:
     bool validate(Json::Value jsonRequest);
 };

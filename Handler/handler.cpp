@@ -110,27 +110,26 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                     switch (jsonCommand)
                     {
                         case GET_ALL_RULES:
-                            iptexec.getAllRules();
+                            jsonResponse["data"] = iptexec.getAllRules();
                             break;
                         case DELETE_RULE:
-                            iptexec.deleteRule( (chainType)jsonRequest["chainType"].asInt(),jsonRequest["line"].asUInt() );
+                            jsonResponse["data"] = iptexec.deleteRule( (chainType)jsonRequest["params"]["chainType"].asInt(),jsonRequest["params"]["line"].asUInt() );
                             break;
                         case BLOCK_IP:
-                            iptexec.blockIP( (chainType)jsonRequest["chainType"].asInt(), jsonRequest["ip"].asString() );
+                            jsonResponse["data"] = iptexec.blockIP( (chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["ip"].asString() );
                             break;
                         case BLOCK_TCP_PORT:
-                            //iptexec.blockTCP( chainType chain, unsigned short tcpPort );
+                            jsonResponse["data"] = iptexec.blockTCP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["tcpPort"].asUInt() );
                             break;
                         case BLOCK_UDP_PORT:
-                            //iptexec.blockUDP( chainType chain, unsigned short udpPort );
+                            jsonResponse["data"] = iptexec.blockUDP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["udpPort"].asUInt() );
                             break;
                         case BLOCK_INCOMING_MAC:
-                            //iptexec.blockMAC( std::string macAddress );
+                            jsonResponse["data"] = iptexec.blockMAC( jsonRequest["params"]["mac"].asString());
                             break;
                         case RAW:
-                            //iptexec.rawCommand( std::string cmd );
+                            jsonResponse["data"] = iptexec.rawCommand( jsonRequest["params"]["raw"].asString());
                             break;
-
                     }
                 }
                 catch ( const exception::iptables::invalid_command &e )
