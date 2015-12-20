@@ -60,7 +60,7 @@ void CommandLineArgumentCollection::Parse(int argc, char *argv[])
         }
 
         std::string argumentName = sRawArgument.substr(0, indexOfSeparator);
-        std::string argumentValue = sRawArgument.substr(indexOfSeparator);
+        std::string argumentValue = sRawArgument.substr(indexOfSeparator + this->m_sArgumentNameValueSeparator.length());
 
         if (argumentName.substr(0, this->m_sArgumentPrefix.length()) != this->m_sArgumentPrefix)
         {
