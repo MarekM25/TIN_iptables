@@ -11,7 +11,6 @@
 //TODO Make install script in bash
 
 /* MEDIUM */
-//TODO Remove #define LOGGER_LEVEL_X everywhere
 //TODO Some fixes in logger
 //TODO Move implementation from headers to .cpp files
 //TODO set correct status in json response
