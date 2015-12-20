@@ -2,68 +2,24 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-<<<<<<< HEAD
       <sourceFolder url="file://$MODULE_DIR$/Configuration.h" isTestSource="false" />
-=======
-      <sourceFolder url="file://$MODULE_DIR$/Handler/handler.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Handler/Validator.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Handler/Validator.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Handler/handler.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/LoggerException.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/CommandLineArgumentException.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/IPTablesException.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/LoggerException.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/IPTablesException.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/ConfigurationException.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/ConfigurationException.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/CommandLineArgumentException.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/HttpException.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Exception/HttpException.h" isTestSource="false" />
->>>>>>> dd5f55ee1f60f3a80eea1f1b4839b0193972d1c7
       <sourceFolder url="file://$MODULE_DIR$/Logger/Log.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Logger/Log.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Logger/Logger.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Logger/Logger.h" isTestSource="false" />
-<<<<<<< HEAD
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Configuration.cpp" isTestSource="false" />
-=======
-      <sourceFolder url="file://$MODULE_DIR$/CommandLineArgument/CommandLineArgumentCollection.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CommandLineArgument/CommandLineArguments.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CommandLineArgument/CommandLineArgument.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CommandLineArgument/CommandLineArgumentCollection.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CommandLineArgument/CommandLineArgument.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CommandLineArgument/CommandLineArguments.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Configuration/Configuration.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Configuration/Configuration.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.h" isTestSource="false" />
->>>>>>> dd5f55ee1f60f3a80eea1f1b4839b0193972d1c7
       <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Http/HttpServer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Http/HttpResponse.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Http/HttpRequest.cpp" isTestSource="false" />
-<<<<<<< HEAD
       <sourceFolder url="file://$MODULE_DIR$/IPTablesExecutor.cpp" isTestSource="false" />
-=======
-      <sourceFolder url="file://$MODULE_DIR$/Http/HttpHeader.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/IPTables/IPTablesExecutor.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/IPTables/IPTablesExecutor.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Authorization/md5.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Authorization/md5.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Authorization/auth.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Authorization/auth.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/3rdParty/jsoncpp/jsoncpp.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Extensions/StringExtensions.cpp" isTestSource="false" />
->>>>>>> dd5f55ee1f60f3a80eea1f1b4839b0193972d1c7
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
