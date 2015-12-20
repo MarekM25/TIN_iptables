@@ -18,24 +18,22 @@ std::string IPTablesExecutor::getAllRules()
 {
     std::string cmd = "iptables -L";
 
-    // delete after debugging
-    std::string tmp = "Wywolana komenda: " + cmd;
-    return tmp;
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
+#ifndef NDEBUG
+    return "Wywolana komenda: " + cmd;
+#else
+    return exec( cmd.c_str() );
+#endif
 }
 
 std::string IPTablesExecutor::deleteRule( chainType chain, unsigned short line )
 {
     std::string cmd = "iptables -D " + mChainStrings[ chain ] + " " + std::to_string( line );
 
-    // delete after debugging
-    std::string tmp = "Wywolana komenda: " + cmd;
-    return tmp;
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
+#ifndef NDEBUG
+    return "Wywolana komenda: " + cmd;
+#else
+    return exec( cmd.c_str() );
+#endif
 }
 
 std::string IPTablesExecutor::blockIP( chainType chain, std::string ipAddress )
@@ -44,48 +42,44 @@ std::string IPTablesExecutor::blockIP( chainType chain, std::string ipAddress )
 
     std::string cmd = "iptables -A " + mChainStrings[ chain ] + " -" + sourceOrDestination + " " + ipAddress + " -j DROP";
 
-    // delete after debugging
-    std::string tmp = "Wywolana komenda: " + cmd;
-    return tmp;
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
+#ifndef NDEBUG
+    return "Wywolana komenda: " + cmd;
+#else
+    return exec( cmd.c_str() );
+#endif
 }
 
 std::string IPTablesExecutor::blockTCP( chainType chain, unsigned short tcpPort )
 {
     std::string cmd = "iptables -A " + mChainStrings[ chain ] + " -p tcp --dport " + std::to_string( tcpPort ) + " -j DROP";
 
-    // delete after debugging
-    std::string tmp = "Wywolana komenda: " + cmd;
-    return tmp;
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
+#ifndef NDEBUG
+    return "Wywolana komenda: " + cmd;
+#else
+    return exec( cmd.c_str() );
+#endif
 }
 
 std::string IPTablesExecutor::blockUDP( chainType chain, unsigned short udpPort )
 {
     std::string cmd = "iptables -A " + mChainStrings[ chain ] + " -p udp --dport " + std::to_string( udpPort ) + " -j DROP";
 
-    // delete after debugging
-    std::string tmp = "Wywolana komenda: " + cmd;
-    return tmp;
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
+#ifndef NDEBUG
+    return "Wywolana komenda: " + cmd;
+#else
+    return exec( cmd.c_str() );
+#endif
 }
 
 std::string IPTablesExecutor::blockMAC( std::string macAddress )
 {
     std::string cmd = "iptables -A INPUT -m mac --mac-source " + macAddress + " -j DROP";
 
-    // delete after debugging
-    std::string tmp = "Wywolana komenda: " + cmd;
-    return tmp;
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
+#ifndef NDEBUG
+    return "Wywolana komenda: " + cmd;
+#else
+    return exec( cmd.c_str() );
+#endif
 }
 
 std::string IPTablesExecutor::rawCommand( std::string cmd )
@@ -102,12 +96,11 @@ std::string IPTablesExecutor::rawCommand( std::string cmd )
         throw exception::iptables::invalid_command();
     }
 
-    // delete after debugging
-    std::string tmp = "Wywolana komenda: " + cmd;
-    return tmp;
-
-    // uncomment after debugging
-    //return exec( cmd.c_str() );
+#ifndef NDEBUG
+    return "Wywolana komenda: " + cmd;
+#else
+    return exec( cmd.c_str() );
+#endif
 }
 
 std::string IPTablesExecutor::exec( const char* cmd )
