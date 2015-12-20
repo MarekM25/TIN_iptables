@@ -2,7 +2,6 @@
 //TODO Handler
 //TODO set params in method of executor iptables
 //TODO verify iptables exceptions in handler
-//TODO verify that setting -log=aei command line argument works properly (sets logging levels)
 
 /* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
