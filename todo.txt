@@ -15,3 +15,5 @@
 //TODO Move implementation from headers to .cpp files
 //TODO set correct status in json response
 //TODO validate if command format is correct
+//TODO cleanup main and warning
+
