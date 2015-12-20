@@ -9,7 +9,6 @@
 //TODO Add LOG() LOG_ACS() in key places in log init etc
 //TODO Make very simple server client (python?)
 //TODO Make install script in bash
-//TODO Implement method in validator to check ip, mac etc
 //TODO Documentation (PA)
 
 /* MEDIUM */
