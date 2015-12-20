@@ -39,8 +39,6 @@ std::string Authorization::generateChallenge()
     std::string str(this->m_challengeLength,0);
     std::generate_n( str.begin(), this->m_challengeLength , randchar );
     return str;
-//std::string temporaryHardcode ="fa37JncCHryDsbzayy4cBWDx";
-//    return temporaryHardcode;
 }
 
 

@@ -2,6 +2,7 @@
 // Created by mmoraczynski on 16.12.15.
 //
 #include "handler.h"
+#include "../Logger/Logger.h"
 
 const std::string Handler::m_sRequiredPathHttpHeaderValue = "/iptables_mgmt";
 
@@ -45,7 +46,8 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         }
             IPTablesExecutor iptexec;
             Authorization auth;
-            if (jsonRequest["command"].isNull())
+            Validator validator;
+            if (validator.validate(jsonRequest))
             {
                 jsonResponse["error_code"] = 11;
                 jsonResponse["error_message"] = "Request was not in valid format";
@@ -102,31 +104,44 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 }
                 std::string challenge = auth.generateChallenge();
                 updateMap(jsonRequest["challenge"].asString(),challenge);
-                switch (jsonCommand)
-                {
-                    case GET_ALL_RULES:
-                        //iptexec.getAllRules();
-                        break;
-                    case DELETE_RULE:
-                        //iptexec.deleteRule( chainType chain, unsigned short line );
-                        break;
-                    case BLOCK_IP:
-                        //iptexec.blockIP( chainType chain, std::string ipAddress );
-                        break;
-                    case BLOCK_TCP_PORT:
-                        //iptexec.blockTCP( chainType chain, unsigned short tcpPort );
-                        break;
-                    case BLOCK_UDP_PORT:
-                        //iptexec.blockUDP( chainType chain, unsigned short udpPort );
-                        break;
-                    case BLOCK_INCOMING_MAC:
-                        //iptexec.blockMAC( std::string macAddress );
-                        break;
-                    case RAW:
-                        //iptexec.rawCommand( std::string cmd );
-                        break;
 
+                try
+                {
+                    switch (jsonCommand)
+                    {
+                        case GET_ALL_RULES:
+                            iptexec.getAllRules();
+                            break;
+                        case DELETE_RULE:
+                            iptexec.deleteRule( (chainType)jsonRequest["chainType"].asInt(),jsonRequest["line"].asUInt() );
+                            break;
+                        case BLOCK_IP:
+                            iptexec.blockIP( (chainType)jsonRequest["chainType"].asInt(), jsonRequest["ip"].asString() );
+                            break;
+                        case BLOCK_TCP_PORT:
+                            //iptexec.blockTCP( chainType chain, unsigned short tcpPort );
+                            break;
+                        case BLOCK_UDP_PORT:
+                            //iptexec.blockUDP( chainType chain, unsigned short udpPort );
+                            break;
+                        case BLOCK_INCOMING_MAC:
+                            //iptexec.blockMAC( std::string macAddress );
+                            break;
+                        case RAW:
+                            //iptexec.rawCommand( std::string cmd );
+                            break;
+
+                    }
                 }
+                catch ( const exception::iptables::invalid_command &e )
+                {
+                    LOG_ERR( "Error: invalid command" );
+                }
+                catch ( const exception::iptables::exec_error &e )
+                {
+                    LOG_ERR( "Error executing command" );
+                }
+
                 jsonResponse["error_code"] = 0;
                 jsonResponse["error_message"] = "OK";
                 jsonResponse["challenge"] = challenge ;

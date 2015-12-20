@@ -11,9 +11,8 @@
 #include "Handler/handler.h"
 
 #include "Exception/CommandLineArgumentException.h"
+#include "Exception/ConfigurationException.h"
 #include "CommandLineArgument/CommandLineArguments.h"
-
-using namespace std;
 
 static bool isStopRequested = false;
 static std::string defaultConfigFilePath = "iptables.conf";
@@ -63,13 +62,9 @@ int main(int argc, char *argv[])
         loggerInstance.enableInfoLogging();
     }
 
-
-
-
-    LOG("initialized");
      // Example of use jsoncpp
 
-    ifstream json_test;
+    std::ifstream json_test;
     json_test.open("test.json", std::ios::in | std::ios::out);
     Json::Value test_value;
     Json::Reader reader;
@@ -86,19 +81,39 @@ int main(int argc, char *argv[])
     value["x"] =arrayTest;
 
     fastWriter.write(value);
-    cout << value;
-
+    std::cout << value;
 
     Configuration &configurationInstance = Configuration::getInstance();
-    std::cout<<configurationInstance.getHostName();
-    if (commandLineArguments.IsConfigFilePathSet())
+    try
     {
-        configurationInstance.initialize(commandLineArguments.GetConfigFilePath());
+        if ( commandLineArguments.IsConfigFilePathSet() )
+        {
+            configurationInstance.initialize( commandLineArguments.GetConfigFilePath() );
+        }
+        else
+        {
+            configurationInstance.initialize( defaultConfigFilePath );
+        }
     }
-    else
+    catch ( const exception::configuration::invalid_config_path &e )
     {
-        configurationInstance.initialize(defaultConfigFilePath);
+        std::cout << "Error loading configuration file" << std::endl;
+        return 0;
     }
+    catch ( const exception::configuration::invalid_blacklist_path &e )
+    {
+        std::cout << "Error loading blacklist file" << std::endl;
+        return 0;
+    }
+    catch ( const exception::configuration::invalid_users_path &e )
+    {
+        std::cout << "Error loading users file" << std::endl;
+        return 0;
+    }
+
+    loggerInstance.initialize(configurationInstance.getLogPath());
+    LOG("initialized");
+
 
     /*
      * example of ip address checking
@@ -110,18 +125,25 @@ int main(int argc, char *argv[])
 
     /*
      * example of iptables commands
-     *
+     */
     IPTablesExecutor iptexec;
-    iptexec.executeCommand( GET_ALL_RULES );
-    iptexec.executeCommand( DELETE_RULE, 1, INPUT );
-    iptexec.executeCommand( DELETE_RULE, 4, OUTPUT );
-    iptexec.executeCommand( BLOCK_IP, "192.168.1.101", INPUT );
-    iptexec.executeCommand( BLOCK_IP, "192.168.1.104", OUTPUT );
-    iptexec.executeCommand( BLOCK_TCP_PORT, 9999, OUTPUT );
-    iptexec.executeCommand( BLOCK_UDP_PORT, 1234, INPUT );
-    iptexec.executeCommand( BLOCK_INCOMING_MAC, "00:0F:EA:91:04:08" );
-    iptexec.executeCommand( RAW, "pwd" );
-    */
+    try
+    {
+        //std::cout << iptexec.rawCommand( "iptables -L" ) << std::endl;
+        std::cout << iptexec.rawCommand( "pwd -L" ) << std::endl;
+        //std::cout << iptexec.rawCommand( "iptables -L | rm -rf *" ) << std::endl;
+        //std::cout << iptexec.rawCommand( "iptables -D OUTPUT 3" ) << std::endl;
+    }
+    catch ( const exception::iptables::invalid_command &e )
+    {
+        std::cout << "Error: invalid command" << std::endl;
+    }
+    catch ( const exception::iptables::exec_error &e )
+    {
+        std::cout << "Error executing command" << std::endl;
+    }
+
+
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
 

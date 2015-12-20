@@ -13,6 +13,9 @@ namespace exception
     {
         class configuration_exception : public std::exception { };
         class config_field_not_set : public configuration_exception { };
+        class invalid_config_path : public configuration_exception { };
+        class invalid_blacklist_path : public configuration_exception { };
+        class invalid_users_path : public configuration_exception { };
     }
 }
 

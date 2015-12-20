@@ -21,6 +21,7 @@
 #include <fstream>
 #include <mutex>
 #include <sstream>
+#include <iostream>
 
 enum severity_type
 {
@@ -37,6 +38,7 @@ public:
     virtual void write_error(const std::string& msg) = 0;
     virtual void write_access(const std::string& msg) = 0;
     virtual void write_info(const std::string& msg) = 0;
+    virtual bool isOstreamOpen() = 0;
     virtual ~LogPolicyInterface() {}
 };
 
@@ -57,6 +59,10 @@ public:
     void write_access(const std::string& msg);
     void write_info(const std::string& msg);
 
+    bool isOstreamOpen();
+
+private:
+    bool is_ostream_open = false;
 };
 
 template<typename log_policy>
@@ -82,7 +88,7 @@ public:
     }
 
 private:
-    Logger();
+    Logger() {}
     ~Logger();
 
     bool write_error = false;
@@ -92,6 +98,8 @@ private:
 public:
     Logger(Logger const&) = delete;
     void operator=(Logger const&) = delete;
+
+    void initialize(std::string logPath);
 
     void enableErrorLogging();
     void enableAccessLogging();
@@ -106,11 +114,11 @@ public:
 
 };
 
-template<typename log_policy>
-Logger<log_policy>::Logger()
-{
-    policy.open_ostream("error_log.txt", "access_log.txt", "info_log.txt");
-}
+//template<typename log_policy>
+//Logger<log_policy>::Logger()
+//{
+//    policy.open_ostream("error_log.txt", "access_log.txt", "info_log.txt");
+//}
 
 template<typename log_policy>
 Logger<log_policy>::~Logger()
@@ -119,10 +127,20 @@ Logger<log_policy>::~Logger()
 }
 
 template<typename log_policy>
+void Logger<log_policy>::initialize(std::string logPath)
+{
+    policy.open_ostream(logPath + "error_log.txt", logPath + "access_log.txt", logPath + "info_log.txt");
+}
+
+template<typename log_policy>
     template<severity_type severity, typename...Args>
 void Logger<log_policy>::print(const Args...args)
 {
-
+    if (!policy.isOstreamOpen())
+    {
+        //TODO: Throw some exception here
+        return;
+    }
     if (severity == severity_type::ERROR && !write_error)
     {
         return;
