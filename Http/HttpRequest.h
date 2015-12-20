@@ -37,6 +37,7 @@ public:
     bool IsHeaderPresent(const std::string &sHeaderName);
     void Clear();
     std::string GetData();
+    void AddData(const std::string &sData);
     std::string GetPath();
 private:
     static const std::string m_sNewLineString;

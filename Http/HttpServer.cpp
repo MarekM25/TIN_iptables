@@ -4,6 +4,7 @@
 
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <thread>
 #include <algorithm>
 #include <array>
@@ -209,15 +210,15 @@ void HttpServer::SetReceiveTimeout(int receiveTimeout)
 
 void HttpServer::ClientConnectionThreadWork(int clientSocket)
 {
+    this->SetSocketNonBlocking(clientSocket);
+
     std::string httpRequestString;
-    std::string line;
-    //Read http headers
+
     while(true)
     {
-        line = this->ReadLine(clientSocket);
-        httpRequestString += line;
+        httpRequestString = this->ReadAvailableString(clientSocket);
 
-        if (string_extensions::ends_with(httpRequestString, this->m_sHttpRequestHeadersDataSeparator))
+        if (httpRequestString.find(this->m_sHttpRequestHeadersDataSeparator) != std::string::npos)
         {
             break;
         }
@@ -238,8 +239,9 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
     try
     {
         unsigned int contentLength = httpRequest.GetContentLength();
-        std::string httpRequestDataString = this->ReadString(clientSocket, contentLength);
-        httpRequest.SetData(httpRequestDataString);
+        unsigned int unreadContentLength = contentLength - (int)httpRequest.GetData().length();
+        std::string httpRequestDataString = this->ReadString(clientSocket, unreadContentLength);
+        httpRequest.AddData(httpRequestDataString);
     }
     catch (const exception::http::http_header_not_present &e)
     {
@@ -270,38 +272,6 @@ void HttpServer::ClientConnectionThreadWork(int clientSocket)
     close(clientSocket);
 }
 
-std::string HttpServer::ReadLine(int socket)
-{
-    std::string line;
-    while(true)
-    {
-        char c;
-
-        switch(recv(socket, &c, sizeof(char), 0))
-        {
-            case -1:
-                if (errno == EWOULDBLOCK)
-                {
-                    continue;
-                }
-
-                return "";
-            case 0:
-                return "";
-            default:
-                line += c;
-                break;
-        }
-
-        if (string_extensions::ends_with(line, this->m_sNewLineString))
-        {
-            break;
-        }
-    }
-
-    return line;
-}
-
 std::string HttpServer::ReadString(int socket, int length)
 {
     ssize_t received = 0;
@@ -318,13 +288,32 @@ std::string HttpServer::ReadString(int socket, int length)
                 continue;
             }
 
-            str = "";
-            break;
+            throw exception::http::internal_socket_error();
         }
 
         std::string bufferString(bufferArray.data(), (std::size_t)ret);
         str += bufferString;
         received += ret;
+    }
+
+    return str;
+}
+
+std::string HttpServer::ReadAvailableString(int socket)
+{
+    std::string str;
+    std::array<char, this->m_bufferSize> bufferArray;
+
+    while(true)
+    {
+        ssize_t ret = recv(socket, bufferArray.data(), this->m_bufferSize, 0);
+        if (ret < 1)
+        {
+            break;
+        }
+
+        std::string bufferString(bufferArray.data(), (std::size_t)ret);
+        str += bufferString;
     }
 
     return str;
@@ -373,13 +362,12 @@ void HttpServer::SendString(int socket, const std::string &str)
         ssize_t ret = send(socket, str.c_str(), (size_t)str.length() - (size_t)sent, 0);
         if (ret == -1)
         {
-            //TODO What to do?
             if (errno == EWOULDBLOCK)
             {
                 continue;
             }
 
-            break;
+            throw exception::http::internal_socket_error();
         }
 
         sent += ret;
@@ -430,4 +418,19 @@ void HttpServer::SetHttpResponseContentLengthHeader(HttpResponse &httpResponse)
     unsigned long dataLength = httpResponse.GetData().length();
     std::string contentLengthHeaderValue = std::to_string(dataLength);
     httpResponse.AddHeader(HttpHeader(this->m_sHttpContentLengthHttpHeaderName, contentLengthHeaderValue));
+}
+
+void HttpServer::SetSocketNonBlocking(int iSocket)
+{
+    int iSocketFlags = fcntl(iSocket, F_GETFL, 0);
+    if (iSocketFlags == -1)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    iSocketFlags |= O_NONBLOCK;
+    if (fcntl(iSocket, F_SETFL, iSocketFlags) == -1)
+    {
+        throw exception::http::internal_socket_error();
+    }
 }

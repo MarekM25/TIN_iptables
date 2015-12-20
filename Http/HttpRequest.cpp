@@ -182,3 +182,8 @@ std::string HttpRequest::GetPath()
 {
     return this->m_sPath;
 }
+
+void HttpRequest::AddData(const std::string &sData)
+{
+    this->m_sData += sData;
+}
