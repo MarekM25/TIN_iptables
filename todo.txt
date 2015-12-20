@@ -10,6 +10,7 @@
 //TODO Make very simple server client (python?)
 //TODO Make install script in bash
 //TODO Implement method in validator to check ip, mac etc
+//TODO Documentation (PA)
 
 /* MEDIUM */
 //TODO Some fixes in logger
