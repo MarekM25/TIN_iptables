@@ -5,6 +5,9 @@
 #include "IPTablesExecutor.h"
 #include "../Exception/IPTablesException.h"
 
+#include <algorithm>
+#include <memory>
+
 IPTablesExecutor::IPTablesExecutor()
 {
     mChainStrings[ 0 ] = "INPUT";
