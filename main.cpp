@@ -26,6 +26,7 @@ void displayUsage(std::string executableName)
 
 void signalHandler(int signal)
 {
+    LOG("Received signal: " + std::to_string(signal));
     isStopRequested = true;
 }
 
@@ -177,7 +178,11 @@ int main(int argc, char *argv[])
         sleep(1);
     }
 
+    LOG("Stopping server");
+
     server.Stop();
+
+    LOG("Server stopped");
 
     return 0;
 }
