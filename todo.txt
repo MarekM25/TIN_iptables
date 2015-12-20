@@ -2,6 +2,7 @@
 //TODO Handler
 //TODO set params in method of executor iptables
 //TODO verify iptables exceptions in handler
+//TODO Cleanup timed-out authorization challenges
 
 /* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
