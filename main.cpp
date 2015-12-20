@@ -30,12 +30,12 @@ void signalHandler(int signal)
     isStopRequested = true;
 }
 
+
 int main(int argc, char *argv[])
 {
     signal(SIGINT, signalHandler);
 
     CommandLineArguments commandLineArguments;
-
     try
     {
         commandLineArguments.Parse(argc, argv);
@@ -62,27 +62,6 @@ int main(int argc, char *argv[])
     {
         loggerInstance.enableInfoLogging();
     }
-
-     // Example of use jsoncpp
-
-    std::ifstream json_test;
-    json_test.open("test.json", std::ios::in | std::ios::out);
-    Json::Value test_value;
-    Json::Reader reader;
-     if(reader.parse(json_test, test_value))
-
-    std::cout<<test_value["hash"].asString();
-
-    Json::Value value;
-    Json::Value arrayTest(Json::arrayValue);
-    Json::FastWriter fastWriter;
-    value["test"] = 5;
-    arrayTest.append(4);
-    arrayTest.append(5);
-    value["x"] =arrayTest;
-
-    fastWriter.write(value);
-    std::cout << value;
 
     Configuration &configurationInstance = Configuration::getInstance();
     try

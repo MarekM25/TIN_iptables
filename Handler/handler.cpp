@@ -50,7 +50,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
             if (!validator.validate(jsonRequest))
             {
                 jsonResponse["error_code"] = 11;
-                jsonResponse["error_message"] = "Request was not in valid format";
+                jsonResponse["error_message"] = "Request or parameters was not in valid format";
                 jsonResponse["challenge"] = "";
                 writer.write(jsonResponse);
                 httpResponse.SetData(jsonResponse.toStyledString());
@@ -113,22 +113,22 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                             jsonResponse["data"] = iptexec.getAllRules();
                             break;
                         case DELETE_RULE:
-                            jsonResponse["data"] = iptexec.deleteRule( (chainType)jsonRequest["params"]["chainType"].asInt(),jsonRequest["params"]["line"].asUInt() );
+                            iptexec.deleteRule( (chainType)jsonRequest["params"]["chainType"].asInt(),jsonRequest["params"]["line"].asUInt() );
                             break;
                         case BLOCK_IP:
-                            jsonResponse["data"] = iptexec.blockIP( (chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["ip"].asString() );
+                            iptexec.blockIP( (chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["ip"].asString() );
                             break;
                         case BLOCK_TCP_PORT:
-                            jsonResponse["data"] = iptexec.blockTCP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["tcpPort"].asUInt() );
+                            iptexec.blockTCP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["tcpPort"].asUInt() );
                             break;
                         case BLOCK_UDP_PORT:
-                            jsonResponse["data"] = iptexec.blockUDP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["udpPort"].asUInt() );
+                            iptexec.blockUDP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["udpPort"].asUInt() );
                             break;
                         case BLOCK_INCOMING_MAC:
-                            jsonResponse["data"] = iptexec.blockMAC( jsonRequest["params"]["mac"].asString());
+                            iptexec.blockMAC( jsonRequest["params"]["mac"].asString());
                             break;
                         case RAW:
-                            jsonResponse["data"] = iptexec.rawCommand( jsonRequest["params"]["raw"].asString());
+                            iptexec.rawCommand( jsonRequest["params"]["raw"].asString());
                             break;
                     }
                 }
