@@ -148,7 +148,7 @@ bool Configuration::parseUsersFile()
 
         if ( index == std::string::npos )
         {
-            LOG_ERR("Wrong line in users file");
+            // Wrong line in users file;
             continue;
         }
 

@@ -11,25 +11,29 @@
  */
 
 #include "Log.h"
+#include "../Exception/LoggerException.h"
 
 void FileLogPolicy::open_ostream(const std::string& error_name, const std::string& access_name,const std::string& info_name)
 {
     error_out_stream.open(error_name.c_str(), std::ios_base::binary | std::ios_base::out | std::ios_base::app);
     if(!error_out_stream.is_open())
     {
-        throw(std::runtime_error("LOGGER: Unable to open an output stream"));
+        throw exception::logger::logger_unable_to_open_output_stream();
+        //throw(std::runtime_error("LOGGER: Unable to open an output stream"));
     }
 
     access_out_stream.open(access_name.c_str(), std::ios_base::binary | std::ios_base::out | std::ios_base::app);
     if(!access_out_stream.is_open())
     {
-        throw(std::runtime_error("LOGGER: Unable to open an output stream"));
+        throw exception::logger::logger_unable_to_open_output_stream();
+        //throw(std::runtime_error("LOGGER: Unable to open an output stream"));
     }
 
     info_out_stream.open(info_name.c_str(), std::ios_base::binary | std::ios_base::out | std::ios_base::app);
     if(!info_out_stream.is_open())
     {
-        throw(std::runtime_error("LOGGER: Unable to open an output stream"));
+        throw exception::logger::logger_unable_to_open_output_stream();
+        //throw(std::runtime_error("LOGGER: Unable to open an output stream"));
     }
 
     is_ostream_open = true;

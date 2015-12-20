@@ -22,6 +22,7 @@
 #include <mutex>
 #include <sstream>
 #include <iostream>
+#include "../Exception/LoggerException.h"
 
 enum severity_type
 {
@@ -138,9 +139,9 @@ void Logger<log_policy>::print(const Args...args)
 {
     if (!policy.isOstreamOpen())
     {
-        //TODO: Throw some exception here
-        return;
+        throw exception::logger::logger_not_initialized();
     }
+
     if (severity == severity_type::ERROR && !write_error)
     {
         return;
