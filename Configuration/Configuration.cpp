@@ -185,7 +185,7 @@ uint32_t Configuration::IPToUInt( const std::string& ipAddress )
     unsigned int a, b, c, d;
     uint32_t result = 0;
 
-    if ( sscanf( ipAddress.c_str(), "%d.%d.%d.%d", &a, &b, &c, &d ) != 4 )
+    if ( sscanf( ipAddress.c_str(), "%u.%u.%u.%u", &a, &b, &c, &d ) != 4 )
         return 0;
 
     result = a << 24;
