@@ -4,27 +4,51 @@
 
 #include "Validator.h"
 
-bool Validator::validateIp(Json::Value ip)
+bool Validator::validateIp( Json::Value ip )
 {
-    //to do
-    return true;
+    if ( !ip.isString() )
+        return false;
+
+    sockaddr_in sa;
+
+    return inet_pton( AF_INET, ip.asString().c_str(), &( sa.sin_addr ) ) != 0;
 }
 
-bool Validator::validateChainType(Json::Value chainType)
+bool Validator::validateChainType( Json::Value chainType )
 {
-    //to do
-    return true;
+    if ( !chainType.isString() )
+        return false;
+
+    std::string chain = chainType.asString();
+
+    return chain == "0" || chain == "1";
 }
 
-bool Validator::isUIntShort(Json::Value value)
+bool Validator::isUIntShort( Json::Value value )
 {
-    //to do
-    return true;
+    if ( !value.isUInt() )
+        return false;
+
+    unsigned short x = ( unsigned short ) value.asUInt();
+
+    return x == value.asUInt();
 }
 
-bool Validator::validateMac(Json::Value)
+bool Validator::validateMac( Json::Value value )
 {
-    //to do
+    if ( !value.isString() || value.asString().size() != 17 )
+        return false;
+
+    std::string mac = value.asString();
+
+    for( int i = 0; i < 17; i++ )
+    {
+        if( i % 3 != 2 && !isxdigit( mac[ i ] ) )
+            return false;
+        if( i % 3 == 2 && mac[ i ] != ':' )
+            return false;
+    }
+
     return true;
 }
 

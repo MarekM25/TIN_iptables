@@ -302,7 +302,7 @@ std::string HttpServer::ReadString(int socket, int length)
 std::string HttpServer::ReadAvailableString(int socket)
 {
     std::string str;
-    std::array<char, this->m_bufferSize> bufferArray;
+    std::array<char, m_bufferSize> bufferArray;
 
     while(true)
     {

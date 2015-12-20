@@ -5,6 +5,7 @@
 #ifndef TIN_IPTABLES_VALIDATOR_H
 #define TIN_IPTABLES_VALIDATOR_H
 
+#include <arpa/inet.h>
 #include <json/json.h>
 #include <limits>
 #include "handler.h"
