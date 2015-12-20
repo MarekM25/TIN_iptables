@@ -16,12 +16,12 @@ bool Validator::validateIp( Json::Value ip )
 
 bool Validator::validateChainType( Json::Value chainType )
 {
-    if ( !chainType.isString() )
+    if ( !chainType.isUInt() )
         return false;
 
-    std::string chain = chainType.asString();
+    unsigned int chain = chainType.asUInt();
 
-    return chain == "0" || chain == "1";
+    return chain == 0 || chain == 1;
 }
 
 bool Validator::isUIntShort( Json::Value value )
@@ -61,8 +61,8 @@ bool Validator::validate(Json::Value jsonRequest)
             jsonRequest["params"].isNull())
         return false;
     if (!jsonRequest["command"].isInt() ||
-            jsonRequest["command"].asInt()<0 ||
-            jsonRequest["command"].asInt()> std::numeric_limits<enum commandType>::max())
+                !(jsonRequest["command"].asInt()>=0 &&
+            jsonRequest["command"].asInt()<= commandType::RAW ))
         return false;
     int command = jsonRequest["command"].isInt();
     switch (command)

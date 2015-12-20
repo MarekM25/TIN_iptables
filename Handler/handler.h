@@ -42,8 +42,6 @@ public:
     Handler() {}
     ~Handler() {}
     HttpResponse HandleHttpRequest(HttpRequestContext httpRequestContext);
-
-
 };
 
 #endif //TIN_IPTABLES_HANDLER_H

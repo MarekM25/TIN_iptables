@@ -47,7 +47,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
             IPTablesExecutor iptexec;
             Authorization auth;
             Validator validator;
-            if (validator.validate(jsonRequest))
+            if (!validator.validate(jsonRequest))
             {
                 jsonResponse["error_code"] = 11;
                 jsonResponse["error_message"] = "Request was not in valid format";
@@ -72,12 +72,12 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 }
                 if (!checkIfChallengeInMap(jsonRequest["challenge"].asString()))
                 {
-                    jsonResponse["error_code"] = 22;
-                    jsonResponse["error_message"] = "Challenge was not correct";
+                    jsonResponse["error_code"] = 21;
+                    jsonResponse["error_message"] = "Authorization failed.";
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::OK);
+                    httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED);
                     return httpResponse;
                 }
                 if (jsonCommand==LOGOUT)
@@ -135,10 +135,24 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 catch ( const exception::iptables::invalid_command &e )
                 {
                     LOG_ERR( "Error: invalid command" );
+                    jsonResponse["error_code"] = 12;
+                    jsonResponse["error_message"] = "Error: invalid command.";
+                    jsonResponse["challenge"] = "";
+                    writer.write(jsonResponse);
+                    httpResponse.SetData(jsonResponse.toStyledString());
+                    httpResponse.SetStatus(HttpResponseStatus::OK);
+                    return httpResponse;
                 }
                 catch ( const exception::iptables::exec_error &e )
                 {
                     LOG_ERR( "Error executing command" );
+                    jsonResponse["error_code"] = 13;
+                    jsonResponse["error_message"] = "Error: executing command.";
+                    jsonResponse["challenge"] = "";
+                    writer.write(jsonResponse);
+                    httpResponse.SetData(jsonResponse.toStyledString());
+                    httpResponse.SetStatus(HttpResponseStatus::OK);
+                    return httpResponse;
                 }
 
                 jsonResponse["error_code"] = 0;
