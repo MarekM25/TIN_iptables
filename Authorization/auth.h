@@ -15,7 +15,7 @@
 
 class Authorization
 {
-    const size_t m_challengeLength = 24;
+    static const size_t m_challengeLength;
     static const int m_cleanupAuthorizationMapEvery;
     std::map<std::string,std::pair<std::string, time_t>> m_usernameChallengeMap;
     char* strToMd5(std::string toHash);

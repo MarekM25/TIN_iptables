@@ -9,6 +9,5 @@
 
 /* MEDIUM */
 //TODO Some fixes in logger
-//TODO Move implementation from headers to .cpp files
 //TODO cleanup main and warning
 

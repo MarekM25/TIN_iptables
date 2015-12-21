@@ -8,6 +8,7 @@
 #include "../Handler/Validator.h"
 #include "../Logger/Logger.h"
 
+const size_t Authorization::m_challengeLength = 24;
 const int Authorization::m_cleanupAuthorizationMapEvery = 100;
 
 char* Authorization::strToMd5(std::string toHash)
