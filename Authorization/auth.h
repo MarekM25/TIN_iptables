@@ -13,7 +13,6 @@
 class Authorization
 {
     const size_t m_challengeLength = 24;
-    std::string m_userPath;
     char* strToMd5(std::string toHash);
 public:
     Json::Value loginInit(std::string username);
