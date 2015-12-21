@@ -120,8 +120,6 @@ int main(int argc, char *argv[])
 
     server.Start();
 
-    LOG_ACS("Hello World request");
-
     while(!isStopRequested)
     {
         sleep(1);
