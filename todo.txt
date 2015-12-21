@@ -1,7 +1,3 @@
-/* CRITICAL */
-//TODO Handler
-//TODO verify iptables exceptions in handler
-
 /* IMPORTANT */
 //TODO Add LOG() LOG_ACS() in key places in log init etc
 //TODO Documentation (PA)
