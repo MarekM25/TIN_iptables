@@ -83,7 +83,7 @@ def create_block_tcp_port_json(challenge, md5hash, chain_type, tcp_port):
 
 def create_block_udp_port_json(challenge, md5hash, chain_type, udp_port):
     data = {'command': BLOCK_UDP_PORT, 'hash': md5hash, 'challenge': challenge,
-            'params': {'chainType': chain_type, 'udp_port': udp_port}}
+            'params': {'chainType': chain_type, 'udpPort': udp_port}}
     return json.dumps(data)
 
 
