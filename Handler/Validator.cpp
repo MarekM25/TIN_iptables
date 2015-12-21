@@ -64,7 +64,7 @@ bool Validator::validate(Json::Value jsonRequest)
                 !(jsonRequest["command"].asInt()>=0 &&
             jsonRequest["command"].asInt()<= commandType::RAW ))
         return false;
-    int command = jsonRequest["command"].isInt();
+    int command = jsonRequest["command"].asInt();
     switch (command)
     {
         case LOGIN_INIT:
