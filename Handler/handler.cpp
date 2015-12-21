@@ -129,7 +129,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 iptexec.blockMAC( jsonRequest["params"]["mac"].asString());
                 break;
             case RAW:
-                iptexec.rawCommand( jsonRequest["params"]["raw"].asString());
+                jsonResponse["data"] = iptexec.rawCommand( jsonRequest["params"]["raw"].asString());
                 break;
         }
     }
