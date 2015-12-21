@@ -94,36 +94,6 @@ int main(int argc, char *argv[])
     loggerInstance.initialize(configurationInstance.getLogPath());
     LOG("initialized");
 
-
-    /*
-     * example of ip address checking
-     *
-    cout << configurationInstance.isIPAddressBlocked( "192.168.1.101" ) << endl;
-    cout << configurationInstance.isIPAddressBlocked( "190.168.1.101" ) << endl;
-    cout << configurationInstance.isIPAddressBlocked( "88.23.1.115" ) << endl;
-    */
-
-    /*
-     * example of iptables commands
-     */
-    IPTablesExecutor iptexec;
-    try
-    {
-        //std::cout << iptexec.rawCommand( "iptables -L" ) << std::endl;
-        std::cout << iptexec.rawCommand( "pwd -L" ) << std::endl;
-        //std::cout << iptexec.rawCommand( "iptables -L | rm -rf *" ) << std::endl;
-        //std::cout << iptexec.rawCommand( "iptables -D OUTPUT 3" ) << std::endl;
-    }
-    catch ( const exception::iptables::invalid_command &e )
-    {
-        std::cout << "Error: invalid command" << std::endl;
-    }
-    catch ( const exception::iptables::exec_error &e )
-    {
-        std::cout << "Error executing command" << std::endl;
-    }
-
-
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());
 
