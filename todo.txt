@@ -3,9 +3,5 @@
 //TODO verify iptables exceptions in handler
 
 /* IMPORTANT */
-//TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
 //TODO Add LOG() LOG_ACS() in key places in log init etc
 //TODO Documentation (PA)
-
-/* MEDIUM */
-//TODO Some fixes in logger
