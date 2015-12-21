@@ -28,6 +28,17 @@ enum commandType
     RAW = 8                 // param: string        : raw_command
 };
 
+enum responseCode
+{
+    RESPONSE_CODE_OK = 0,
+    RESPONSE_CODE_NOT_JSON_FORMAT = 10,
+    RESPONSE_CODE_INVALID_JSON_REQUEST_FORMAT = 11,
+    RESPONSE_CODE_INVALID_COMMAND = 12,
+    RESPONSE_CODE_INTERNAL_ERROR = 13,
+    RESPONSE_CODE_UNAUTHORIZED = 20,
+    RESPONSE_CODE_INVALID_USERNAME = 21,
+};
+
 class Handler : public HttpServerRequestHandlerInterface
 {
     std::map<std::string,std::string> m_usernameChallengeMap;

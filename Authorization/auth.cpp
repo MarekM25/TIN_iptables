@@ -5,6 +5,7 @@
 #include <functional>
 #include <stdlib.h>
 #include <algorithm>
+#include "../Handler/Validator.h"
 
 char* Authorization::strToMd5(std::string toHash)
 {
@@ -46,16 +47,16 @@ Json::Value Authorization::loginInit(std::string username)
 {
     Json::Value response;
     Configuration &config = Configuration::getInstance();
-    fflush(stdout);
+
     if (!config.getUserPassword(username).empty()) {
         std::string challenge = generateChallenge();
-        response["error_code"] = 0;
+        response["error_code"] = responseCode::RESPONSE_CODE_OK;
         response["error_message"] = "OK";
         response["challenge"] = challenge;
     }
     else
     {
-        response["error_code"] = 21;
+        response["error_code"] = responseCode::RESPONSE_CODE_INVALID_USERNAME;
         response["error_message"] = "Specified username not exist";
         response["challenge"] = "";
     }
@@ -69,12 +70,5 @@ bool Authorization::authorize(std::string username,std::string hash, std::string
     Configuration &config = Configuration::getInstance();
     std::string password = config.getUserPassword(username);
     std::string localHash = strToMd5(password + challenge);
-    if (localHash==hash)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return localHash == hash;
 }

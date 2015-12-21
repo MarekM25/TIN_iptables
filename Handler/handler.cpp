@@ -26,18 +26,18 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     Json::Value jsonRequest, jsonResponse;
     if (!reader.parse(httpRequest.GetData(),jsonRequest))
     {
-        jsonResponse["error_code"] = 10;
+        jsonResponse["error_code"] = responseCode::RESPONSE_CODE_NOT_JSON_FORMAT;
         jsonResponse["error_message"] = "Request was not in JSON format";
         jsonResponse["challenge"] = "";
         httpResponse.SetData(jsonResponse.toStyledString());
-        httpResponse.SetStatus(HttpResponseStatus::OK);
+        httpResponse.SetStatus(HttpResponseStatus::BAD_REQUEST);
         return httpResponse;
     }
     Configuration &config= Configuration::getInstance();
 
         if (config.isIPAddressBlocked(httpRequestContext.GetClientIpAddress()))
         {
-            jsonResponse["error_code"] = 20;
+            jsonResponse["error_code"] = responseCode::RESPONSE_CODE_UNAUTHORIZED;
             jsonResponse["error_message"] = "You are not authorized to use this server.";
             jsonResponse["challenge"] = "";
             httpResponse.SetData(jsonResponse.toStyledString());
@@ -49,7 +49,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
             Validator validator;
             if (!validator.validate(jsonRequest))
             {
-                jsonResponse["error_code"] = 11;
+                jsonResponse["error_code"] = responseCode::RESPONSE_CODE_INVALID_JSON_REQUEST_FORMAT;
                 jsonResponse["error_message"] = "Request or parameters was not in valid format";
                 jsonResponse["challenge"] = "";
                 writer.write(jsonResponse);
@@ -62,7 +62,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 if (jsonCommand == LOGIN_INIT)
                 {
                     jsonResponse = auth.loginInit(jsonRequest["params"]["username"].asString());
-                    if (jsonResponse["error_code"] == 0) {
+                    if (jsonResponse["error_code"] == responseCode::RESPONSE_CODE_OK) {
                         insertToMap(jsonResponse["challenge"].asString(), jsonRequest["params"]["username"].asString());
                     }
                     writer.write(jsonResponse);
@@ -72,7 +72,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 }
                 if (!checkIfChallengeInMap(jsonRequest["challenge"].asString()))
                 {
-                    jsonResponse["error_code"] = 21;
+                    jsonResponse["error_code"] = responseCode::RESPONSE_CODE_UNAUTHORIZED;
                     jsonResponse["error_message"] = "Authorization failed.";
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
@@ -83,7 +83,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 if (jsonCommand==LOGOUT)
                 {
                     removeFromMap(jsonRequest["challenge"].asString());
-                    jsonResponse["error_code"] = 0;
+                    jsonResponse["error_code"] = responseCode::RESPONSE_CODE_OK;
                     jsonResponse["error_message"] = "OK";
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
@@ -94,7 +94,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 bool checkIfAuthorized = auth.authorize(m_usernameChallengeMap[jsonRequest["challenge"].asString()],jsonRequest["hash"].asString(),jsonRequest["challenge"].asString());
                 if (!checkIfAuthorized)
                 {
-                    jsonResponse["error_code"] = 21;
+                    jsonResponse["error_code"] = responseCode::RESPONSE_CODE_UNAUTHORIZED;
                     jsonResponse["error_message"] = "Authorization failed.";
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
@@ -113,16 +113,16 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                             jsonResponse["data"] = iptexec.getAllRules();
                             break;
                         case DELETE_RULE:
-                            iptexec.deleteRule( (chainType)jsonRequest["params"]["chainType"].asInt(),jsonRequest["params"]["line"].asUInt() );
+                            iptexec.deleteRule( (chainType)jsonRequest["params"]["chainType"].asInt(),(unsigned short)jsonRequest["params"]["line"].asUInt() );
                             break;
                         case BLOCK_IP:
                             iptexec.blockIP( (chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["ip"].asString() );
                             break;
                         case BLOCK_TCP_PORT:
-                            iptexec.blockTCP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["tcpPort"].asUInt() );
+                            iptexec.blockTCP((chainType)jsonRequest["params"]["chainType"].asInt(), (unsigned short)jsonRequest["params"]["tcpPort"].asUInt() );
                             break;
                         case BLOCK_UDP_PORT:
-                            iptexec.blockUDP((chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["udpPort"].asUInt() );
+                            iptexec.blockUDP((chainType)jsonRequest["params"]["chainType"].asInt(), (unsigned short)jsonRequest["params"]["udpPort"].asUInt() );
                             break;
                         case BLOCK_INCOMING_MAC:
                             iptexec.blockMAC( jsonRequest["params"]["mac"].asString());
@@ -135,27 +135,27 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 catch ( const exception::iptables::invalid_command &e )
                 {
                     LOG_ERR( "Error: invalid command" );
-                    jsonResponse["error_code"] = 12;
+                    jsonResponse["error_code"] = responseCode::RESPONSE_CODE_INVALID_COMMAND;
                     jsonResponse["error_message"] = "Error: invalid command.";
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::OK);
+                    httpResponse.SetStatus(HttpResponseStatus::BAD_REQUEST);
                     return httpResponse;
                 }
                 catch ( const exception::iptables::exec_error &e )
                 {
                     LOG_ERR( "Error executing command" );
-                    jsonResponse["error_code"] = 13;
+                    jsonResponse["error_code"] = responseCode::RESPONSE_CODE_INTERNAL_ERROR;
                     jsonResponse["error_message"] = "Error: executing command.";
                     jsonResponse["challenge"] = "";
                     writer.write(jsonResponse);
                     httpResponse.SetData(jsonResponse.toStyledString());
-                    httpResponse.SetStatus(HttpResponseStatus::OK);
+                    httpResponse.SetStatus(HttpResponseStatus::INTERNAL_SERVER_ERROR);
                     return httpResponse;
                 }
 
-                jsonResponse["error_code"] = 0;
+                jsonResponse["error_code"] = responseCode::RESPONSE_CODE_OK;
                 jsonResponse["error_message"] = "OK";
                 jsonResponse["challenge"] = challenge ;
                 writer.write(jsonResponse);
@@ -180,11 +180,7 @@ void Handler::updateMap(std::string oldchallenge, std::string newchallenge)
 bool Handler::checkIfChallengeInMap(std::string challenge)
 {
     std::map<std::string,std::string>::iterator it = m_usernameChallengeMap.find(challenge);
-    if (it != m_usernameChallengeMap.end())
-    {
-        return true;
-    }
-    return false;
+    return it != m_usernameChallengeMap.end();
 }
 
 
