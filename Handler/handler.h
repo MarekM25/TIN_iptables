@@ -41,13 +41,8 @@ enum responseCode
 
 class Handler : public HttpServerRequestHandlerInterface
 {
-    std::map<std::string,std::string> m_usernameChallengeMap;
-    bool checkIfChallengeInMap(std::string challenge);
-    void updateMap(std::string oldChallenge, std::string newChallenge);
-    void insertToMap(std::string challenge, std::string username);
-    void removeFromMap(std::string challenge);
-
     static const std::string m_sRequiredPathHttpHeaderValue;
+    Authorization m_auth;
 
 public:
     Handler() {}

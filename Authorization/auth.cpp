@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <algorithm>
 #include "../Handler/Validator.h"
+#include "../Logger/Logger.h"
+
+const int Authorization::m_cleanupAuthorizationMapEvery = 100;
 
 char* Authorization::strToMd5(std::string toHash)
 {
@@ -48,6 +51,14 @@ Json::Value Authorization::loginInit(std::string username)
     Json::Value response;
     Configuration &config = Configuration::getInstance();
 
+    srand((unsigned int)time(NULL));
+
+    int r = rand() % this->m_cleanupAuthorizationMapEvery;
+    if (r == this->m_cleanupAuthorizationMapEvery - 1)
+    {
+        this->cleanupAuthorizationMap();
+    }
+
     if (!config.getUserPassword(username).empty()) {
         std::string challenge = generateChallenge();
         response["error_code"] = responseCode::RESPONSE_CODE_OK;
@@ -64,11 +75,87 @@ Json::Value Authorization::loginInit(std::string username)
 }
 
 
-bool Authorization::authorize(std::string username,std::string hash, std::string challenge)
+bool Authorization::authorize(std::string challenge, std::string hash)
 {
-    Json::Value response;
     Configuration &config = Configuration::getInstance();
-    std::string password = config.getUserPassword(username);
+
+    if (!this->checkIfChallengeInMap(challenge))
+    {
+        return false;
+    }
+
+    std::pair<std::string, time_t> usernameSessionLastUpdateTimePair = this->m_usernameChallengeMap.find(challenge)->second;
+
+    std::string password = config.getUserPassword(usernameSessionLastUpdateTimePair.first);
     std::string localHash = strToMd5(password + challenge);
-    return localHash == hash;
+
+    srand((unsigned int)time(NULL));
+
+    int r = rand() % this->m_cleanupAuthorizationMapEvery;
+    if (r == this->m_cleanupAuthorizationMapEvery - 1)
+    {
+        this->cleanupAuthorizationMap();
+    }
+
+    return localHash == hash && !this->isSessionTimedOut(usernameSessionLastUpdateTimePair.second);
+}
+
+void Authorization::updateMap(std::string oldchallenge, std::string newchallenge)
+{
+    std::map<std::string, std::pair<std::string, time_t>>::iterator it = m_usernameChallengeMap.find(oldchallenge);
+    if (it != m_usernameChallengeMap.end())
+    {
+        std::string username = it->second.first;
+        m_usernameChallengeMap.erase(it);
+        this->insertToMap(newchallenge, username);
+    }
+}
+
+bool Authorization::checkIfChallengeInMap(std::string challenge)
+{
+    std::map<std::string, std::pair<std::string, time_t>>::iterator it = m_usernameChallengeMap.find(challenge);
+    return it != m_usernameChallengeMap.end();
+}
+
+void Authorization::insertToMap(std::string challenge, std::string username)
+{
+    m_usernameChallengeMap.insert(std::pair<std::string, std::pair<std::string, time_t>>(challenge, std::pair<std::string, time_t>(username, time(NULL))));
+}
+
+void Authorization::removeFromMap(std::string challenge)
+{
+    std::map<std::string, std::pair<std::string, time_t>>::iterator it = m_usernameChallengeMap.find(challenge);
+    if (it != m_usernameChallengeMap.end())
+        m_usernameChallengeMap.erase(it);
+}
+
+bool  Authorization::isSessionTimedOut(time_t sessionLastUpdateTime)
+{
+    Configuration &config = Configuration::getInstance();
+    time_t now;
+    time(&now);
+
+    double seconds = difftime(now, sessionLastUpdateTime);
+
+    return seconds > config.getSessionTimeout();
+}
+
+void Authorization::cleanupAuthorizationMap()
+{
+    int cleanedSessions = 0;
+    std::map<std::string, std::pair<std::string, time_t>>::iterator it = this->m_usernameChallengeMap.begin();
+    for ( ; it != this->m_usernameChallengeMap.end(); )
+    {
+        if (this->isSessionTimedOut(it->second.second))
+        {
+            this->m_usernameChallengeMap.erase(it++);
+            cleanedSessions++;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    LOG("Successfully cleaned up " + std::to_string(cleanedSessions) + " sessions.");
 }
