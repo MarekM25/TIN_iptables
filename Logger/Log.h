@@ -115,12 +115,6 @@ public:
 
 };
 
-//template<typename log_policy>
-//Logger<log_policy>::Logger()
-//{
-//    policy.open_ostream("error_log.txt", "access_log.txt", "info_log.txt");
-//}
-
 template<typename log_policy>
 Logger<log_policy>::~Logger()
 {
