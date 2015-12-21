@@ -9,5 +9,3 @@
 
 /* MEDIUM */
 //TODO Some fixes in logger
-//TODO cleanup main and warning
-
