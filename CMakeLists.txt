@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 2.8)
 project(TIN_iptables)
 
 set(dir ${CMAKE_CURRENT_SOURCE_DIR})
