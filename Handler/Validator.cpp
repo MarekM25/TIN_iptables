@@ -165,11 +165,6 @@ bool Validator::validate(Json::Value jsonRequest)
                 LOG_ERR("Json Validator: RAW incorrect params value");
                 return false;
             }
-            if (!validateMac(jsonRequest["params"]["raw"]))
-            {
-                LOG_ERR("Json Validator: RAW incorrect params value");
-                return false;
-            }
             break;
 
     }
