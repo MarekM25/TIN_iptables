@@ -60,6 +60,8 @@ Json::Value Authorization::loginInit(std::string username)
         this->cleanupAuthorizationMap();
     }
 
+    LOG_ACS(username, "Authorization request received");
+
     if (!config.getUserPassword(username).empty()) {
         std::string challenge = generateChallenge();
         response["error_code"] = responseCode::RESPONSE_CODE_OK;
@@ -71,6 +73,7 @@ Json::Value Authorization::loginInit(std::string username)
         response["error_code"] = responseCode::RESPONSE_CODE_INVALID_USERNAME;
         response["error_message"] = "Specified username not exist";
         response["challenge"] = "";
+        LOG_ACS(username, "FAILED: user does not exist");
     }
     return response;
 }
