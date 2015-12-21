@@ -1,3 +1,4 @@
+# users.txt - name:password
 mareczek:123456
 kokoskososkosko
 andrusza2:trolololo
