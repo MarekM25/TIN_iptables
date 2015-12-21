@@ -1,7 +1,6 @@
 /* CRITICAL */
 //TODO Handler
 //TODO verify iptables exceptions in handler
-//TODO Cleanup timed-out authorization challenges
 
 /* IMPORTANT */
 //TODO Throw custom classes exceptions (ex. throw new InvalidIpAddressException.)
@@ -12,5 +11,4 @@
 //TODO Some fixes in logger
 //TODO Move implementation from headers to .cpp files
 //TODO cleanup main and warning
-//TODO move m_userChallengeMap to Authorization class
 
