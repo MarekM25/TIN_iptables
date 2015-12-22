@@ -112,6 +112,8 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     std::string challenge = this->m_auth.generateChallenge();
     this->m_auth.updateMap(jsonRequest["challenge"].asString(),challenge);
 
+    std::string chainStrings[ 2 ] = { "INPUT", "OUTPUT" };
+
     try
     {
         switch (jsonCommand)
@@ -122,27 +124,27 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
                 break;
             case DELETE_RULE:
                 iptexec.deleteRule( (chainType)jsonRequest["params"]["chainType"].asInt(),(unsigned short)jsonRequest["params"]["line"].asUInt() );
-                LOG(username, " DELETE_RULE");
+                LOG(username, " DELETE_RULE: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", line ", jsonRequest["params"]["line"].asInt());
                 break;
             case BLOCK_IP:
                 iptexec.blockIP( (chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["ip"].asString() );
-                LOG(username, " BLOCK_IP");
+                LOG(username, " BLOCK_IP: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", ip ", jsonRequest["params"]["ip"].asString());
                 break;
             case BLOCK_TCP_PORT:
                 iptexec.blockTCP((chainType)jsonRequest["params"]["chainType"].asInt(), (unsigned short)jsonRequest["params"]["tcpPort"].asUInt() );
-                LOG(username, " BLOCK_TCP_PORT");
+                LOG(username, " BLOCK_TCP_PORT: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", port ", jsonRequest["params"]["tcpPort"].asInt());
                 break;
             case BLOCK_UDP_PORT:
                 iptexec.blockUDP((chainType)jsonRequest["params"]["chainType"].asInt(), (unsigned short)jsonRequest["params"]["udpPort"].asUInt() );
-                LOG(username, " BLOCK_UDP_PORT");
+                LOG(username, " BLOCK_UDP_PORT: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", port ", jsonRequest["params"]["udpPort"].asInt());
                 break;
             case BLOCK_INCOMING_MAC:
                 iptexec.blockMAC( jsonRequest["params"]["mac"].asString());
-                LOG(username, " BLOCK_INCOMING_MAC");
+                LOG(username, " BLOCK_INCOMING_MAC: ", jsonRequest["params"]["mac"].asString());
                 break;
             case RAW:
                 iptexec.rawCommand( jsonRequest["params"]["raw"].asString());
-                LOG(username, " RAW");
+                LOG(username, " RAW_COMMAND: ", jsonRequest["params"]["raw"].asString());
                 break;
         }
     }
