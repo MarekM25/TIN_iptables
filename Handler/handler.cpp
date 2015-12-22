@@ -85,7 +85,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     {
         if (this->m_auth.checkIfChallengeInMap(jsonRequest["challenge"].asString()))
         {
-            LOG_ACS(this->m_auth.getUsernameFromChallanege(jsonRequest["challenge"].asString()), " Logged out");
+            LOG_ACS(this->m_auth.getUsernameFromChallenge(jsonRequest["challenge"].asString()), " Logged out");
         }
         this->m_auth.removeFromMap(jsonRequest["challenge"].asString());
         jsonResponse["error_code"] = responseCode::RESPONSE_CODE_OK;
@@ -108,7 +108,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED);
         return httpResponse;
     }
-    std::string username = this->m_auth.getUsernameFromChallanege(jsonRequest["challenge"].asString());
+    std::string username = this->m_auth.getUsernameFromChallenge(jsonRequest["challenge"].asString());
     std::string challenge = this->m_auth.generateChallenge();
     this->m_auth.updateMap(jsonRequest["challenge"].asString(),challenge);
 

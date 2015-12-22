@@ -164,7 +164,7 @@ void Authorization::cleanupAuthorizationMap()
     LOG("Successfully cleaned up " + std::to_string(cleanedSessions) + " sessions.");
 }
 
-std::string Authorization::getUsernameFromChallanege(std::string challange)
+std::string Authorization::getUsernameFromChallenge(std::string challenge)
 {
-    return m_usernameChallengeMap[challange].first;
+    return m_usernameChallengeMap[challenge].first;
 }

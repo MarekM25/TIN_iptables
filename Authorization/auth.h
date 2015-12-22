@@ -26,7 +26,7 @@ public:
     std::string generateChallenge();
     bool authorize(std::string challenge, std::string hash);
     bool checkIfChallengeInMap(std::string challenge);
-    std::string getUsernameFromChallanege(std::string challange);
+    std::string getUsernameFromChallenge(std::string challenge);
     void updateMap(std::string oldChallenge, std::string newChallenge);
     void insertToMap(std::string challenge, std::string username);
     void removeFromMap(std::string challenge);
