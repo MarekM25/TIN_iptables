@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     }
 
     loggerInstance.initialize(configurationInstance.getLogPath());
-    LOG("initialized");
+    LOG("Initialized");
 
     HttpServer server;
     server.SetPort(configurationInstance.getServerPort());

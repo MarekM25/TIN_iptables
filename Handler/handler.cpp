@@ -72,7 +72,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     }
     if (!this->m_auth.checkIfChallengeInMap(jsonRequest["challenge"].asString()))
     {
-        LOG_ACS("Authorization FAILED");
+        LOG_ACS("Authorization FAILED for ip: ", httpRequestContext.GetClientIpAddress());
         jsonResponse["error_code"] = responseCode::RESPONSE_CODE_UNAUTHORIZED;
         jsonResponse["error_message"] = "Authorization failed.";
         jsonResponse["challenge"] = "";
