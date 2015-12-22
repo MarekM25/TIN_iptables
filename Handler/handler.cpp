@@ -72,6 +72,7 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     }
     if (!this->m_auth.checkIfChallengeInMap(jsonRequest["challenge"].asString()))
     {
+        LOG_ACS("Authorization FAILED");
         jsonResponse["error_code"] = responseCode::RESPONSE_CODE_UNAUTHORIZED;
         jsonResponse["error_message"] = "Authorization failed.";
         jsonResponse["challenge"] = "";
@@ -82,6 +83,10 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
     }
     if (jsonCommand==LOGOUT)
     {
+        if (this->m_auth.checkIfChallengeInMap(jsonRequest["challenge"].asString()))
+        {
+            LOG_ACS(this->m_auth.getUsernameFromChallenge(jsonRequest["challenge"].asString()), " Logged out");
+        }
         this->m_auth.removeFromMap(jsonRequest["challenge"].asString());
         jsonResponse["error_code"] = responseCode::RESPONSE_CODE_OK;
         jsonResponse["error_message"] = "OK";
@@ -103,8 +108,11 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         httpResponse.SetStatus(HttpResponseStatus::UNAUTHORIZED);
         return httpResponse;
     }
+    std::string username = this->m_auth.getUsernameFromChallenge(jsonRequest["challenge"].asString());
     std::string challenge = this->m_auth.generateChallenge();
     this->m_auth.updateMap(jsonRequest["challenge"].asString(),challenge);
+
+    std::string chainStrings[ 2 ] = { "INPUT", "OUTPUT" };
 
     try
     {
@@ -112,24 +120,31 @@ HttpResponse Handler::HandleHttpRequest(HttpRequestContext httpRequestContext)
         {
             case GET_ALL_RULES:
                 jsonResponse["data"] = iptexec.getAllRules();
+                LOG(username, " GET_ALL_RULES");
                 break;
             case DELETE_RULE:
                 iptexec.deleteRule( (chainType)jsonRequest["params"]["chainType"].asInt(),(unsigned short)jsonRequest["params"]["line"].asUInt() );
+                LOG(username, " DELETE_RULE: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", line ", jsonRequest["params"]["line"].asInt());
                 break;
             case BLOCK_IP:
                 iptexec.blockIP( (chainType)jsonRequest["params"]["chainType"].asInt(), jsonRequest["params"]["ip"].asString() );
+                LOG(username, " BLOCK_IP: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", ip ", jsonRequest["params"]["ip"].asString());
                 break;
             case BLOCK_TCP_PORT:
                 iptexec.blockTCP((chainType)jsonRequest["params"]["chainType"].asInt(), (unsigned short)jsonRequest["params"]["tcpPort"].asUInt() );
+                LOG(username, " BLOCK_TCP_PORT: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", port ", jsonRequest["params"]["tcpPort"].asInt());
                 break;
             case BLOCK_UDP_PORT:
                 iptexec.blockUDP((chainType)jsonRequest["params"]["chainType"].asInt(), (unsigned short)jsonRequest["params"]["udpPort"].asUInt() );
+                LOG(username, " BLOCK_UDP_PORT: ", chainStrings[ jsonRequest["params"]["chainType"].asInt() ], ", port ", jsonRequest["params"]["udpPort"].asInt());
                 break;
             case BLOCK_INCOMING_MAC:
                 iptexec.blockMAC( jsonRequest["params"]["mac"].asString());
+                LOG(username, " BLOCK_INCOMING_MAC: ", jsonRequest["params"]["mac"].asString());
                 break;
             case RAW:
                 jsonResponse["data"] = iptexec.rawCommand( jsonRequest["params"]["raw"].asString());
+                LOG(username, " RAW_COMMAND: ", jsonRequest["params"]["raw"].asString());
                 break;
         }
     }
