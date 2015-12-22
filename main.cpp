@@ -13,6 +13,7 @@
 #include "Exception/CommandLineArgumentException.h"
 #include "Exception/ConfigurationException.h"
 #include "CommandLineArgument/CommandLineArguments.h"
+#include "Exception/HttpException.h"
 
 static bool isStopRequested = false;
 static std::string defaultConfigFilePath = "iptables.conf";
@@ -78,17 +79,17 @@ int main(int argc, char *argv[])
     catch ( const exception::configuration::invalid_config_path &e )
     {
         std::cout << "Error loading configuration file" << std::endl;
-        return 0;
+        return 1;
     }
     catch ( const exception::configuration::invalid_blacklist_path &e )
     {
         std::cout << "Error loading blacklist file" << std::endl;
-        return 0;
+        return 1;
     }
     catch ( const exception::configuration::invalid_users_path &e )
     {
         std::cout << "Error loading users file" << std::endl;
-        return 0;
+        return 1;
     }
 
     loggerInstance.initialize(configurationInstance.getLogPath());
@@ -118,9 +119,18 @@ int main(int argc, char *argv[])
 
     LOG("Server Port: ", configurationInstance.getServerPort());
 
-    server.Start();
+    try
+    {
+        server.Start();
+    }
+    catch (const exception::http::http_server_exception &e)
+    {
+        LOG_ERR("Error starting http server. Maybe another instance is already running.");
+        return 1;
+    }
 
-    while(!isStopRequested)
+
+    while(!isStopRequested && server.IsRunning())
     {
         sleep(1);
     }

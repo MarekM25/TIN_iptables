@@ -35,7 +35,7 @@ public:
 private:
     sockaddr_in m_localAddress;
     std::thread m_serverThread;
-    void ServerThreadWork();
+    void ServerThreadWork(int iSocket);
     void ClientConnectionThreadWork(int clientSocket);
     int m_iMaxConnectionQueueLength;
     int m_iSendTimeout;
@@ -47,6 +47,7 @@ private:
     void SendResponse(int socket, HttpResponse &httpResponse);
     void SendString(int socket, const std::string &str);
     void SetSocketNonBlocking(int iSocket);
+    int InitializeListeningSocket();
     static const std::string m_sNewLineString;
     static const std::string m_sHttpRequestHeadersDataSeparator;
     static const std::string m_sHttpRequestHeaderNameValueSeparator;

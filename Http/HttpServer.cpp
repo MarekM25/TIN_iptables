@@ -67,8 +67,10 @@ void HttpServer::Start()
 
     this->m_bIsServerStopRequested = false;
 
-    this->m_serverThread = std::thread([this]() {
-        this->ServerThreadWork();
+    int iSocket = this->InitializeListeningSocket();
+
+    this->m_serverThread = std::thread([this, iSocket]() {
+        this->ServerThreadWork(iSocket);
     });
 
     this->m_bIsRunning = true;
@@ -92,53 +94,8 @@ bool HttpServer::IsRunning()
     return this->m_bIsRunning;
 }
 
-void HttpServer::ServerThreadWork()
+void HttpServer::ServerThreadWork(int iSocket)
 {
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1)
-    {
-        throw exception::http::internal_socket_error();
-    }
-
-    struct timeval sendTimeout;
-    sendTimeout.tv_sec = this->m_iSendTimeout;
-    sendTimeout.tv_usec = 0;
-
-    if (setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (void*)&sendTimeout, sizeof(sendTimeout)) == -1)
-    {
-        throw exception::http::internal_socket_error();
-    }
-
-    struct timeval receiveTimeout;
-    receiveTimeout.tv_sec = this->m_iReceiveTimeout;
-    receiveTimeout.tv_usec = 0;
-
-    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (void*)&receiveTimeout, sizeof(receiveTimeout)) == -1)
-    {
-        throw exception::http::internal_socket_error();
-    }
-
-    int reuse = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (void*)&reuse, sizeof(reuse)) == -1)
-    {
-        throw exception::http::internal_socket_error();
-    }
-
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, (void*)&reuse, sizeof(reuse)) == -1)
-    {
-        throw exception::http::internal_socket_error();
-    }
-
-    if (bind(sockfd, (struct sockaddr*)&this->m_localAddress, sizeof(this->m_localAddress)) != 0)
-    {
-        throw exception::http::internal_socket_error();
-    }
-
-    if (listen(sockfd, this->m_iMaxConnectionQueueLength) != 0)
-    {
-        throw exception::http::internal_socket_error();
-    }
-
     fd_set ready;
     struct timeval selectTimeout;
     int max_fd;
@@ -148,15 +105,15 @@ void HttpServer::ServerThreadWork()
     while(!this->m_bIsServerStopRequested)
     {
         FD_ZERO(&ready);
-        FD_SET(sockfd, &ready);
-        max_fd = sockfd;
+        FD_SET(iSocket, &ready);
+        max_fd = iSocket;
 
         if (select(max_fd + 1, &ready, (fd_set *)0, (fd_set *)0, &selectTimeout) == -1)
         {
             throw exception::http::internal_socket_error();
         }
 
-        if (!FD_ISSET(sockfd, &ready))
+        if (!FD_ISSET(iSocket, &ready))
         {
             continue;
         }
@@ -165,7 +122,7 @@ void HttpServer::ServerThreadWork()
         struct sockaddr_in clientAddr;
         socklen_t clientAddrSize = sizeof(clientAddr);
 
-        clientsockfd = accept(sockfd, (struct sockaddr *)&clientAddr, &clientAddrSize);
+        clientsockfd = accept(iSocket, (struct sockaddr *)&clientAddr, &clientAddrSize);
         if (clientsockfd == -1)
         {
             if (errno == EAGAIN)
@@ -190,7 +147,7 @@ void HttpServer::ServerThreadWork()
         clientThread.detach();
     }
 
-    close(sockfd);
+    close(iSocket);
 }
 
 void HttpServer::SetMaxConnectionQueueLength(int maxConnectionQueueLength)
@@ -433,4 +390,54 @@ void HttpServer::SetSocketNonBlocking(int iSocket)
     {
         throw exception::http::internal_socket_error();
     }
+}
+
+int HttpServer::InitializeListeningSocket()
+{
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd == -1)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    struct timeval sendTimeout;
+    sendTimeout.tv_sec = this->m_iSendTimeout;
+    sendTimeout.tv_usec = 0;
+
+    if (setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (void*)&sendTimeout, sizeof(sendTimeout)) == -1)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    struct timeval receiveTimeout;
+    receiveTimeout.tv_sec = this->m_iReceiveTimeout;
+    receiveTimeout.tv_usec = 0;
+
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (void*)&receiveTimeout, sizeof(receiveTimeout)) == -1)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    int reuse = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (void*)&reuse, sizeof(reuse)) == -1)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, (void*)&reuse, sizeof(reuse)) == -1)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    if (bind(sockfd, (struct sockaddr*)&this->m_localAddress, sizeof(this->m_localAddress)) != 0)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    if (listen(sockfd, this->m_iMaxConnectionQueueLength) != 0)
+    {
+        throw exception::http::internal_socket_error();
+    }
+
+    return sockfd;
 }
