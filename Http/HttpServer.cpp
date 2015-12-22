@@ -418,7 +418,8 @@ int HttpServer::InitializeListeningSocket()
         throw exception::http::internal_socket_error();
     }
 
-    int reuse = 1;
+    //Reuse IP and Port can lead to multiple instances of the http server on the same ip & port
+    /*int reuse = 1;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (void*)&reuse, sizeof(reuse)) == -1)
     {
         throw exception::http::internal_socket_error();
@@ -427,7 +428,7 @@ int HttpServer::InitializeListeningSocket()
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, (void*)&reuse, sizeof(reuse)) == -1)
     {
         throw exception::http::internal_socket_error();
-    }
+    }*/
 
     if (bind(sockfd, (struct sockaddr*)&this->m_localAddress, sizeof(this->m_localAddress)) != 0)
     {
